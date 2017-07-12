@@ -50,7 +50,7 @@ uint8_t MLS; // The candidates set of the most loaded node
 #define DUAL_ROUTING_CONVERGE 	0
 
 /* Allow only a update per round */
-#define SINGLE_UPDATE_ROUND	0
+#define SINGLE_UPDATE_ROUND	1
 
 /* LSA-MAC, implemeted on cxmac
  * Preamble free short broadcast after long broadcast, dual broadcast is included in LSA-MAC

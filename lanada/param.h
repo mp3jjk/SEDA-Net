@@ -13,7 +13,7 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 1
+#define LONG_WEIGHT_RATIO 5
 
 /* Weight ratio between rank and parent's degree */
 #define ALPHA	1
@@ -49,13 +49,13 @@ uint8_t MLS; // The candidates set of the most loaded node
 #define DUAL_ROUTING_CONVERGE 	0
 
 /* Allow only a update per round */
-#define SINGLE_UPDATE_ROUND	0
+#define SINGLE_UPDATE_ROUND	1
 
 /* LSA-MAC, implemeted on cxmac
  * Preamble free short broadcast after long broadcast, dual broadcast is included in LSA-MAC
  * Only long duty cylce, long preamble */
 #if DUAL_RADIO
-#define LSA_MAC	0
+#define LSA_MAC	1
 #define LSA_R	0
 #else	/* DUAL_RADIO */
 #define LSA_MAC 0
