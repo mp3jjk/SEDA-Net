@@ -2,6 +2,10 @@
 #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
 #define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
 
+#if DUAL_RADIO == 0
+#define ONLY_LONG	1
+#endif
+
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
 #define MODE_LAST_PARENT	0 // Tx Last parent info. in dio_ack
