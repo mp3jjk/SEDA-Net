@@ -1514,15 +1514,15 @@ input_packet(void)
 //	    	printf("recv sender ip: %d %d\n",
 //	    	packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[0],packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1]);
 	    	if(packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[0] == 0x80)
-	    	{
-//	    		printf("long!\n");
-		    	id_count[recv_id%BUF_SIZE]+=LONG_WEIGHT_RATIO;
-	    	}
-	    	else
-	    	{
+//	    	{
+////	    		printf("long!\n");
+//		    	id_count[recv_id%BUF_SIZE]+=LONG_WEIGHT_RATIO;
+//	    	}
+//	    	else
+//	    	{
 //	    		printf("short!\n");
 	    		id_count[recv_id%BUF_SIZE]++;
-	    	}
+//	    	}
 #else
 	    	id_count[recv_id%BUF_SIZE]++;
 #endif

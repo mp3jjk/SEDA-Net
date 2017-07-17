@@ -133,7 +133,8 @@ calculate_path_metric(rpl_parent_t *p)
 			  + (p->est_load + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;*/
 /*	  ret_metric = p->rank + (p->parent_sum_weight + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR * ALPHA
 	  			  + (p->est_load + avg_est_load/256 + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;*/
-	  ret_metric = p->rank + (p->parent_sum_weight + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR * ALPHA / ALPHA_DIV;
+	  ret_metric = p->rank /*+ (p->parent_sum_weight + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR * ALPHA / ALPHA_DIV*/
+			  + (p->est_load + p->parent_weight)* RPL_DAG_MC_ETX_DIVISOR;
 #else
 	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
 #endif
@@ -292,16 +293,17 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
     }
     rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
   } else {
+/*
 //    rank_increase = nbr->link_metric;
 //	  printf("nbr ip %d MLS id %d\n",nbr->ipaddr.u8[15], p->MLS_id);
-/*	  if(nbr->ipaddr.u8[15] == p->MLS_id)
+	  if(nbr->ipaddr.u8[15] == p->MLS_id)
 	  {
 //		  printf("est_load %d\n",p->est_load);
 		  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR * (p->est_load + 1);
 //		  printf("MLS's child rank_inc %d\n",rank_increase);
 	  }
 	  else
-	  {*/
+	  {
 //		  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
 	  if(p->est_load == 0) {
 		  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR * (p->parent_weight);
@@ -310,6 +312,8 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
 	  	  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR * (p->est_load + p->parent_weight);
 	  }
 //	  }
+*/
+	  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
     if(base_rank == 0) {
       base_rank = p->rank;
     }
@@ -382,7 +386,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 #if ALPHA > 0
 	  if(p1->parent_sum_weight != 0 && p1_metric - p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR * ALPHA / ALPHA_DIV > 0)
 	  {
-		  p1_metric -= p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
+		  p1_metric -= p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR * ALPHA / ALPHA_DIV;
 	  }
 #endif
 	  if(p1->est_load != 0 && p1_metric - p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR > 0)
@@ -397,7 +401,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 #if ALPHA > 0
 	  if(p2->parent_sum_weight != 0 && p2_metric - p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR * ALPHA / ALPHA_DIV > 0)
 	  {
-		  p2_metric -= p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
+		  p2_metric -= p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR * ALPHA / ALPHA_DIV;
 	  }
 #endif
 	  if(p2->est_load != 0 && p2_metric - p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR > 0)
@@ -432,30 +436,22 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 #else
   if(p1_metric == p2_metric)
   {
-	  if(p1->rank < p2->rank) // Smaller rank
+/*	  if(p1->parent_sum_weight < p2->parent_sum_weight - LONG_WEIGHT_RATIO) // Smaller weight sum
 	  {
 		  return p1;
 	  }
-	  else if(p1->rank > p2->rank)
+	  else if(p1->parent_sum_weight - LONG_WEIGHT_RATIO > p2->parent_sum_weight)
 	  {
 		  return p2;
-	  }
-/*	  if(p1->est_load < p2->est_load) // Smaller est_load
+	  }*/
+	  if(p1->est_load < p2->est_load) // Smaller est_load
 	  {
 		  return p1;
 	  }
 	  else if(p1->est_load > p2->est_load)
 	  {
 		  return p2;
-	  }*/
-/*	  if(p1->parent_sum_weight < p2->parent_sum_weight) // Smaller weight sum
-	  {
-		  return p1;
 	  }
-	  else if(p1->parent_sum_weight > p2->parent_sum_weight)
-	  {
-		  return p2;
-	  }*/
 	  if(p1->parent_weight < p2->parent_weight) // Smaller weight
 	  {
 		  return p1;
@@ -464,6 +460,17 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	  {
 		  return p2;
 	  }
+
+	  if(p1->rank < p2->rank) // Smaller rank
+	  {
+		  return p1;
+	  }
+	  else if(p1->rank > p2->rank)
+	  {
+		  return p2;
+	  }
+
+
 
 /*	  if(p1->rank < p2->rank) // Smaller rank
 	  {

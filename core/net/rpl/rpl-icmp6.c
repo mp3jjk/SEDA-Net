@@ -938,7 +938,11 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 //		printf("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
 //		memcpy(&buffer[pos++],id_count[latest_id]);
 //		buffer[pos++] = id_count[latest_id];
+//		count_index = latest_id % BUF_SIZE;
+//		printf("load %d at %d\n",id_count[count_index],count_index);
+//		int temp_load = id_count[count_index] * 256;
 		buffer[pos++] = avg_est_load / 256;
+//		buffer[pos++] = id_count[count_index];
 		buffer[pos++] = latest_id;
 	}
 	else

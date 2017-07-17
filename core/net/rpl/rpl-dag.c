@@ -1436,7 +1436,7 @@ rpl_join_instance(uip_ipaddr_t *from, rpl_dio_t *dio)
   	  if(dag->rank==RPL_MIN_HOPRANKINC * 3) // Level 2 nodes
   	  {
   		  MLS = 1;
-//  		printf("MLS node!\n");
+//  		  printf("MLS node!\n");
   	  }
   	  else
   	  {

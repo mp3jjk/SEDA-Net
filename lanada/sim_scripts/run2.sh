@@ -2,20 +2,21 @@
 
 SR=0 # Decide whether SR simulation runs or not
 LR=1 # For LR case
+ONLY_LONG=0 # SR = 1 with only Long
 TRAFFIC=0 # 0 = periodic, 1 = poisson
 VAR_PERIOD=(30)
 VAR_ARRIVAL=(30)
-VAR_TOPOLOGY=("36grid")
+VAR_TOPOLOGY=("36grid" "50random")
 VAR_LR_RANGE=("2X")
-VAR_LR_WEIGHT=(3 5)
+VAR_LR_WEIGHT=(2)
 VAR_LSA_R=0
 VAR_STROBE_CNT=1
-VAR_ALPHA=(1)
-VAR_ALPHA_DIV=(2 3)
+VAR_ALPHA=(0)
+VAR_ALPHA_DIV=(2)
 VAR_PARENT_REDUCTION=0
 VAR_REDUCTION_RATIO=0
 VAR_DATA_ACK=1
-DATE="0712_3"
+DATE="0717"
 LSA_MAC=1
 
 # SR_RANGE simulation
@@ -28,11 +29,14 @@ then
 	do
 	    for topology in "${VAR_TOPOLOGY[@]}"
 	    do
-		for alpha in "${VAR_ALPHA[@]}"
+		for range in "${VAR_LR_RANGE[@]}"
 		do
-		    for alpha_div in "${VAR_ALPHA_DIV[@]}"
+		    for alpha in "${VAR_ALPHA[@]}"
 		    do
-		./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div
+			for alpha_div in "${VAR_ALPHA_DIV[@]}"
+			do
+			    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div $ONLY_LONG $range
+			done
 		    done
 		done
 	    done
@@ -42,11 +46,14 @@ then
 	do
 	    for topology in "${VAR_TOPOLOGY[@]}"
 	    do
-		for alpha in "${VAR_ALPHA[@]}"
+		for range in "${VAR_LR_RANGE[@]}"
 		do
-		    for alpha_div in "${VAR_ALPHA_DIV[@]}"
+		    for alpha in "${VAR_ALPHA[@]}"
 		    do
-		./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK
+			for alpha_div in "${VAR_ALPHA_DIV[@]}"
+			do
+			    ./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div $ONLY_LONG $range
+			done
 		    done
 		done
 	    done

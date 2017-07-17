@@ -3,6 +3,10 @@ echo "#define RPL_ENERGY_MODE 0
 #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
 #define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
 
+#if DUAL_RADIO == 0
+#define ONLY_LONG	${13}
+#endif
+
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
 #define MODE_LAST_PARENT	0 // Tx Last parent info. in dio_ack
@@ -50,7 +54,7 @@ uint8_t MLS; // The candidates set of the most loaded node
 #define DUAL_ROUTING_CONVERGE 	0
 
 /* Allow only a update per round */
-#define SINGLE_UPDATE_ROUND	1
+#define SINGLE_UPDATE_ROUND	0
 
 /* LSA-MAC, implemeted on cxmac
  * Preamble free short broadcast after long broadcast, dual broadcast is included in LSA-MAC
