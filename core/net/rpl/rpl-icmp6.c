@@ -713,12 +713,12 @@ dio_input(void)
 	  dio_broadcast(rpl_get_default_instance());
   }
 #endif
-  if(prev_weight != my_weight)
+/*  if(prev_weight != my_weight)
   {
 	  PRINTF("DIO Reset in DIO\n");
 //		printf("joonki12\n");
 	  rpl_reset_dio_timer(rpl_get_default_instance());
-  }
+  }*/
   PRINTF("DIO INPUT my_weight %d\n",my_weight);
 #endif
 
@@ -928,7 +928,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     }
 #endif
 #if RPL_LIFETIME_MAX_MODE2
-	if(MLS)
+	if(MLS == 1)
 	{
 		PRINTF("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
 //		printf("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
@@ -938,12 +938,13 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 //		printf("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
 //		memcpy(&buffer[pos++],id_count[latest_id]);
 //		buffer[pos++] = id_count[latest_id];
-//		count_index = latest_id % BUF_SIZE;
-//		printf("load %d at %d\n",id_count[count_index],count_index);
-//		int temp_load = id_count[count_index] * 256;
 		buffer[pos++] = avg_est_load / 256;
-//		buffer[pos++] = id_count[count_index];
 		buffer[pos++] = latest_id;
+	}
+	else if(MLS == 2)
+	{
+		set16(buffer,pos,0);
+		pos+=3;
 	}
 	else
 	{
@@ -1752,12 +1753,12 @@ fwd_dao:
     }
   }
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-  if(prev_weight != my_weight)
+/*  if(prev_weight != my_weight)
   {
 	  PRINTF("DIO Reset in DAO\n");
 //		printf("joonki13\n");
 	  rpl_reset_dio_timer(instance);
-  }
+  }*/
 #endif
 
  discard:

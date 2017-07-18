@@ -21,7 +21,7 @@
 
 /* Weight ratio between rank and parent's degree */
 #define ALPHA	0
-#define ALPHA_DIV	2
+#define ALPHA_DIV	1
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
@@ -59,7 +59,7 @@ uint8_t MLS; // The candidates set of the most loaded node
  * Preamble free short broadcast after long broadcast, dual broadcast is included in LSA-MAC
  * Only long duty cylce, long preamble */
 #if DUAL_RADIO
-#define LSA_MAC	0
+#define LSA_MAC	1
 #define LSA_R	0
 #else	/* DUAL_RADIO */
 #define LSA_MAC 0

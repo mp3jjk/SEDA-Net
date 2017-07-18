@@ -1155,8 +1155,8 @@ best_parent(rpl_dag_t *dag)
     p = nbr_table_next(rpl_parents, p);
   }
 
-/*
-#if !ZOUL_MOTE
+
+#if !ZOUL_MOTE && 0
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
   if(best != prev && best != NULL && prev != NULL)
   {
@@ -1168,10 +1168,14 @@ best_parent(rpl_dag_t *dag)
 	  }
 #else
 //	  if(rand() % (my_parent_number * my_parent_number) > (prev->parent_sum_weight - best->parent_sum_weight))
-	  uint8_t random = rand() % ((my_parent_number * my_parent_number) * 2);
+//	  uint8_t random = rand() % ((my_parent_number * my_parent_number) * 2);
+	  uint8_t random = rand() % 2;
+
 #if RPL_LIFETIME_MAX_MODE2
 //	  printf("random %d cmp %d p_num %d\n",random, prev->est_load - best->est_load,my_parent_number);
-	  if(random > (prev->est_load - best->est_load))
+//	  if(random > (prev->est_load - best->est_load))
+	  if(random == 0)
+
 	  {
 //		  printf("return prev\n");
 		  return prev;
@@ -1183,7 +1187,8 @@ best_parent(rpl_dag_t *dag)
   }
 #endif
 #endif
-*/
+
+
 
 //  printf("return best my_parent_number %d\n",my_parent_number);
   return best;
@@ -1438,6 +1443,10 @@ rpl_join_instance(uip_ipaddr_t *from, rpl_dio_t *dio)
   		  MLS = 1;
 //  		  printf("MLS node!\n");
   	  }
+  	  else if(dag->rank < RPL_MIN_HOPRANKINC * 3)
+  	  {
+  		  MLS = 2; // Before MLS
+  	  }
   	  else
   	  {
   		  MLS = 0;
@@ -1447,6 +1456,10 @@ rpl_join_instance(uip_ipaddr_t *from, rpl_dio_t *dio)
   	  {
   		MLS = 1;
 //  		printf("MLS node!\n");
+  	  }
+  	  else if(dag->rank < RPL_MIN_HOPRANKINC * 2)
+  	  {
+  		  MLS = 2; // Before MLS
   	  }
   	  else
   	  {
@@ -1953,6 +1966,10 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
   		  MLS = 1;
 //  		  printf("MLS node!\n");
   	  }
+  	  else if(dag->rank < RPL_MIN_HOPRANKINC * 3)
+  	  {
+  		  MLS = 2; // Before MLS
+  	  }
   	  else
   	  {
   		  MLS = 0;
@@ -1962,6 +1979,10 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
   	  {
   		  MLS = 1;
 //  		  printf("MLS node!\n");
+  	  }
+  	  else if(dag->rank < RPL_MIN_HOPRANKINC * 2)
+  	  {
+  		  MLS = 2; // Before MLS
   	  }
   	  else
   	  {

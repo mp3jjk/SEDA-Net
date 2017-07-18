@@ -1493,7 +1493,7 @@ input_packet(void)
 		    		+ (original_dataptr[original_datalen-25]- '0')*100;*/
 		 ip = (original_dataptr[original_datalen-51] - '0') + (original_dataptr[original_datalen-52] - '0')*10
 				 + (original_dataptr[original_datalen-53]- '0')*100;
-		 printf("incoming recv_id %d ip %d\n",recv_id, ip);
+//		 printf("incoming recv_id %d ip %d\n",recv_id, ip);
 #endif
 	    if(id_array[ip] >= recv_id)
 	    {
@@ -1514,15 +1514,15 @@ input_packet(void)
 //	    	printf("recv sender ip: %d %d\n",
 //	    	packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[0],packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1]);
 	    	if(packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[0] == 0x80)
-//	    	{
+	    	{
 ////	    		printf("long!\n");
-//		    	id_count[recv_id%BUF_SIZE]+=LONG_WEIGHT_RATIO;
-//	    	}
-//	    	else
-//	    	{
+		    	id_count[recv_id%BUF_SIZE]+=LONG_WEIGHT_RATIO;
+	    	}
+	    	else
+	    	{
 //	    		printf("short!\n");
 	    		id_count[recv_id%BUF_SIZE]++;
-//	    	}
+	    	}
 #else
 	    	id_count[recv_id%BUF_SIZE]++;
 #endif
