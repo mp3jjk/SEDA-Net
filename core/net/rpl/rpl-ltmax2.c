@@ -133,8 +133,8 @@ calculate_path_metric(rpl_parent_t *p)
 			  + (p->est_load + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;*/
 /*	  ret_metric = p->rank + (p->parent_sum_weight + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR * ALPHA
 	  			  + (p->est_load + avg_est_load/256 + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;*/
-	  ret_metric = p->rank + p->est_load * RPL_DAG_MC_ETX_DIVISOR + p->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
-//			  + (p->parent_sum_weight + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR * ALPHA / ALPHA_DIV
+	  ret_metric = p->rank + p->est_load * RPL_DAG_MC_ETX_DIVISOR + p->parent_weight * RPL_DAG_MC_ETX_DIVISOR
+			  + (p->parent_sum_weight + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR * ALPHA / ALPHA_DIV;
 //			  + (p->est_load + p->parent_weight)* RPL_DAG_MC_ETX_DIVISOR;
 #else
 	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
@@ -436,14 +436,14 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   sprintf(log_buf,"Comparing %d %c p2: %d\n", nbr2->ipaddr.u8[15], nbr2->ipaddr.u8[8]==0x82 ? 'L' : 'S', p2_metric);
 	LOG_MESSAGE(log_buf);
 	free(log_buf);*/
-  if(linkaddr_node_addr.u8[15] == 32 && (nbr1->ipaddr.u8[15] == 26 || nbr2->ipaddr.u8[15] == 26))
+/*  if(linkaddr_node_addr.u8[15] == 32 && (nbr1->ipaddr.u8[15] == 26 || nbr2->ipaddr.u8[15] == 26))
 //	  if(linkaddr_node_addr.u8[15] == 32)
   {
   printf("Cmp %d %c p1: %d load: %d weight: %d rank: %d %c\n", nbr1->ipaddr.u8[15], nbr1->ipaddr.u8[8]==0x82 ? 'L' : 'S',
 		  p1_metric,p1->est_load,p1->parent_sum_weight, p1->rank,p1 == dag->preferred_parent ? 'P':'X');
   printf("Cmp %d %c p2: %d load: %d weight: %d rank: %d %c\n", nbr2->ipaddr.u8[15], nbr2->ipaddr.u8[8]==0x82 ? 'L' : 'S',
 		  p2_metric,p2->est_load,p2->parent_sum_weight, p2->rank,p2 == dag->preferred_parent ? 'P':'X');
-  }
+  }*/
   if(p1->rank == RPL_DAG_MC_ETX_DIVISOR || p2->rank == RPL_DAG_MC_ETX_DIVISOR)
   {
 	  if(p1->parent_weight < p2->parent_weight && p1->rank == RPL_DAG_MC_ETX_DIVISOR) {
