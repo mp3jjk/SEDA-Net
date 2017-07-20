@@ -124,6 +124,8 @@ struct rimac_hdr {
 
 #define MAX_STROBE_SIZE 50
 
+#define CARRIER_SENSING_TIME RTIMER_ARCH_SECOND / 1000 * 7
+
 #ifdef RIMAC_CONF_ON_TIME
 #define DEFAULT_ON_TIME (RIMAC_CONF_ON_TIME)
 #else
@@ -165,6 +167,8 @@ struct rimac_hdr {
 
 
 #define MAX_STROBE_SIZE 50
+
+#define CARRIER_SENSING_TIME RTIMER_ARCH_SECOND / 1000 * 7
 
 #ifdef RIMAC_CONF_ON_TIME
 #define DEFAULT_ON_TIME (RIMAC_CONF_ON_TIME)
@@ -226,6 +230,8 @@ static volatile unsigned char waiting_for_packet = 0;
 static volatile unsigned char someone_is_sending = 0;
 static volatile unsigned char we_are_sending = 0;
 static volatile unsigned char radio_is_on = 0;
+static volatile unsigned char interference = 0;
+static volatile unsigned char backoff = 0;
 
 #undef LEDS_ON
 #undef LEDS_OFF
@@ -234,7 +240,7 @@ static volatile unsigned char radio_is_on = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 0
+#define DEBUG 1
 #define TIMING 0
 
 #if DEBUG
@@ -534,12 +540,13 @@ cpowercycle(void *ptr)
   PT_BEGIN(&pt);
 
   while(1) {
+	  /*
     if(someone_is_sending > 0) {
       someone_is_sending--;
-    }
+    }*/
 
     /* If there were a strobe in the air, turn radio on */
-#if DUAL_RADIO
+/*#if DUAL_RADIO
 #if DUAL_ROUTING_CONVERGE
 		// JOOONKI is working on this	
 		if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
@@ -561,14 +568,14 @@ cpowercycle(void *ptr)
 			}
     }
 
-#else /* DUAL_ROUTING_CONVERGE */
+#else  DUAL_ROUTING_CONVERGE
 #if LSA_MAC
 #if LSA_R
 #if CONVERGE_MODE == 1
 		if (LSA_converge == 1)
 #elif CONVERGE_MODE == 2
 		if (simple_convergence == 1) 
-#endif /* CONVERGE_MODE */ 
+#endif  CONVERGE_MODE
 		{
 			if (LSA_lr_child == 1) {
 				powercycle_dual_turn_radio_on(LONG_RADIO);
@@ -578,10 +585,10 @@ cpowercycle(void *ptr)
 		} else {
 			powercycle_dual_turn_radio_on(LONG_RADIO);
 		}
-#else /* LSA_R */ 
+#else  LSA_R
 		powercycle_dual_turn_radio_on(LONG_RADIO);
-#endif /* LSA_R */
-#else /* LSA_MAC */
+#endif  LSA_R
+#else  LSA_MAC
     if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
     {
     	dual_duty_cycle_count++;
@@ -592,16 +599,116 @@ cpowercycle(void *ptr)
     	dual_duty_cycle_count = 0;
       powercycle_dual_turn_radio_on(BOTH_RADIO);
     }
-#endif /* LSA_MAC */
-#endif /* DUAL_ROUTING_CONVERGE */
-#else	/* DUAL_RADIO */
+#endif  LSA_MAC
+#endif  DUAL_ROUTING_CONVERGE
+#else	 DUAL_RADIO
     powercycle_turn_radio_on();
-#endif /* DUAL_RADIO */
+#endif  DUAL_RADIO */
 
 
 
-    // printf("cpowerycle on\n");
-    CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
+     printf("cpowerycle on\n");
+  // Carrier Sensing
+	powercycle_dual_turn_radio_on(LONG_RADIO);
+    CSCHEDULE_POWERCYCLE(CARRIER_SENSING_TIME);
+    PT_YIELD(&pt);
+    printf("after CS\n");
+    if(interference == 1) { // Backoff
+    	interference = 0;
+    	backoff = 1;
+        printf("interference backoff\n");
+    }
+    else { // Tx Preamble packet
+    	uint8_t preamble[MAX_STROBE_SIZE];
+    	int preamble_len, len;
+    	uint8_t got_preamble_ack = 0;
+    	uint8_t is_dispatch = 0, is_preamble_ack = 0;
+    	struct rimac_hdr *hdr;
+    	rtimer_clock_t t;
+
+    	len = NETSTACK_FRAMER.create();
+    	preamble_len = len + sizeof(struct rimac_hdr);
+    	if(len < 0 || preamble_len > (int)sizeof(preamble)) {
+    		/* Failed to send */
+    		PRINTF("rimac: send failed, too large header\n");
+    		return MAC_TX_ERR_FATAL;
+    	}
+    	memcpy(preamble, packetbuf_hdrptr(), len);
+    	preamble[len] = DISPATCH;
+    	preamble[len+1] = TYPE_STROBE;
+
+    	dual_radio_switch(LONG_RADIO);
+    	printf("tx preamble\n");
+		NETSTACK_RADIO.send(preamble, preamble_len);
+		t =  RTIMER_NOW();
+		while(got_preamble_ack == 0 &&
+				RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time)) {
+			/* See if we got an ACK */
+			packetbuf_clear();
+			len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
+			if(len > 0) {
+				packetbuf_set_datalen(len);
+				if(NETSTACK_FRAMER.parse() >= 0) {
+					hdr = packetbuf_dataptr();
+					is_dispatch = hdr->dispatch == DISPATCH;
+					is_preamble_ack = hdr->type == TYPE_STROBE_ACK;
+					if(is_dispatch && is_preamble_ack) {
+						//						  	    	printf("ACK recognized\n");
+#if DUAL_RADIO
+						if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+								&linkaddr_node_addr) ||
+								linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+										&long_linkaddr_node_addr))
+#else
+						if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+								&linkaddr_node_addr))
+#endif
+								/* We got an ACK from the receiver, so we can immediately send
+	   the packet. */
+						{
+							PRINTF("got preamble_ack\n");
+							got_preamble_ack = 1;
+						}
+						else {
+							PRINTDEBUG("rimac: strobe ack for someone else\n");
+							backoff = 1;
+						}
+					}
+					else /*if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE)*/ {
+						PRINTDEBUG("rimac: strobe from someone else\n");
+						backoff = 1;
+					}
+				}
+				else {
+					PRINTF("rimac: send failed to parse %u\n", len);
+				}
+			}
+		}
+		if(got_preamble_ack) {
+			// wait data
+			printf("got preamble ack\n");
+			got_preamble_ack = 0;
+			CSCHEDULE_POWERCYCLE(rimac_config.strobe_wait_time);
+			PT_YIELD(&pt);
+		}
+    }
+
+    if(backoff) { // Do Backoff
+    	printf("backoff\n");
+
+        powercycle_dual_turn_radio_off(BOTH_RADIO);
+        CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME); // random and exponential backoff
+        PT_YIELD(&pt);
+    }
+    else {
+    	printf("sleep\n");
+
+        powercycle_dual_turn_radio_off(BOTH_RADIO);
+        CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME);
+        PT_YIELD(&pt);
+    }
+
+/*    CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
     PT_YIELD(&pt);
     if(rimac_config.off_time > 0) {
 #if DUAL_RADIO
@@ -613,9 +720,9 @@ cpowercycle(void *ptr)
       if(waiting_for_packet != 0) {
 	waiting_for_packet++;
 	if(waiting_for_packet > 2) {
-	  /* We should not be awake for more than two consecutive
+	   We should not be awake for more than two consecutive
 	     power cycles without having heard a packet, so we turn off
-	     the radio. */
+	     the radio.
 	  waiting_for_packet = 0;
 #if DUAL_RADIO
 	  powercycle_dual_turn_radio_off(BOTH_RADIO);
@@ -626,8 +733,7 @@ cpowercycle(void *ptr)
       }
       // printf("cpowerycle off\n");
       CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME);
-      PT_YIELD(&pt);
-    }
+      PT_YIELD(&pt);*/
   }
 
   PT_END(&pt);
@@ -1857,6 +1963,8 @@ rimac_init(void)
 #endif
   radio_is_on = 0;
   waiting_for_packet = 0;
+  interference = 0;
+  backoff = 0;
   PT_INIT(&pt);
   /*  rtimer_set(&rt, RTIMER_NOW() + rimac_config.off_time, 1,
       (void (*)(struct rtimer *, void *))powercycle, NULL);*/
