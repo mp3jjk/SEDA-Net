@@ -728,14 +728,14 @@ send_packet(void)
   rtimer_clock_t encounter_time = 0;
   int strobes;
   struct rimac_hdr *hdr;
-  int got_strobe_ack = 0;
+  int got_strobe = 0;
 #if DATA_ACK
   uint8_t got_data_ack = 0;
 #endif
   uint8_t strobe[MAX_STROBE_SIZE];
   int strobe_len, len;
   int is_broadcast = 0;
-  int is_dispatch, is_strobe_ack;
+  int is_dispatch, is_strobe;
   /*int is_reliable;*/
   struct encounter *e;
   struct queuebuf *packet;
@@ -808,27 +808,24 @@ send_packet(void)
            packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[1]);
 #endif /* NETSTACK_CONF_WITH_IPV6 */
   }
-  len = NETSTACK_FRAMER.create();
-  strobe_len = len + sizeof(struct rimac_hdr);
-  if(len < 0 || strobe_len > (int)sizeof(strobe)) {
-    /* Failed to send */
-   PRINTF("rimac: send failed, too large header\n");
-    return MAC_TX_ERR_FATAL;
-  }
-  memcpy(strobe, packetbuf_hdrptr(), len);
-#if STROBE_CNT_MODE
-  strobe[len] = DISPATCH | (strobe_cnt << 2); /* dispatch */
-  cnt_pos = len;
-#else
-  strobe[len] = DISPATCH; /* dispatch */
-#endif
-  strobe[len + 1] = TYPE_STROBE; /* type */
+
 /*
-#if STROBE_CNT_MODE
-  strobe[len + 2] = strobe_cnt;
-  cnt_pos = len + 2;
-#endif
-*/
+ *  len = NETSTACK_FRAMER.create();
+ *  strobe_len = len + sizeof(struct rimac_hdr);
+ *  if(len < 0 || strobe_len > (int)sizeof(strobe)) {
+ *    [> Failed to send <]
+ *   PRINTF("rimac: send failed, too large header\n");
+ *    return MAC_TX_ERR_FATAL;
+ *  }
+ *  memcpy(strobe, packetbuf_hdrptr(), len);
+ *#if STROBE_CNT_MODE
+ *  strobe[len] = DISPATCH | (strobe_cnt << 2); [> dispatch <]
+ *  cnt_pos = len;
+ *#else
+ *  strobe[len] = DISPATCH; [> dispatch <]
+ *#endif
+ *  strobe[len + 1] = TYPE_STROBE; [> type <]
+ */
 
   packetbuf_compact();
   packet = queuebuf_new_from_packetbuf();
@@ -955,11 +952,11 @@ send_packet(void)
 #else
 		watchdog_periodic();
 #endif
-	  got_strobe_ack = 0;
+	  got_strobe = 0;
 	  t = RTIMER_NOW();
 		
 		for(strobes = 0, collisions = 0;
-			  got_strobe_ack == 0 && collisions == 0 &&
+			  got_strobe == 0 && collisions == 0 &&
 #if DUAL_RADIO
 					  RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + strobe_time);
 #else
@@ -969,26 +966,10 @@ send_packet(void)
 #if ZOUL_MOTE
 			watchdog_periodic();
 #endif
-			/* JOONKI
-			 * short range broadcast skip sending strobed preambles */
-#if DUAL_RADIO
-#if LSA_MAC
-			if (is_broadcast && was_short == 1){
-				break;
-			} 
-#endif /* LSA_MAC */ 
-#endif
 			/* for debug */
-#if TIMING
-			mark_time=RTIMER_NOW();
-#endif
-				// printf("OUT\n");
-				// printf("got_strobe_ack: %d\n", got_strobe_ack);
 				/* Strobe wait start time fixed */
-//				t=RTIMER_NOW();
-			while(got_strobe_ack == 0 &&
+			while(got_strobe == 0 &&
 					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time)) {
-				// printf("rimac_config.strobe_wait_time: %d\n", rimac_config.strobe_wait_time*10000/RTIMER_ARCH_SECOND);
 								rtimer_clock_t now = RTIMER_NOW();
 				/* See if we got an ACK */
 				packetbuf_clear();
@@ -996,18 +977,11 @@ send_packet(void)
 				if(len > 0) {
 					packetbuf_set_datalen(len);
 					if(NETSTACK_FRAMER.parse() >= 0) {
-						//					  printf("packet parsed\n");
 						hdr = packetbuf_dataptr();
-#if STROBE_CNT_MODE
-						char dispatch_ext = hdr->dispatch << 6;
 						
-						is_dispatch = dispatch_ext == DISPATCH;
-#else
 						is_dispatch = hdr->dispatch == DISPATCH;
-#endif
-						is_strobe_ack = hdr->type == TYPE_STROBE_ACK;
-						if(is_dispatch && is_strobe_ack) {
-							//						  	    	printf("ACK recognized\n");
+						is_strobe = hdr->type == TYPE_STROBE;
+						if(is_dispatch && is_strobe) {
 #if DUAL_RADIO
 							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
 									&linkaddr_node_addr) ||
@@ -1020,15 +994,14 @@ send_packet(void)
 								{
 									/* We got an ACK from the receiver, so we can immediately send
 		   the packet. */
-									PRINTF("got strobe_ack\n");
-									got_strobe_ack = 1;
+									PRINTF("got strobe\n");
+									got_strobe = 1;
 									encounter_time = now;
 								} else {
 									PRINTDEBUG("rimac: strobe ack for someone else\n");
 								}
 							} else /*if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE)*/ {
 								PRINTDEBUG("rimac: strobe from someone else\n");
-								collisions++;
 							}
 						} else {
 							PRINTF("rimac: send failed to parse %u\n", len);
@@ -1036,104 +1009,14 @@ send_packet(void)
 					}
 				}
 				t = RTIMER_NOW();
-#if TIMING
-				printf("STROBE WAIT TIME is %d\n", (t - mark_time)*10000/RTIMER_ARCH_SECOND);
-#endif
-				/* Send the strobe packet. */
-				if(got_strobe_ack == 0 && collisions == 0) {
-					if(is_broadcast) {
-#if WITH_STROBE_BROADCAST
-#if TIMING
-						mark_time = RTIMER_NOW();
-						NETSTACK_RADIO.send(strobe, strobe_len);
-						printf("STROBE TIME is %d, STROBE LEN is %d\n", (RTIMER_NOW() - mark_time)*10000/RTIMER_ARCH_SECOND, strobe_len);
-#else
-						NETSTACK_RADIO.send(strobe, strobe_len);
-#endif
-#if STROBE_CNT_MODE
-						strobe[cnt_pos] += (1 << 2);
-						//	  printf("rimac tx strobe_cnt %d t: %d\n",strobe_cnt,RTIMER_NOW());
-#endif	/* STROBE_CNT_MODE */
-#else		/* WITH_STROBE_BROADCAST */
-
-						/* restore the packet to send */
-						queuebuf_to_packetbuf(packet);
-						NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
-#endif	/* WITH_STROBE_BROADCAST */
-
-#if DUAL_RADIO
-						dual_radio_off(target);
-#else
-						off();
-#endif
-					} else {
-#if TIMING
-						mark_time = RTIMER_NOW();
-						NETSTACK_RADIO.send(strobe, strobe_len);
-						printf("STROBE TIME is %d, STROBE LEN is %d\n", (RTIMER_NOW() - mark_time)*10000/RTIMER_ARCH_SECOND, strobe_len);
-#else
-						NETSTACK_RADIO.send(strobe, strobe_len);
-#endif
-
-
-#if 0
-						/* Turn off the radio for a while to let the other side
-	     respond. We don't need to keep our radio on when we know
-	     that the other side needs some time to produce a reply. */
-#if DUAL_RADIO
-						dual_radio_off(target);
-#else
-						off();
-#endif
-						rtimer_clock_t wt = RTIMER_NOW();
-						while(RTIMER_CLOCK_LT(RTIMER_NOW(), wt + WAIT_TIME_BEFORE_STROBE_ACK));
-#endif /* 0 */
-#if DUAL_RADIO
-						dual_radio_on(target);
-#else
-						on();
-#endif
-					}
-				}
 			}
 	  }
-
-#if WITH_ACK_OPTIMIZATION
-  /* If we have received the strobe ACK, and we are sending a packet
-     that will need an upper layer ACK (as signified by the
-     PACKETBUF_ATTR_RELIABLE packet attribute), we keep the radio on. */
-  if(got_strobe_ack && (
-#if NETSTACK_CONF_WITH_RIME
-      packetbuf_attr(PACKETBUF_ATTR_RELIABLE) ||
-      packetbuf_attr(PACKETBUF_ATTR_ERELIABLE) ||
-#endif /* NETSTACK_CONF_WITH_RIME */
-#if PACKETBUF_WITH_PACKET_TYPE
-			packetbuf_attr(PACKETBUF_ATTR_PACKET_TYPE) ==
-			PACKETBUF_ATTR_PACKET_TYPE_STREAM ||
-#endif
-      0)) {
-#if DUAL_RADIO
-	  dual_radio_on(target);
-#else
-	  on(); /* Wait for ACK packet */
-#endif
-    waiting_for_packet = 1;
-  } else {
-#if DUAL_RADIO
-	dual_radio_off(target);
-#else
-    off();
-#endif
-  }
-#else /* WITH_ACK_OPTIMIZATION */
 
 #if DUAL_RADIO
   dual_radio_off(target);
 #else
   off();
 #endif
-
-#endif /* WITH_ACK_OPTIMIZATION */
 
 	/* Switch the radio back to the original one */
 #if DUAL_RADIO
@@ -1154,13 +1037,15 @@ send_packet(void)
 #endif
 #endif
 
-	got_strobe_ack=1;
+	/*
+	 *got_strobe=1; // WHAT IS THIS??????????????????????????
+	 */
   /* restore the packet to send */
   queuebuf_to_packetbuf(packet);
   queuebuf_free(packet);
 
   /* Send the data packet. */
-  if((is_broadcast || got_strobe_ack || is_streaming) && collisions == 0) {
+  if((is_broadcast || got_strobe || is_streaming) && collisions == 0) {
 
 #if RPL_ENERGY_MODE
 //	     Relaying Tx energy consumption for Data packet JJH
@@ -1263,7 +1148,7 @@ send_packet(void)
   }
 
 #if WITH_ENCOUNTER_OPTIMIZATION
-  if(got_strobe_ack && !is_streaming) {
+  if(got_strobe && !is_streaming) {
     register_encounter(packetbuf_addr(PACKETBUF_ADDR_RECEIVER), encounter_time);
   }
 #endif /* WITH_ENCOUNTER_OPTIMIZATION */
@@ -1273,9 +1158,9 @@ send_packet(void)
 #endif
 	/* For debug */
   PRINTF("rimac: send (strobes=%u,len=%u,%s), done\n", strobes,
-	 packetbuf_totlen(), got_strobe_ack ? "ack" : "no ack");
+	 packetbuf_totlen(), got_strobe ? "ack" : "no ack");
 #if DATA_ACK
-  if(!is_broadcast && got_strobe_ack)
+  if(!is_broadcast && got_strobe)
   {
 	  PRINTF("rimac: recv %s\n",got_data_ack ? "data_ack" : "data_noack");
   }
@@ -1302,10 +1187,10 @@ send_packet(void)
 
   if(collisions == 0) {
 #if DATA_ACK
-//	  printf("rimac status %d %d %d\n",is_broadcast,got_strobe_ack,got_data_ack);
-    if(!is_broadcast && (!got_strobe_ack || !got_data_ack)) 
+//	  printf("rimac status %d %d %d\n",is_broadcast,got_strobe,got_data_ack);
+    if(!is_broadcast && (!got_strobe || !got_data_ack)) 
 #else
-    if(!is_broadcast && !got_strobe_ack) 
+    if(!is_broadcast && !got_strobe) 
 #endif
 		{
       return MAC_TX_NOACK;
