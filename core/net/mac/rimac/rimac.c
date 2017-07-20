@@ -105,7 +105,9 @@ struct announcement_msg {
 #define TYPE_STROBE       0x10
 /* #define TYPE_DATA         0x11 */
 #define TYPE_ANNOUNCEMENT 0x12
-#define TYPE_STROBE_ACK   0x13
+#define TYPE_STROBE_SHORT_ACK   0x13
+#define TYPE_STROBE_LONG_ACK   0x23
+#define TYPE_STROBE_LONG_BROADCAST_ACK   0x24
 #if DATA_ACK
 #define TYPE_DATA_ACK   0x14
 #endif
@@ -124,7 +126,7 @@ struct rimac_hdr {
 
 #define MAX_STROBE_SIZE 50
 
-#define CARRIER_SENSING_TIME RTIMER_ARCH_SECOND / 1000 * 7
+#define CARRIER_SENSING_TIME RTIMER_ARCH_SECOND / 1000 * 2
 
 #ifdef RIMAC_CONF_ON_TIME
 #define DEFAULT_ON_TIME (RIMAC_CONF_ON_TIME)
@@ -168,7 +170,7 @@ struct rimac_hdr {
 
 #define MAX_STROBE_SIZE 50
 
-#define CARRIER_SENSING_TIME RTIMER_ARCH_SECOND / 1000 * 7
+#define CARRIER_SENSING_TIME RTIMER_ARCH_SECOND / 1000 * 2
 
 #ifdef RIMAC_CONF_ON_TIME
 #define DEFAULT_ON_TIME (RIMAC_CONF_ON_TIME)
@@ -240,7 +242,7 @@ static volatile unsigned char backoff = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 1
+#define DEBUG 0
 #define TIMING 0
 
 #if DEBUG
@@ -399,7 +401,7 @@ PROCESS_THREAD(strobe_wait, ev, data)
 	if(!is_short_waiting)
 	{
 		uint8_t *cnt = (uint8_t *)data;
-		t = (rimac_config.strobe_time) - (*cnt + 1)*(rimac_config.on_time + 1);
+		t = (rimac_config.strobe_time) - (*cnt + 3)*(rimac_config.strobe_wait_time + 1);
 		t >= rimac_config.strobe_time ? t = 1 : t;
 #if DUAL_RADIO
 		dual_radio_off(BOTH_RADIO);
@@ -427,7 +429,7 @@ PROCESS_THREAD(strobe_wait, ev, data)
 	if(!is_short_waiting)
 	{
 #if DUAL_RADIO
-		dual_radio_on(strobe_target);
+		dual_radio_on(LONG_RADIO);
 #else
 		on();
 #endif
@@ -439,6 +441,7 @@ PROCESS_THREAD(strobe_wait, ev, data)
 		dual_radio_off(SHORT_RADIO);
 		waiting_for_packet = 0;
 		is_short_waiting = 0;
+		interference = 0;
 	}
 #ifdef ZOUL_MOTE
 	else if (is_short_waiting == 2)
@@ -606,26 +609,38 @@ cpowercycle(void *ptr)
 #endif  DUAL_RADIO */
 
 
-
-     printf("cpowerycle on\n");
+	  if(rimac_is_on == 0) {
+		  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
+		  PT_YIELD(&pt);
+		  continue;
+	  }
+//     printf("cpowerycle on\n");
   // Carrier Sensing
 	powercycle_dual_turn_radio_on(LONG_RADIO);
     CSCHEDULE_POWERCYCLE(CARRIER_SENSING_TIME);
     PT_YIELD(&pt);
-    printf("after CS\n");
-    if(interference == 1) { // Backoff
+	powercycle_dual_turn_radio_off(LONG_RADIO);
+//    printf("after CS\n");
+    if(NETSTACK_RADIO.receiving_packet() == 1 || interference == 1) { // Backoff
+//    	printf("cs detect\n");
     	interference = 0;
     	backoff = 1;
-        printf("interference backoff\n");
+//        printf("interference backoff\n");
     }
-    else { // Tx Preamble packet
+    else if(!waiting_for_packet){ // Tx Preamble packet
+    	packetbuf_clear();
     	uint8_t preamble[MAX_STROBE_SIZE];
     	int preamble_len, len;
     	uint8_t got_preamble_ack = 0;
-    	uint8_t is_dispatch = 0, is_preamble_ack = 0;
+    	uint8_t is_dispatch = 0, is_short_preamble_ack = 0, is_long_preamble_ack = 0;
+    	uint8_t is_long_broadcast_preamble_ack = 0;
+    	uint8_t cnt;
     	struct rimac_hdr *hdr;
-    	rtimer_clock_t t;
 
+    	dual_radio_switch(LONG_RADIO);
+		packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
+//		printf("sending %d\n",packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1]);
+    	rtimer_clock_t t;
     	len = NETSTACK_FRAMER.create();
     	preamble_len = len + sizeof(struct rimac_hdr);
     	if(len < 0 || preamble_len > (int)sizeof(preamble)) {
@@ -633,78 +648,119 @@ cpowercycle(void *ptr)
     		PRINTF("rimac: send failed, too large header\n");
     		return MAC_TX_ERR_FATAL;
     	}
+
     	memcpy(preamble, packetbuf_hdrptr(), len);
     	preamble[len] = DISPATCH;
     	preamble[len+1] = TYPE_STROBE;
 
-    	dual_radio_switch(LONG_RADIO);
-    	printf("tx preamble\n");
-		NETSTACK_RADIO.send(preamble, preamble_len);
-		t =  RTIMER_NOW();
-		while(got_preamble_ack == 0 &&
-				RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time)) {
-			/* See if we got an ACK */
-			packetbuf_clear();
-			len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
-			if(len > 0) {
-				packetbuf_set_datalen(len);
-				if(NETSTACK_FRAMER.parse() >= 0) {
-					hdr = packetbuf_dataptr();
-					is_dispatch = hdr->dispatch == DISPATCH;
-					is_preamble_ack = hdr->type == TYPE_STROBE_ACK;
-					if(is_dispatch && is_preamble_ack) {
-						//						  	    	printf("ACK recognized\n");
+//    	printf("tx preamble\n");
+		if(NETSTACK_RADIO.send(preamble, preamble_len) != RADIO_TX_OK) {
+			backoff = 1;
+		}
+		else {
+			//		packetbuf_clear();
+			powercycle_dual_turn_radio_on(LONG_RADIO);
+			t =  RTIMER_NOW();
+			while(got_preamble_ack == 0 &&
+					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time * 2)) {
+				if(NETSTACK_RADIO.receiving_packet() == 1) {
+					t = RTIMER_NOW();
+				}
+				packetbuf_clear();
+				len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
+				if(len > 0) {
+					packetbuf_set_datalen(len);
+					if(NETSTACK_FRAMER.parse() >= 0) {
+						hdr = packetbuf_dataptr();
+						char dispatch_ext = hdr->dispatch << 6;
+						cnt = hdr->dispatch >> 2;
+//						printf("cnt %d\n",cnt);
+//						is_dispatch = hdr->dispatch == DISPATCH;
+						is_dispatch = dispatch_ext == DISPATCH;
+						is_short_preamble_ack = hdr->type == TYPE_STROBE_SHORT_ACK;
+						is_long_preamble_ack = hdr->type == TYPE_STROBE_LONG_ACK;
+						is_long_broadcast_preamble_ack = hdr->type == TYPE_STROBE_LONG_BROADCAST_ACK;
+						if(is_dispatch
+								&& (is_short_preamble_ack || is_long_preamble_ack || is_long_broadcast_preamble_ack)) {
+							//												  	    	printf("ACK recognized\n");
 #if DUAL_RADIO
-						if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-								&linkaddr_node_addr) ||
-								linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-										&long_linkaddr_node_addr))
+							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+									&linkaddr_node_addr) ||
+									linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+											&long_linkaddr_node_addr))
 #else
-						if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-								&linkaddr_node_addr))
+								if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+										&linkaddr_node_addr))
 #endif
-								/* We got an ACK from the receiver, so we can immediately send
-	   the packet. */
-						{
-							PRINTF("got preamble_ack\n");
-							got_preamble_ack = 1;
+								{
+									PRINTF("got preamble_ack %c\n",is_short_preamble_ack ? 'S':'L');
+									if(is_short_preamble_ack) {
+										got_preamble_ack = SHORT_RADIO;
+									}
+									else {
+										got_preamble_ack = LONG_RADIO;
+									}
+								}
+								else {
+									PRINTDEBUG("rimac: strobe ack for someone else\n");
+									backoff = 1;
+								}
 						}
 						else {
-							PRINTDEBUG("rimac: strobe ack for someone else\n");
+							PRINTDEBUG("rimac: strobe from someone else\n");
 							backoff = 1;
 						}
 					}
-					else /*if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE)*/ {
-						PRINTDEBUG("rimac: strobe from someone else\n");
-						backoff = 1;
+					else {
+						PRINTF("rimac: send failed to parse in preamble %u\n", len);
 					}
 				}
-				else {
-					PRINTF("rimac: send failed to parse %u\n", len);
+			}
+			if(got_preamble_ack) {
+				// wait data
+				if(got_preamble_ack == SHORT_RADIO) {
+					//				printf("sending %d waiting %d\n",we_are_sending,waiting_for_packet);
+					powercycle_dual_turn_radio_on(SHORT_RADIO);
+					CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
+					PT_YIELD(&pt);
 				}
+				else if(is_long_preamble_ack) {
+					powercycle_dual_turn_radio_on(LONG_RADIO);
+					CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2);
+					PT_YIELD(&pt);
+				}
+				else {
+			    	  process_start(&strobe_wait, &cnt);
+				}
+				got_preamble_ack = 0;
 			}
 		}
-		if(got_preamble_ack) {
-			// wait data
-			printf("got preamble ack\n");
-			got_preamble_ack = 0;
-			CSCHEDULE_POWERCYCLE(rimac_config.strobe_wait_time);
-			PT_YIELD(&pt);
-		}
     }
-
+/*    powercycle_dual_turn_radio_on(BOTH_RADIO);
+    CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2);
+    PT_YIELD(&pt);*/
     if(backoff) { // Do Backoff
-    	printf("backoff\n");
-
+//    	printf("backoff\n");
+    	backoff = 0;
+    	interference = 0;
         powercycle_dual_turn_radio_off(BOTH_RADIO);
         CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME); // random and exponential backoff
         PT_YIELD(&pt);
     }
     else {
-    	printf("sleep\n");
-
+//    	printf("sleep\n");
+    	rtimer_clock_t temp;
+    	backoff = 0;
+    	interference = 0;
+    	if(waiting_for_packet != 0) {
+    		waiting_for_packet++;
+    		if(waiting_for_packet > 2) {
+    			waiting_for_packet = 0;
+    		}
+    	}
+    	temp = random_rand()%DEFAULT_OFF_TIME + DEFAULT_OFF_TIME/2;
         powercycle_dual_turn_radio_off(BOTH_RADIO);
-        CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME);
+        CSCHEDULE_POWERCYCLE(temp);
         PT_YIELD(&pt);
     }
 
@@ -838,8 +894,8 @@ send_packet(void)
 #if DATA_ACK
   uint8_t got_data_ack = 0;
 #endif
-  uint8_t strobe[MAX_STROBE_SIZE];
-  int strobe_len, len;
+  uint8_t preamble_ack[MAX_STROBE_SIZE];
+  int ack_len, len;
   int is_broadcast = 0;
   int is_dispatch, is_strobe;
   /*int is_reliable;*/
@@ -847,7 +903,11 @@ send_packet(void)
   struct queuebuf *packet;
   int is_already_streaming = 0;
   uint8_t collisions;
-	
+
+  linkaddr_t recv_addr;
+  linkaddr_t recv_addr_2;
+  linkaddr_t temp_addr;
+
 	/* for debug */
 #if TIMING
   static rtimer_clock_t mark_time=0;
@@ -860,14 +920,6 @@ send_packet(void)
   rtimer_clock_t strobe_time;
 #endif
 	// JJH
-#if RPL_ENERGY_MODE
-  int original_datalen;
-  uint8_t *original_dataptr;
-#endif
-#if STROBE_CNT_MODE
-  uint8_t strobe_cnt = 1;
-  int cnt_pos;
-#endif
 #if DUAL_RADIO
 #if LSA_MAC
 	static uint8_t was_short;
@@ -914,25 +966,21 @@ send_packet(void)
            packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[1]);
 #endif /* NETSTACK_CONF_WITH_IPV6 */
   }
+  linkaddr_copy(&recv_addr,packetbuf_addr(PACKETBUF_ADDR_RECEIVER));
+  if(!is_broadcast) {
+	  linkaddr_copy(&recv_addr_2,&recv_addr);
+	  if(recv_addr.u8[0]==0x80) {
+		  recv_addr_2.u8[0] = 0x00;
+	  }
+	  else {
+		  recv_addr_2.u8[0] = 0x80;
+	  }
+  }
 
-/*
- *  len = NETSTACK_FRAMER.create();
- *  strobe_len = len + sizeof(struct rimac_hdr);
- *  if(len < 0 || strobe_len > (int)sizeof(strobe)) {
- *    [> Failed to send <]
- *   PRINTF("rimac: send failed, too large header\n");
- *    return MAC_TX_ERR_FATAL;
- *  }
- *  memcpy(strobe, packetbuf_hdrptr(), len);
- *#if STROBE_CNT_MODE
- *  strobe[len] = DISPATCH | (strobe_cnt << 2); [> dispatch <]
- *  cnt_pos = len;
- *#else
- *  strobe[len] = DISPATCH; [> dispatch <]
- *#endif
- *  strobe[len + 1] = TYPE_STROBE; [> type <]
- */
-
+  len = NETSTACK_FRAMER.create();
+  if(len < 0 ||len > (int)sizeof(preamble_ack)) {
+	  PRINTF("rimac: send failed, too large header\n");
+  }
   packetbuf_compact();
   packet = queuebuf_new_from_packetbuf();
   if(packet == NULL) {
@@ -942,70 +990,12 @@ send_packet(void)
     return MAC_TX_ERR;
   }
 
-#if WITH_STREAMING && PACKETBUF_WITH_PACKET_TYPE
-  if(is_streaming == 1 &&
-     (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-		   &is_streaming_to) ||
-      linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-		   &is_streaming_to_too))) {
-    is_already_streaming = 1;
-  }
-  if(packetbuf_attr(PACKETBUF_ATTR_PACKET_TYPE) ==
-     PACKETBUF_ATTR_PACKET_TYPE_STREAM) {
-    is_streaming = 1;
-    if(linkaddr_cmp(&is_streaming_to, &linkaddr_null)) {
-      linkaddr_copy(&is_streaming_to, packetbuf_addr(PACKETBUF_ADDR_RECEIVER));
-    } else if(!linkaddr_cmp(&is_streaming_to, packetbuf_addr(PACKETBUF_ADDR_RECEIVER))) {
-      linkaddr_copy(&is_streaming_to_too, packetbuf_addr(PACKETBUF_ADDR_RECEIVER));
-    }
-    stream_until = RTIMER_NOW() + DEFAULT_STREAM_TIME;
-  }
-#endif /* WITH_STREAMING */
-
 #if DUAL_RADIO
   dual_radio_off(BOTH_RADIO);
 #else
   off();
 #endif
 
-#if WITH_ENCOUNTER_OPTIMIZATION
-  /* We go through the list of encounters to find if we have recorded
-     an encounter with this particular neighbor. If so, we can compute
-     the time for the next expected encounter and setup a ctimer to
-     switch on the radio just before the encounter. */
-  for(e = list_head(encounter_list); e != NULL; e = list_item_next(e)) {
-    const linkaddr_t *neighbor = packetbuf_addr(PACKETBUF_ADDR_RECEIVER);
-
-    if(linkaddr_cmp(neighbor, &e->neighbor)) {
-      rtimer_clock_t wait, now, expected;
-
-      /* We expect encounters to happen every DEFAULT_PERIOD time
-	 units. The next expected encounter is at time e->time +
-	 DEFAULT_PERIOD. To compute a relative offset, we subtract
-	 with clock_time(). Because we are only interested in turning
-	 on the radio within the DEFAULT_PERIOD period, we compute the
-	 waiting time with modulo DEFAULT_PERIOD. */
-
-      now = RTIMER_NOW();
-      wait = ((rtimer_clock_t)(e->time - now)) % (DEFAULT_PERIOD);
-      expected = now + wait - 2 * DEFAULT_ON_TIME;
-
-#if WITH_ACK_OPTIMIZATION && PACKETBUF_WITH_PACKET_TYPE
-      /* Wait until the receiver is expected to be awake */
-      if(packetbuf_attr(PACKETBUF_ATTR_PACKET_TYPE) !=
-	 PACKETBUF_ATTR_PACKET_TYPE_ACK &&
-	 is_streaming == 0) {
-	/* Do not wait if we are sending an ACK, because then the
-	   receiver will already be awake. */
-	while(RTIMER_CLOCK_LT(RTIMER_NOW(), expected));
-      }
-#else /* WITH_ACK_OPTIMIZATION */
-      /* Wait until the receiver is expected to be awake */
-      while(RTIMER_CLOCK_LT(RTIMER_NOW(), expected));
-#endif /* WITH_ACK_OPTIMIZATION */
-    }
-  }
-#endif /* WITH_ENCOUNTER_OPTIMIZATION */
 
   /* By setting we_are_sending to one, we ensure that the rtimer
      powercycle interrupt do not interfere with us sending the packet. */
@@ -1044,12 +1034,17 @@ send_packet(void)
 #endif
 
 	  /* Turn on the radio to listen for the strobe ACK. */
-#if DUAL_RADIO
-  dual_radio_on(target);
+#if COOJA
+	if (!((is_broadcast && was_short == 1) || recv_addr.u8[1] == SERVER_NODE)) {
 #else
-  on();
+	if (!((is_broadcast && was_short == 1) || recv_addr.u8[7] == SERVER_NODE)) {
 #endif
-
+#if DUAL_RADIO
+		dual_radio_on(LONG_RADIO);
+#else
+		on();
+#endif
+	}
   collisions = 0;
   if(!is_already_streaming) {
 	  
@@ -1062,7 +1057,7 @@ send_packet(void)
 	  t = RTIMER_NOW();
 		
 		for(strobes = 0, collisions = 0;
-			  got_strobe == 0 && collisions == 0 &&
+			  got_strobe != 1 && collisions == 0 &&
 #if DUAL_RADIO
 					  RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + strobe_time);
 #else
@@ -1073,8 +1068,22 @@ send_packet(void)
 			watchdog_periodic();
 #endif
 			/* for debug */
+#if DUAL_RADIO
+#if LSA_MAC
+#if COOJA
+			if ((is_broadcast && was_short == 1) || recv_addr.u8[1] == SERVER_NODE)
+#else
+			if ((is_broadcast && was_short == 1) || recv_addr.u8[7] == SERVER_NODE)
+#endif
+			{
+				got_strobe = 1;
+				break;
+			}
+#endif /* LSA_MAC */
+#endif
+
 				/* Strobe wait start time fixed */
-			while(got_strobe == 0 &&
+			while(got_strobe != 1 &&
 					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time)) {
 								rtimer_clock_t now = RTIMER_NOW();
 				/* See if we got an ACK */
@@ -1089,33 +1098,82 @@ send_packet(void)
 						is_strobe = hdr->type == TYPE_STROBE;
 						if(is_dispatch && is_strobe) {
 #if DUAL_RADIO
-							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-									&linkaddr_node_addr) ||
-									linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-											&long_linkaddr_node_addr)) 
+
+							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_SENDER),
+									&recv_addr) ||
+									linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_SENDER),
+											&recv_addr_2) ||
+											is_broadcast)// ||
+/*									linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_SENDER),
+											&long_linkaddr_node_addr)) */
 #else
 								if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
 										&linkaddr_node_addr)) 
 #endif
 								{
+//									  printf("here %d\n",packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1]);
 									/* We got an ACK from the receiver, so we can immediately send
 		   the packet. */
-									PRINTF("got strobe\n");
-									got_strobe = 1;
-									encounter_time = now;
+									if(is_broadcast) {
+										PRINTF("got strobe but broadcast\n");
+										got_strobe = 2;
+										break;
+									}
+									else {
+										PRINTF("got strobe\n");
+										got_strobe = 1;
+										break;
+									}
+//									encounter_time = now;
 								} else {
-									PRINTDEBUG("rimac: strobe ack for someone else\n");
+									PRINTDEBUG("rimac: strobe for someone else\n");
 								}
 							} else /*if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE)*/ {
-								PRINTDEBUG("rimac: strobe from someone else\n");
+								PRINTDEBUG("rimac: not strobe\n");
 							}
 						} else {
-							PRINTF("rimac: send failed to parse %u\n", len);
+							PRINTF("rimac: send failed to parse send_packet %u\n", len);
 						}
 					}
 				}
 				t = RTIMER_NOW();
-			}
+
+#if COOJA
+	if (!((is_broadcast && was_short == 1) || recv_addr.u8[1] == SERVER_NODE) && got_strobe != 0)
+#else
+	if (!((is_broadcast && was_short == 1) || recv_addr.u8[7] == SERVER_NODE) && got_strobe != 0)
+#endif
+	{
+//		printf("got_strobe %d\n",got_strobe);
+		if(got_strobe == 2) {
+			got_strobe = 0;
+		}
+//	  printf("sender %d\n",packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1]);
+	  linkaddr_copy(&temp_addr,packetbuf_addr(PACKETBUF_ADDR_SENDER));
+	  packetbuf_clear();
+	  packetbuf_set_addr(PACKETBUF_ADDR_SENDER,&long_linkaddr_node_addr);
+	  packetbuf_set_addr(PACKETBUF_ADDR_RECEIVER,&temp_addr);
+
+	  len = NETSTACK_FRAMER.create();
+	  ack_len = len + sizeof(struct rimac_hdr);
+	  if(len < 0 || ack_len > (int)sizeof(preamble_ack)) {
+		  PRINTF("rimac: send failed, too large header\n");
+		  return MAC_TX_ERR_FATAL;
+	  }
+	  memcpy(preamble_ack, packetbuf_hdrptr(), len);
+	  preamble_ack[len] = DISPATCH | (++strobes << 2);
+	  if(was_short) {
+		  preamble_ack[len + 1] = TYPE_STROBE_SHORT_ACK;
+	  }
+	  else if(is_broadcast){
+		  preamble_ack[len + 1] = TYPE_STROBE_LONG_BROADCAST_ACK;
+	  }
+	  else {
+		  preamble_ack[len + 1] = TYPE_STROBE_LONG_ACK;
+	  }
+	  NETSTACK_RADIO.send(preamble_ack, ack_len);
+  }
+		}
 	  }
 
 #if DUAL_RADIO
@@ -1125,6 +1183,7 @@ send_packet(void)
 #endif
 
 	/* Switch the radio back to the original one */
+/*
 #if DUAL_RADIO
 #if LSA_MAC
 #if LSA_R
@@ -1142,51 +1201,23 @@ send_packet(void)
 #endif
 #endif
 #endif
+*/
 
-	/*
-	 *got_strobe=1; // WHAT IS THIS??????????????????????????
-	 */
   /* restore the packet to send */
   queuebuf_to_packetbuf(packet);
   queuebuf_free(packet);
 
+  if(was_short) {
+	  target = SHORT_RADIO;
+	  dual_radio_switch(SHORT_RADIO);
+  }
+  else {
+	  target = LONG_RADIO;
+	  dual_radio_switch(LONG_RADIO);
+  }
+
   /* Send the data packet. */
   if((is_broadcast || got_strobe || is_streaming) && collisions == 0) {
-
-#if RPL_ENERGY_MODE
-//	     Relaying Tx energy consumption for Data packet JJH
-	  original_datalen = packetbuf_totlen();
-	  original_dataptr = packetbuf_hdrptr();
-	  if(original_dataptr[original_datalen-1]=='X')
-	  {
-//	    	 For each data relay, energy reduction 1 for short 2 for long
-	  	if(remaining_energy >1){
-#if DUAL_RADIO
-	    	if(radio_received_is_longrange()==LONG_RADIO)
-	    	{
-	    		if(remaining_energy-2 < 1)
-	    			remaining_energy=1;
-	    		else
-	    			remaining_energy-=2;
-				}	else {
-	    		remaining_energy--;
-				}
-#else
-				remaining_energy--;
-#endif
-			}
-			PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
-	   	if(remaining_energy == 1) { // A node dies first 
-	   		PRINTF("ENERGY DEPLETION\n");
-			}
-		}
-#endif
-#if TIMING
-		 mark_time=RTIMER_NOW();
-//		printf("rimac: send data here\n");
-    NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
-		printf("DATA TIME is %d, DATA LEN is %d\n", (RTIMER_NOW() - mark_time)*10000/RTIMER_ARCH_SECOND, packetbuf_totlen());
-#else
 /*		if(is_broadcast && was_short == 1) {
 			printf("now2 %d\n",clock_time());
 		}
@@ -1194,8 +1225,7 @@ send_packet(void)
 		{
 			printf("now %d\n",clock_time());
 		}*/
-    NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
-#endif
+	  NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
 	
 #if DATA_ACK
 		if(!is_broadcast)
@@ -1290,6 +1320,7 @@ send_packet(void)
   we_are_sending = 0;
 
   LEDS_OFF(LEDS_BLUE);
+  dual_radio_off(BOTH_RADIO);
 
   if(collisions == 0) {
 #if DATA_ACK
@@ -1338,7 +1369,8 @@ qsend_list(mac_callback_t sent, void *ptr, struct rdc_buf_list *buf_list)
 static void
 input_packet(void)
 {
-  struct rimac_hdr *hdr;
+	interference = 1;
+	struct rimac_hdr *hdr;
 	// JJH
 #if DUAL_RADIO
   int target = SHORT_RADIO;
@@ -1356,7 +1388,7 @@ input_packet(void)
 
   if(NETSTACK_FRAMER.parse() >= 0) {
     hdr = packetbuf_dataptr();
-
+    char dispatch_ext = hdr->dispatch << 6;
 //	PRINTF("why here? %d %x\n",
 //			hdr->dispatch,hdr->type);
 
@@ -1364,20 +1396,34 @@ input_packet(void)
     original_datalen = packetbuf_totlen();
     original_dataptr = packetbuf_dataptr();
 #endif
+/*
 #if STROBE_CNT_MODE
     char dispatch_ext = hdr->dispatch << 6;
 //    printf("packet input dispatch %d\n",dispatch_ext);
-#if DATA_ACK
-    if(dispatch_ext != DISPATCH
-    		|| (hdr->type != TYPE_STROBE_ACK && hdr->type != TYPE_STROBE && hdr->type != TYPE_ANNOUNCEMENT && hdr->type != TYPE_DATA_ACK))
+*/
+//#if DATA_ACK
+//    if(dispatch_ext != DISPATCH
+//    		|| (hdr->type != TYPE_STROBE_ACK && hdr->type != TYPE_STROBE && hdr->type != TYPE_ANNOUNCEMENT && hdr->type != TYPE_DATA_ACK))
+/*
 #else
     if(dispatch_ext != DISPATCH
        		|| (hdr->type != TYPE_STROBE_ACK && hdr->type != TYPE_STROBE && hdr->type != TYPE_ANNOUNCEMENT))
+*/
+
+//#endif
+//#else
+//    if(hdr->dispatch != DISPATCH)
+#if DATA_ACK
+    if(dispatch_ext != DISPATCH
+    		|| (hdr->type != TYPE_STROBE && hdr->type != TYPE_STROBE_SHORT_ACK && hdr->type != TYPE_STROBE_LONG_ACK
+    				&& hdr->type != TYPE_STROBE_LONG_BROADCAST_ACK && hdr->type != TYPE_DATA_ACK))
+#else
+    if(dispatch_ext != DISPATCH
+       		|| (hdr->type != TYPE_STROBE && hdr->type != TYPE_STROBE_SHORT_ACK && hdr->type != TYPE_STROBE_LONG_ACK
+       				&& hdr->type != TYPE_STROBE_LONG_BROADCAST_ACK))
 
 #endif
-#else
-    if(hdr->dispatch != DISPATCH) 
-#endif
+//#endif
 		{		// The packet is for data
       someone_is_sending = 0;
 #if DUAL_RADIO
@@ -1400,13 +1446,15 @@ input_packet(void)
 #endif
 				{
 
+
 #if DUAL_RADIO
 #if LSA_MAC
-				/* JOONKI
-				 * waiting for incoming short broadcast */
+//				 JOONKI
+//				 waiting for incoming short broadcast
 				if (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER), &linkaddr_null) && 
 						radio_received_is_longrange()==LONG_RADIO){
 #ifdef	COOJA
+//					printf("long broadcast\n");
 					dual_radio_off(LONG_RADIO);
 					dual_radio_on(SHORT_RADIO);
 					waiting_for_packet = 1;
@@ -1425,14 +1473,15 @@ input_packet(void)
 					dual_radio_off(BOTH_RADIO);
 					waiting_for_packet = 0;
 				}
-#else		/* LSA_MAC */
+#else // LSA_MAC
 				dual_radio_off(BOTH_RADIO);
 				waiting_for_packet = 0;
-#endif /* LSA_MAC */
+#endif // LSA_MAC
 #else
     	  off();
     	  waiting_for_packet = 0;
 #endif
+
 
 #if RIMAC_CONF_COMPOWER
 	/* Accumulate the power consumption for the packet reception. */
@@ -1448,7 +1497,7 @@ input_packet(void)
 	compower_clear(&current_packet);
 #endif /* RIMAC_CONF_COMPOWER */
 
-
+//	printf("rx data\n");
 #if RPL_LIFETIME_MAX_MODE2
 	if(!linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER), &linkaddr_null))
 	{
@@ -1521,37 +1570,7 @@ input_packet(void)
 	    	id_array[ip] = recv_id;
 //	    	printf("id: %d count: %d\n",recv_id,id_count[recv_id]);
 	    }
-	}
-//#else
-//#endif
-/*
-	    if(linkaddr_node_addr.u8[1]!=1 && remaining_energy >1){
-#if DUAL_RADIO
-			if(radio_received_is_longrange()==LONG_RADIO)
-			{
-				if(remaining_energy-2 < 1){
-					remaining_energy=1;
-				}	else	{
-					remaining_energy-=2;
-				}
-			}	else	{
-				remaining_energy--;
-			}
-#else
-	remaining_energy--;
-#endif
-		}
-	PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
-		if(remaining_energy == 1) // A node dies
-			PRINTF("ENERGY DEPLETION\n");
-#if DUAL_RADIO
-		PRINTF("DATA from: %d to: %d %c %d\n",
-				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],radio_received_is_longrange()==LONG_RADIO ? 'L' : 'S',remaining_energy);
-#else
-	PRINTF("DATA from: %d to: %d %d\n",
-				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],remaining_energy);
-#endif
-*/
+	 }
 	}
 #endif /* RPL_ENERGY_MODE */
 
@@ -1629,13 +1648,16 @@ input_packet(void)
 
         PRINTDEBUG("rimac: data(%u)\n", packetbuf_datalen());
         NETSTACK_MAC.input();
+        if(!(waiting_for_packet && is_short_waiting)) {
+        	dual_radio_off(BOTH_RADIO);
+        }
         return;
       } else {
         PRINTDEBUG("rimac: data not for us\n");
       }
 
     } else if(hdr->type == TYPE_STROBE) {
-      someone_is_sending = 2;
+ /*     someone_is_sending = 2;
 #if DUAL_RADIO
 				if (radio_received_is_longrange()==LONG_RADIO){
 					dual_radio_switch(LONG_RADIO);
@@ -1662,12 +1684,12 @@ input_packet(void)
 				}
 #endif
 #endif
-	/* This is a strobe packet for us. */
+	 This is a strobe packet for us.
 
-	/* If the sender address is someone else, we should
+	 If the sender address is someone else, we should
 	   acknowledge the strobe and wait for the packet. By using
 	   the same address as both sender and receiver, we flag the
-	   message is a strobe ack. */
+	   message is a strobe ack.
 	hdr->type = TYPE_STROBE_ACK;
 	packetbuf_set_addr(PACKETBUF_ADDR_RECEIVER,
 			   packetbuf_addr(PACKETBUF_ADDR_SENDER));
@@ -1685,8 +1707,8 @@ input_packet(void)
 #endif
 	packetbuf_compact();
 	if(NETSTACK_FRAMER.create() >= 0) {
-	  /* We turn on the radio in anticipation of the incoming
-	     packet. */
+	   We turn on the radio in anticipation of the incoming
+	     packet.
 	  someone_is_sending = 1;
 	  waiting_for_packet = 1;
 
@@ -1714,10 +1736,10 @@ input_packet(void)
 	}
       } else if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
                              &linkaddr_null)) {
-	/* If the receiver address is null, the strobe is sent to
+	 If the receiver address is null, the strobe is sent to
 	   prepare for an incoming broadcast packet. If this is the
 	   case, we turn on the radio and wait for the incoming
-	   broadcast packet. */
+	   broadcast packet.
 //    	  printf("rimac strobe_cnt %d\n",hdr->dispatch >> 2);
     	  waiting_for_packet = 1;
 #if STROBE_CNT_MODE
@@ -1725,29 +1747,30 @@ input_packet(void)
 #if DUAL_RADIO
     	  strobe_target = radio_received_is_longrange();
     	  dual_radio_off(BOTH_RADIO);
-    	  /* Wait based on strobe count, to Rx data */
+    	   Wait based on strobe count, to Rx data
     	  process_start(&strobe_wait, &cnt);
 #else
     	  off();
     	  process_start(&strobe_wait, &cnt);
 #endif
-#endif	/* STROBE_CNT_MODE */
+#endif	 STROBE_CNT_MODE
 
 
       } else {
         PRINTDEBUG("rimac: strobe not for us\n");
-      }
+      }*/
 
       /* We are done processing the strobe and we therefore return
 	 to the caller. */
-      return;
+//        PRINTDEBUG("rimac: stray strobe\n");
+        return;
 #if RIMAC_CONF_ANNOUNCEMENTS
     } else if(hdr->type == TYPE_ANNOUNCEMENT) {
       packetbuf_hdrreduce(sizeof(struct rimac_hdr));
       parse_announcements(packetbuf_addr(PACKETBUF_ADDR_SENDER));
 #endif /* RIMAC_CONF_ANNOUNCEMENTS */
-    } else if(hdr->type == TYPE_STROBE_ACK) {
-      PRINTDEBUG("rimac: stray strobe ack\n");
+    } else if(hdr->type == TYPE_STROBE_SHORT_ACK || hdr->type == TYPE_STROBE_LONG_ACK) {
+//      PRINTDEBUG("rimac: stray strobe ack\n");
     }
 #if DATA_ACK
     else if(hdr->type == TYPE_DATA_ACK) {

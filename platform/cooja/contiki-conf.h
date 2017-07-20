@@ -106,8 +106,9 @@
 
 /* Network setup for Rime */
 #define NETSTACK_CONF_NETWORK rime_driver
-#define NETSTACK_CONF_MAC csma_driver
-#define NETSTACK_CONF_RDC nullrdc_driver
+#define NETSTACK_CONF_MAC nullmac_driver
+//#define NETSTACK_CONF_RDC nullrdc_driver
+#define NETSTACK_CONF_RDC rimac_driver
 #define NETSTACK_CONF_RADIO cooja_radio_driver
 /*#define NETSTACK_CONF_FRAMER framer_nullmac*/
 
@@ -148,7 +149,7 @@
 #define UIP_CONF_MAX_ROUTES   300
 #endif /* UIP_CONF_MAX_ROUTES */
 
-#define TCPIP_CONF_ANNOTATE_TRANSMISSIONS 0
+#define TCPIP_CONF_ANNOTATE_TRANSMISSIONS 1
 
 #ifndef UIP_CONF_ND6_SEND_RA
 #define UIP_CONF_ND6_SEND_RA		0
