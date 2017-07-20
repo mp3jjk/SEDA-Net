@@ -44,7 +44,7 @@
 #include "dev/watchdog.h"
 #include "net/netstack.h"
 #include "lib/random.h"
-#include "net/mac/cxmac/cxmac.h"
+#include "net/mac/rimac/rimac.h"
 #include "net/rime/rime.h"
 #include "net/rime/timesynch.h"
 #include "sys/compower.h"
@@ -110,7 +110,7 @@ struct announcement_msg {
 #define TYPE_DATA_ACK   0x14
 #endif
 
-struct cxmac_hdr {
+struct rimac_hdr {
   uint8_t dispatch;
   uint8_t type;
 /*
@@ -124,15 +124,15 @@ struct cxmac_hdr {
 
 #define MAX_STROBE_SIZE 50
 
-#ifdef CXMAC_CONF_ON_TIME
-#define DEFAULT_ON_TIME (CXMAC_CONF_ON_TIME)
+#ifdef RIMAC_CONF_ON_TIME
+#define DEFAULT_ON_TIME (RIMAC_CONF_ON_TIME)
 #else
 #define DEFAULT_ON_TIME (RTIMER_ARCH_SECOND / 80)
 // #define DEFAULT_ON_TIME (RTIMER_ARCH_SECOND / 58)
 #endif
 
-#ifdef CXMAC_CONF_OFF_TIME
-#define DEFAULT_OFF_TIME (CXMAC_CONF_OFF_TIME)
+#ifdef RIMAC_CONF_OFF_TIME
+#define DEFAULT_OFF_TIME (RIMAC_CONF_OFF_TIME)
 #else
 // #define DEFAULT_OFF_TIME (RTIMER_ARCH_SECOND / NETSTACK_RDC_CHANNEL_CHECK_RATE - DEFAULT_ON_TIME)
 #define DEFAULT_OFF_TIME (RTIMER_ARCH_SECOND / NETSTACK_RDC_CHANNEL_CHECK_RATE - DEFAULT_ON_TIME)
@@ -166,15 +166,15 @@ struct cxmac_hdr {
 
 #define MAX_STROBE_SIZE 50
 
-#ifdef CXMAC_CONF_ON_TIME
-#define DEFAULT_ON_TIME (CXMAC_CONF_ON_TIME)
+#ifdef RIMAC_CONF_ON_TIME
+#define DEFAULT_ON_TIME (RIMAC_CONF_ON_TIME)
 #else
 //#define DEFAULT_ON_TIME (RTIMER_ARCH_SECOND / 80)
 #define DEFAULT_ON_TIME (RTIMER_ARCH_SECOND / 56)
 #endif
 
-#ifdef CXMAC_CONF_OFF_TIME
-#define DEFAULT_OFF_TIME (CXMAC_CONF_OFF_TIME)
+#ifdef RIMAC_CONF_OFF_TIME
+#define DEFAULT_OFF_TIME (RIMAC_CONF_OFF_TIME)
 #else
 // #define DEFAULT_OFF_TIME (RTIMER_ARCH_SECOND / NETSTACK_RDC_CHANNEL_CHECK_RATE - DEFAULT_ON_TIME)
 #define DEFAULT_OFF_TIME (RTIMER_ARCH_SECOND / NETSTACK_RDC_CHANNEL_CHECK_RATE - DEFAULT_ON_TIME)
@@ -204,7 +204,7 @@ struct cxmac_hdr {
 #define DEFAULT_STROBE_WAIT_TIME (2 * DEFAULT_ON_TIME / 3)
 #endif /* COOJA */
 
-struct cxmac_config cxmac_config = {
+struct rimac_config rimac_config = {
   DEFAULT_ON_TIME,
   DEFAULT_OFF_TIME,
 /*  Original setting */
@@ -220,7 +220,7 @@ static struct pt pt;
 PROCESS(strobe_wait, "strobe wait");
 static volatile unsigned char strobe_target;
 
-static volatile uint8_t cxmac_is_on = 0;
+static volatile uint8_t rimac_is_on = 0;
 
 static volatile unsigned char waiting_for_packet = 0;
 static volatile unsigned char someone_is_sending = 0;
@@ -265,22 +265,22 @@ static volatile unsigned char radio_is_on = 0;
 #endif /* ZOLERTIA_Z1 */
 #endif /* DUAL_RADIO */
 #include "sys/log_message.h"
-// extern int rdc_collision_count, rdc_transmission_count;
+// extern int rimac_collision_count, rimac_transmission_count;
 
-#if CXMAC_CONF_ANNOUNCEMENTS
+#if RIMAC_CONF_ANNOUNCEMENTS
 /* Timers for keeping track of when to send announcements. */
 static struct ctimer announcement_cycle_ctimer, announcement_ctimer;
 
 static int announcement_radio_txpower;
-#endif /* CXMAC_CONF_ANNOUNCEMENTS */
+#endif /* RIMAC_CONF_ANNOUNCEMENTS */
 
 /* Flag that is used to keep track of whether or not we are listening
    for announcements from neighbors. */
 static uint8_t is_listening;
 
-#if CXMAC_CONF_COMPOWER
+#if RIMAC_CONF_COMPOWER
 static struct compower_activity current_packet;
-#endif /* CXMAC_CONF_COMPOWER */
+#endif /* RIMAC_CONF_COMPOWER */
 
 #if WITH_ENCOUNTER_OPTIMIZATION
 
@@ -317,7 +317,7 @@ static void dual_radio_off(char target);
 static void
 on(void)
 {
-  if(cxmac_is_on && radio_is_on == 0) {
+  if(rimac_is_on && radio_is_on == 0) {
     radio_is_on = 1;
 #if DUAL_RADIO
 		dual_radio_turn_on(BOTH_RADIO);
@@ -331,7 +331,7 @@ on(void)
 static void
 off(void)
 {
-  if(cxmac_is_on && radio_is_on != 0 && is_listening == 0 &&
+  if(rimac_is_on && radio_is_on != 0 && is_listening == 0 &&
      is_streaming == 0) {
     radio_is_on = 0;
 #if DUAL_RADIO
@@ -351,9 +351,9 @@ powercycle_dual_turn_radio_on(char target)
      waiting_for_packet == 0) {
 	  dual_radio_on(target);
   }
-#if CXMAC_CONF_COMPOWER
+#if RIMAC_CONF_COMPOWER
   compower_accumulate(&compower_idle_activity);
-#endif /* CXMAC_CONF_COMPOWER */
+#endif /* RIMAC_CONF_COMPOWER */
 }
 static void
 powercycle_dual_turn_radio_off(char target)
@@ -371,9 +371,9 @@ powercycle_turn_radio_off(void)
      waiting_for_packet == 0) {
     off();
   }
-#if CXMAC_CONF_COMPOWER
+#if RIMAC_CONF_COMPOWER
   compower_accumulate(&compower_idle_activity);
-#endif /* CXMAC_CONF_COMPOWER */
+#endif /* RIMAC_CONF_COMPOWER */
 }
 static void
 powercycle_turn_radio_on(void)
@@ -393,8 +393,8 @@ PROCESS_THREAD(strobe_wait, ev, data)
 	if(!is_short_waiting)
 	{
 		uint8_t *cnt = (uint8_t *)data;
-		t = (cxmac_config.strobe_time) - (*cnt + 1)*(cxmac_config.on_time + 1);
-		t >= cxmac_config.strobe_time ? t = 1 : t;
+		t = (rimac_config.strobe_time) - (*cnt + 1)*(rimac_config.on_time + 1);
+		t >= rimac_config.strobe_time ? t = 1 : t;
 #if DUAL_RADIO
 		dual_radio_off(BOTH_RADIO);
 #else
@@ -460,7 +460,7 @@ static void
 dual_radio_on(char target)
 {
 //	printf("dual_radio_on target %d %d\n",target, radio_is_on);
-	if(cxmac_is_on && radio_is_on == 0) {
+	if(rimac_is_on && radio_is_on == 0) {
 		radio_is_on = 1;
 		dual_radio_turn_on(target);
 		if(target == LONG_RADIO)
@@ -482,7 +482,7 @@ static void
 dual_radio_off(char target)
 {
 //	printf("dual_radio_off target %d %d\n",target, radio_is_on);
-	if(cxmac_is_on && radio_is_on != 0 && is_listening == 0 &&
+	if(rimac_is_on && radio_is_on != 0 && is_listening == 0 &&
 			is_streaming == 0) {
 		radio_is_on = 0;
 		dual_radio_turn_off(target);
@@ -511,7 +511,7 @@ static void
 cschedule_powercycle(clock_time_t time)
 {
 
-  if(cxmac_is_on) {
+  if(rimac_is_on) {
     if(time == 0) {
       time = 1;
     }
@@ -603,7 +603,7 @@ cpowercycle(void *ptr)
     // printf("cpowerycle on\n");
     CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
     PT_YIELD(&pt);
-    if(cxmac_config.off_time > 0) {
+    if(rimac_config.off_time > 0) {
 #if DUAL_RADIO
       powercycle_dual_turn_radio_off(BOTH_RADIO);
 #else
@@ -633,7 +633,7 @@ cpowercycle(void *ptr)
   PT_END(&pt);
 }
 /*---------------------------------------------------------------------------*/
-#if CXMAC_CONF_ANNOUNCEMENTS
+#if RIMAC_CONF_ANNOUNCEMENTS
 static int
 parse_announcements(const linkaddr_t *from)
 {
@@ -691,7 +691,7 @@ format_announcement(char *hdr)
     return 0;
   }
 }
-#endif /* CXMAC_CONF_ANNOUNCEMENTS */
+#endif /* RIMAC_CONF_ANNOUNCEMENTS */
 /*---------------------------------------------------------------------------*/
 #if WITH_ENCOUNTER_OPTIMIZATION
 static void
@@ -727,7 +727,7 @@ send_packet(void)
   rtimer_clock_t t;
   rtimer_clock_t encounter_time = 0;
   int strobes;
-  struct cxmac_hdr *hdr;
+  struct rimac_hdr *hdr;
   int got_strobe_ack = 0;
 #if DATA_ACK
   uint8_t got_data_ack = 0;
@@ -778,11 +778,11 @@ send_packet(void)
 #if DUAL_RADIO
 	if(sending_in_LR() == LONG_RADIO){
 		target = LONG_RADIO;
-		strobe_time = cxmac_config.strobe_time * DUAL_DUTY_RATIO;
+		strobe_time = rimac_config.strobe_time * DUAL_DUTY_RATIO;
 	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
 	}	else	{
 		target = SHORT_RADIO;
-		strobe_time = cxmac_config.strobe_time;
+		strobe_time = rimac_config.strobe_time;
 	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 	}
 #else
@@ -790,10 +790,10 @@ send_packet(void)
 #endif
   if(packetbuf_holds_broadcast()) {
     is_broadcast = 1;
-    PRINTDEBUG("cxmac: send broadcast\n");
+    PRINTDEBUG("rimac: send broadcast\n");
   } else {
 #if NETSTACK_CONF_WITH_IPV6
-    PRINTDEBUG("cxmac: send unicast to %02x%02x:%02x%02x:%02x%02x:%02x%02x\n",
+    PRINTDEBUG("rimac: send unicast to %02x%02x:%02x%02x:%02x%02x:%02x%02x\n",
            packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[0],
            packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[1],
            packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[2],
@@ -803,16 +803,16 @@ send_packet(void)
            packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[6],
            packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[7]);
 #else
-    PRINTDEBUG("cxmac: send unicast to %u.%u\n",
+    PRINTDEBUG("rimac: send unicast to %u.%u\n",
            packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[0],
            packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[1]);
 #endif /* NETSTACK_CONF_WITH_IPV6 */
   }
   len = NETSTACK_FRAMER.create();
-  strobe_len = len + sizeof(struct cxmac_hdr);
+  strobe_len = len + sizeof(struct rimac_hdr);
   if(len < 0 || strobe_len > (int)sizeof(strobe)) {
     /* Failed to send */
-   PRINTF("cxmac: send failed, too large header\n");
+   PRINTF("rimac: send failed, too large header\n");
     return MAC_TX_ERR_FATAL;
   }
   memcpy(strobe, packetbuf_hdrptr(), len);
@@ -834,7 +834,7 @@ send_packet(void)
   packet = queuebuf_new_from_packetbuf();
   if(packet == NULL) {
     /* No buffer available */
-    PRINTF("cxmac: send failed, no queue buffer available (of %u)\n",
+    PRINTF("rimac: send failed, no queue buffer available (of %u)\n",
            QUEUEBUF_CONF_NUM);
     return MAC_TX_ERR;
   }
@@ -963,7 +963,7 @@ send_packet(void)
 #if DUAL_RADIO
 					  RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + strobe_time);
 #else
-					  RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + cxmac_config.strobe_time);
+					  RTIMER_CLOCK_LT(RTIMER_NOW(), t0 + rimac_config.strobe_time);
 #endif
 			  strobes++) {
 #if ZOUL_MOTE
@@ -987,8 +987,8 @@ send_packet(void)
 				/* Strobe wait start time fixed */
 //				t=RTIMER_NOW();
 			while(got_strobe_ack == 0 &&
-					RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time)) {
-				// printf("cxmac_config.strobe_wait_time: %d\n", cxmac_config.strobe_wait_time*10000/RTIMER_ARCH_SECOND);
+					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time)) {
+				// printf("rimac_config.strobe_wait_time: %d\n", rimac_config.strobe_wait_time*10000/RTIMER_ARCH_SECOND);
 								rtimer_clock_t now = RTIMER_NOW();
 				/* See if we got an ACK */
 				packetbuf_clear();
@@ -1024,14 +1024,14 @@ send_packet(void)
 									got_strobe_ack = 1;
 									encounter_time = now;
 								} else {
-									PRINTDEBUG("cxmac: strobe ack for someone else\n");
+									PRINTDEBUG("rimac: strobe ack for someone else\n");
 								}
 							} else /*if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE)*/ {
-								PRINTDEBUG("cxmac: strobe from someone else\n");
+								PRINTDEBUG("rimac: strobe from someone else\n");
 								collisions++;
 							}
 						} else {
-							PRINTF("cxmac: send failed to parse %u\n", len);
+							PRINTF("rimac: send failed to parse %u\n", len);
 						}
 					}
 				}
@@ -1052,7 +1052,7 @@ send_packet(void)
 #endif
 #if STROBE_CNT_MODE
 						strobe[cnt_pos] += (1 << 2);
-						//	  printf("cxmac tx strobe_cnt %d t: %d\n",strobe_cnt,RTIMER_NOW());
+						//	  printf("rimac tx strobe_cnt %d t: %d\n",strobe_cnt,RTIMER_NOW());
 #endif	/* STROBE_CNT_MODE */
 #else		/* WITH_STROBE_BROADCAST */
 
@@ -1192,7 +1192,7 @@ send_packet(void)
 #endif
 #if TIMING
 		 mark_time=RTIMER_NOW();
-//		printf("cxmac: send data here\n");
+//		printf("rimac: send data here\n");
     NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
 		printf("DATA TIME is %d, DATA LEN is %d\n", (RTIMER_NOW() - mark_time)*10000/RTIMER_ARCH_SECOND, packetbuf_totlen());
 #else
@@ -1218,7 +1218,7 @@ send_packet(void)
 #endif
 			t = RTIMER_NOW();
 			while(got_data_ack == 0 &&
-					RTIMER_CLOCK_LT(RTIMER_NOW(), t + cxmac_config.strobe_wait_time * 2)) {
+					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time * 2)) {
 				 // printf("wait for data ack %d\n",got_data_ack);
 				packetbuf_clear();
 				len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
@@ -1240,13 +1240,13 @@ send_packet(void)
 #endif
 								{
 									got_data_ack = 1;
-									//PRINTDEBUG("cxmac: got data ack\n");
+									//PRINTDEBUG("rimac: got data ack\n");
 								} else {
-									PRINTDEBUG("cxmac: data ack for someone else\n");
+									PRINTDEBUG("rimac: data ack for someone else\n");
 								}
 						}
 					} else {
-						PRINTF("cxmac: send failed to parse %u\n", len);
+						PRINTF("rimac: send failed to parse %u\n", len);
 					}
 				}
 			}
@@ -1272,16 +1272,16 @@ send_packet(void)
   watchdog_start();
 #endif
 	/* For debug */
-  PRINTF("cxmac: send (strobes=%u,len=%u,%s), done\n", strobes,
+  PRINTF("rimac: send (strobes=%u,len=%u,%s), done\n", strobes,
 	 packetbuf_totlen(), got_strobe_ack ? "ack" : "no ack");
 #if DATA_ACK
   if(!is_broadcast && got_strobe_ack)
   {
-	  PRINTF("cxmac: recv %s\n",got_data_ack ? "data_ack" : "data_noack");
+	  PRINTF("rimac: recv %s\n",got_data_ack ? "data_ack" : "data_noack");
   }
 
 #endif
-#if CXMAC_CONF_COMPOWER
+#if RIMAC_CONF_COMPOWER
   /* Accumulate the power consumption for the packet transmission. */
   compower_accumulate(&current_packet);
 
@@ -1294,7 +1294,7 @@ send_packet(void)
   /* Clear the accumulated power consumption so that it is ready for
      the next packet. */
   compower_clear(&current_packet);
-#endif /* CXMAC_CONF_COMPOWER */
+#endif /* RIMAC_CONF_COMPOWER */
 
   we_are_sending = 0;
 
@@ -1302,7 +1302,7 @@ send_packet(void)
 
   if(collisions == 0) {
 #if DATA_ACK
-//	  printf("cxmac status %d %d %d\n",is_broadcast,got_strobe_ack,got_data_ack);
+//	  printf("rimac status %d %d %d\n",is_broadcast,got_strobe_ack,got_data_ack);
     if(!is_broadcast && (!got_strobe_ack || !got_data_ack)) 
 #else
     if(!is_broadcast && !got_strobe_ack) 
@@ -1323,12 +1323,12 @@ qsend_packet(mac_callback_t sent, void *ptr)
 {
   int ret;
   if(someone_is_sending) {
-    PRINTF("cxmac: should queue packet, now just dropping %d %d %d %d.\n",
+    PRINTF("rimac: should queue packet, now just dropping %d %d %d %d.\n",
 	   waiting_for_packet, someone_is_sending, we_are_sending, radio_is_on);
     RIMESTATS_ADD(sendingdrop);
     ret = MAC_TX_COLLISION;
   } else {
-    PRINTF("cxmac: send immediately.\n");
+    PRINTF("rimac: send immediately.\n");
     ret = send_packet();
   }
   mac_call_sent_callback(sent, ptr, ret, 1);
@@ -1347,7 +1347,7 @@ qsend_list(mac_callback_t sent, void *ptr, struct rdc_buf_list *buf_list)
 static void
 input_packet(void)
 {
-  struct cxmac_hdr *hdr;
+  struct rimac_hdr *hdr;
 	// JJH
 #if DUAL_RADIO
   int target = SHORT_RADIO;
@@ -1443,7 +1443,7 @@ input_packet(void)
     	  waiting_for_packet = 0;
 #endif
 
-#if CXMAC_CONF_COMPOWER
+#if RIMAC_CONF_COMPOWER
 	/* Accumulate the power consumption for the packet reception. */
 	compower_accumulate(&current_packet);
 	/* Convert the accumulated power consumption for the received
@@ -1455,7 +1455,7 @@ input_packet(void)
 	/* Clear the accumulated power consumption so that it is ready
 	   for the next packet. */
 	compower_clear(&current_packet);
-#endif /* CXMAC_CONF_COMPOWER */
+#endif /* RIMAC_CONF_COMPOWER */
 
 
 #if RPL_LIFETIME_MAX_MODE2
@@ -1497,7 +1497,7 @@ input_packet(void)
 #endif
 	    if(id_array[ip] >= recv_id)
 	    {
-//	    	printf("cxmac: duplicated data %d\n",recv_id);
+//	    	printf("rimac: duplicated data %d\n",recv_id);
 	    }
 	    else
 	    {
@@ -1567,7 +1567,7 @@ input_packet(void)
 #if DATA_ACK
 	if(!linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),&linkaddr_null)) // Only when it is not broadcast data
 	{
-		// struct cxmac_hdr *hdr;
+		// struct rimac_hdr *hdr;
 		uint8_t ack[MAX_STROBE_SIZE];
 		uint8_t ack_len, len;
 		linkaddr_t temp;
@@ -1609,10 +1609,10 @@ input_packet(void)
 		len = NETSTACK_FRAMER.create();
 		if(len < 0)
 		{
-			PRINTF("cxmac: failed to send data ack\n");
+			PRINTF("rimac: failed to send data ack\n");
 			return;
 		}
-		ack_len = len + sizeof(struct cxmac_hdr);
+		ack_len = len + sizeof(struct rimac_hdr);
 		memcpy(ack,packetbuf_hdrptr(),len);
 		ack[len] = DISPATCH;
 		ack[len + 1] = TYPE_DATA_ACK;
@@ -1622,25 +1622,25 @@ input_packet(void)
 		
 		/* rtimer_clock_t wait;
 		wait=RTIMER_NOW();
-		while(RTIMER_CLOCK_LT(RTIMER_NOW(), wait + cxmac_config.strobe_wait_time)); */
+		while(RTIMER_CLOCK_LT(RTIMER_NOW(), wait + rimac_config.strobe_wait_time)); */
 		NETSTACK_RADIO.send(ack, ack_len);
 		
 		// is_short_waiting = 1;
 		// process_start(&strobe_wait, NULL);
 	  // NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
 		// LOG_MESSAGE("SEDNING DATA ACK!!!!!! %d\n",NETSTACK_RADIO.send(ack, ack_len));
-		// printf("cxmac: send data ack %u\n", ack_len);
-		// printf("cxmac: send data ack %u\n", packetbuf_totlen());
+		// printf("rimac: send data ack %u\n", ack_len);
+		// printf("rimac: send data ack %u\n", packetbuf_totlen());
 	}
 	queuebuf_to_packetbuf(packet);
 	queuebuf_free(packet);
 #endif
 
-        PRINTDEBUG("cxmac: data(%u)\n", packetbuf_datalen());
+        PRINTDEBUG("rimac: data(%u)\n", packetbuf_datalen());
         NETSTACK_MAC.input();
         return;
       } else {
-        PRINTDEBUG("cxmac: data not for us\n");
+        PRINTDEBUG("rimac: data not for us\n");
       }
 
     } else if(hdr->type == TYPE_STROBE) {
@@ -1717,9 +1717,9 @@ input_packet(void)
 #endif
 	  // LOG_MESSAGE("SENDING STROBE ACK %d\n",NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen()));
 	  NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
-	 // printf("cxmac: send strobe ack %u\n", packetbuf_totlen());
+	 // printf("rimac: send strobe ack %u\n", packetbuf_totlen());
 	} else {
-	  PRINTF("cxmac: failed to send strobe ack\n");
+	  PRINTF("rimac: failed to send strobe ack\n");
 	}
       } else if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
                              &linkaddr_null)) {
@@ -1727,7 +1727,7 @@ input_packet(void)
 	   prepare for an incoming broadcast packet. If this is the
 	   case, we turn on the radio and wait for the incoming
 	   broadcast packet. */
-//    	  printf("cxmac strobe_cnt %d\n",hdr->dispatch >> 2);
+//    	  printf("rimac strobe_cnt %d\n",hdr->dispatch >> 2);
     	  waiting_for_packet = 1;
 #if STROBE_CNT_MODE
     	  uint8_t cnt = hdr->dispatch >> 2;
@@ -1744,39 +1744,39 @@ input_packet(void)
 
 
       } else {
-        PRINTDEBUG("cxmac: strobe not for us\n");
+        PRINTDEBUG("rimac: strobe not for us\n");
       }
 
       /* We are done processing the strobe and we therefore return
 	 to the caller. */
       return;
-#if CXMAC_CONF_ANNOUNCEMENTS
+#if RIMAC_CONF_ANNOUNCEMENTS
     } else if(hdr->type == TYPE_ANNOUNCEMENT) {
-      packetbuf_hdrreduce(sizeof(struct cxmac_hdr));
+      packetbuf_hdrreduce(sizeof(struct rimac_hdr));
       parse_announcements(packetbuf_addr(PACKETBUF_ADDR_SENDER));
-#endif /* CXMAC_CONF_ANNOUNCEMENTS */
+#endif /* RIMAC_CONF_ANNOUNCEMENTS */
     } else if(hdr->type == TYPE_STROBE_ACK) {
-      PRINTDEBUG("cxmac: stray strobe ack\n");
+      PRINTDEBUG("rimac: stray strobe ack\n");
     }
 #if DATA_ACK
     else if(hdr->type == TYPE_DATA_ACK) {
-    	PRINTDEBUG("cxmac: stray data_ack\n");
+    	PRINTDEBUG("rimac: stray data_ack\n");
     }
 #endif
     else {
-      PRINTF("cxmac: unknown type %u (%u)\n", hdr->type,
+      PRINTF("rimac: unknown type %u (%u)\n", hdr->type,
              packetbuf_datalen());
     }
   } else {
-    PRINTF("cxmac: failed to parse (%u)\n", packetbuf_totlen());
+    PRINTF("rimac: failed to parse (%u)\n", packetbuf_totlen());
   }
 }
 /*---------------------------------------------------------------------------*/
-#if CXMAC_CONF_ANNOUNCEMENTS
+#if RIMAC_CONF_ANNOUNCEMENTS
 static void
 send_announcement(void *ptr)
 {
-  struct cxmac_hdr *hdr;
+  struct rimac_hdr *hdr;
   int announcement_len;
 
   /* Set up the probe header. */
@@ -1784,10 +1784,10 @@ send_announcement(void *ptr)
   hdr = packetbuf_dataptr();
 
   announcement_len = format_announcement((char *)hdr +
-					 sizeof(struct cxmac_hdr));
+					 sizeof(struct rimac_hdr));
 
   if(announcement_len > 0) {
-    packetbuf_set_datalen(sizeof(struct cxmac_hdr) + announcement_len);
+    packetbuf_set_datalen(sizeof(struct rimac_hdr) + announcement_len);
     hdr->dispatch = DISPATCH;
     hdr->type = TYPE_ANNOUNCEMENT;
 
@@ -1818,24 +1818,24 @@ listen_callback(int periods)
 {
   is_listening = periods + 1;
 }
-#endif /* CXMAC_CONF_ANNOUNCEMENTS */
+#endif /* RIMAC_CONF_ANNOUNCEMENTS */
 /*---------------------------------------------------------------------------*/
 void
-cxmac_set_announcement_radio_txpower(int txpower)
+rimac_set_announcement_radio_txpower(int txpower)
 {
-#if CXMAC_CONF_ANNOUNCEMENTS
+#if RIMAC_CONF_ANNOUNCEMENTS
   announcement_radio_txpower = txpower;
-#endif /* CXMAC_CONF_ANNOUNCEMENTS */
+#endif /* RIMAC_CONF_ANNOUNCEMENTS */
 }
 /*---------------------------------------------------------------------------*/
 void
-cxmac_init(void)
+rimac_init(void)
 {
 #if TIMING
-	printf("cxmac on_time %d\n",DEFAULT_ON_TIME*10000/RTIMER_ARCH_SECOND);
-	printf("cxmac off_time %d\n",DEFAULT_OFF_TIME*10000/RTIMER_ARCH_SECOND);
-	printf("cxmac strobe_wait_time %d\n",cxmac_config.strobe_wait_time*10000/RTIMER_ARCH_SECOND);
-	printf("cxmac strobe %d\n",cxmac_config.strobe_time*10000/RTIMER_ARCH_SECOND);
+	printf("rimac on_time %d\n",DEFAULT_ON_TIME*10000/RTIMER_ARCH_SECOND);
+	printf("rimac off_time %d\n",DEFAULT_OFF_TIME*10000/RTIMER_ARCH_SECOND);
+	printf("rimac strobe_wait_time %d\n",rimac_config.strobe_wait_time*10000/RTIMER_ARCH_SECOND);
+	printf("rimac strobe %d\n",rimac_config.strobe_time*10000/RTIMER_ARCH_SECOND);
 	printf("------------------------------------------\n");
 #endif
 #if DUAL_RADIO
@@ -1858,21 +1858,21 @@ cxmac_init(void)
   radio_is_on = 0;
   waiting_for_packet = 0;
   PT_INIT(&pt);
-  /*  rtimer_set(&rt, RTIMER_NOW() + cxmac_config.off_time, 1,
+  /*  rtimer_set(&rt, RTIMER_NOW() + rimac_config.off_time, 1,
       (void (*)(struct rtimer *, void *))powercycle, NULL);*/
 
-  cxmac_is_on = 1;
+  rimac_is_on = 1;
 
 #if WITH_ENCOUNTER_OPTIMIZATION
   list_init(encounter_list);
   memb_init(&encounter_memb);
 #endif /* WITH_ENCOUNTER_OPTIMIZATION */
 
-#if CXMAC_CONF_ANNOUNCEMENTS
+#if RIMAC_CONF_ANNOUNCEMENTS
   announcement_register_listen_callback(listen_callback);
   ctimer_set(&announcement_cycle_ctimer, ANNOUNCEMENT_TIME,
 	     cycle_announcement, NULL);
-#endif /* CXMAC_CONF_ANNOUNCEMENTS */
+#endif /* RIMAC_CONF_ANNOUNCEMENTS */
 
   CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME);
 }
@@ -1880,8 +1880,8 @@ cxmac_init(void)
 static int
 turn_on(void)
 {
-  cxmac_is_on = 1;
-  /*  rtimer_set(&rt, RTIMER_NOW() + cxmac_config.off_time, 1,
+  rimac_is_on = 1;
+  /*  rtimer_set(&rt, RTIMER_NOW() + rimac_config.off_time, 1,
       (void (*)(struct rtimer *, void *))powercycle, NULL);*/
   CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME);
   return 1;
@@ -1890,7 +1890,7 @@ turn_on(void)
 static int
 turn_off(int keep_radio_on)
 {
-  cxmac_is_on = 0;
+  rimac_is_on = 0;
 #if DUAL_RADIO
   if(keep_radio_on) {
     return dual_radio_turn_on(BOTH_RADIO);
@@ -1912,10 +1912,10 @@ channel_check_interval(void)
   return (1ul * CLOCK_SECOND * DEFAULT_PERIOD) / RTIMER_ARCH_SECOND;
 }
 /*---------------------------------------------------------------------------*/
-const struct rdc_driver cxmac_driver =
+const struct rdc_driver rimac_driver =
   {
-    "CX-MAC",
-    cxmac_init,
+    "RI-MAC",
+    rimac_init,
     qsend_packet,
     qsend_list,
     input_packet,

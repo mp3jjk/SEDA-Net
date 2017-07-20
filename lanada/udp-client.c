@@ -180,9 +180,9 @@ send_packet(void *ptr)
 		LOG_MESSAGE("[PS] DAO_ACK:%d, DAO_FWD: %d, DAO_ACK_FWD: %d, LSA: %d, Total: %d\n",
 				dao_ack_count, dao_fwd_count,dao_ack_fwd_count, LSA_count, total_count2 );
 		LOG_MESSAGE("[PS] CSMA_Transmission: %d, CXMAC_Transmission: %d, CXMAC_Collision: %d\n", 
-				csma_transmission_count, cxmac_transmission_count, cxmac_collision_count);		
+				csma_transmission_count, rdc_transmission_count, rdc_collision_count);
 		LOG_MESSAGE("[PS] CSMA_Drop: %d, CXMAC_Retransmission: %d\n",
-				csma_drop_count, cxmac_retransmission_count - csma_drop_count);
+				csma_drop_count, rdc_retransmission_count - csma_drop_count);
 		LOG_MESSAGE("[PS] Remaining energy: %d\n", (int) get_residual_energy());
 		rpl_parent_t *p = nbr_table_head(rpl_parents);
 		if (p != NULL) {
@@ -205,7 +205,7 @@ send_packet(void *ptr)
 			LOG_MESSAGE("[LT] DAO_ACK:%d, DAO_FWD: %d, DAO_ACK_FWD: %d, LSA: %d, Total: %d\n",
 					dao_ack_count, dao_fwd_count,dao_ack_fwd_count, LSA_count, total_count2 );
 			LOG_MESSAGE("[LT] CSMA_Transmission: %d, CXMAC_Transmission: %d, CXMAC_Collision: %d\n", 
-					csma_transmission_count, cxmac_transmission_count, cxmac_collision_count);
+					csma_transmission_count, rdc_transmission_count, rdc_collision_count);
 			LOG_MESSAGE("Lifetime of this node ended here!!!\n");
 
 		 	NETSTACK_MAC.off(0);

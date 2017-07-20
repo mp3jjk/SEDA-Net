@@ -3,7 +3,7 @@
 #define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
 
 #if DUAL_RADIO == 0
-#define ONLY_LONG	1
+#define ONLY_LONG	0
 #endif
 
 /* Distributed weight update problem solutions */
@@ -21,7 +21,7 @@
 
 /* Weight ratio between rank and parent's degree */
 #define ALPHA	0
-#define ALPHA_DIV	1
+#define ALPHA_DIV	2
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1

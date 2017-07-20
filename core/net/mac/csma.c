@@ -387,14 +387,14 @@ packet_sent(void *ptr, int status, int num_transmissions)
     break;
   case MAC_TX_NOACK:
 #if PS_COUNT
-		cxmac_retransmission_count ++;
+		rdc_retransmission_count ++;
 #endif
     noack(q, n, num_transmissions);
     break;
   case MAC_TX_COLLISION:
 #if PS_COUNT
-		cxmac_collision_count ++;
-		cxmac_retransmission_count ++;
+		rdc_collision_count ++;
+		rdc_retransmission_count ++;
 #endif
     collision(q, n, num_transmissions);
     break;

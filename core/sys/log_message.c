@@ -14,9 +14,9 @@ int log_file;
 void log_initialization(void){
 #if PS_COUNT
 	csma_drop_count = 0;
-	cxmac_collision_count = 0;
-	cxmac_retransmission_count = 0;
-	cxmac_transmission_count = 0;
+	rdc_collision_count = 0;
+	rdc_retransmission_count = 0;
+	rdc_transmission_count = 0;
 	csma_transmission_count = 0;
 	control_message_count = 0;
 	data_message_count = 0;
