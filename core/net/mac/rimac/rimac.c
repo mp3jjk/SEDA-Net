@@ -323,7 +323,6 @@ extern uint8_t remaining_energy;
 static void dual_radio_on(char target);
 static void dual_radio_off(char target);
 #endif
-static uint8_t collision_detection;
 /*---------------------------------------------------------------------------*/
 static void
 on(void)
@@ -552,6 +551,10 @@ cschedule_powercycle(clock_time_t time)
 static char
 cpowercycle(void *ptr)
 {
+	static uint8_t radio_cca;
+	static uint8_t something_received;
+	static uint8_t preamble_ack_collision;
+
   if(is_streaming) {
     if(!RTIMER_CLOCK_LT(RTIMER_NOW(), stream_until)) {
       is_streaming = 0;
@@ -646,8 +649,7 @@ cpowercycle(void *ptr)
     	interference = 0;
     	backoff = 1;
 //        printf("interference backoff\n");
-    }
-    else if(!waiting_for_packet){ // Tx Preamble packet
+    } else if(!waiting_for_packet){ // Tx Preamble packet
     	packetbuf_clear();
     	uint8_t preamble[MAX_STROBE_SIZE];
     	int preamble_len, len;
@@ -682,14 +684,21 @@ cpowercycle(void *ptr)
 			powercycle_dual_turn_radio_on(LONG_RADIO);
 			t =  RTIMER_NOW();
 			temp = 0;
+			radio_cca = 1;
+			something_received = 0;
+			preamble_ack_collision = 0;
 			while(got_preamble_ack == 0 &&
 					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time * 2 + temp)) {
 				if(NETSTACK_RADIO.receiving_packet() == 1) {
 					temp = rimac_config.strobe_wait_time;
 				}
+				if (NETSTACK_RADIO.channel_clear() == 0) {
+					radio_cca = 0;
+				}
 				packetbuf_clear();
 				len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
 				if(len > 0) {
+					something_received = 1;
 					packetbuf_set_datalen(len);
 					if(NETSTACK_FRAMER.parse() >= 0) {
 						hdr = packetbuf_dataptr();
@@ -756,13 +765,16 @@ cpowercycle(void *ptr)
 			    	  process_start(&strobe_wait, &cnt);
 				}
 				got_preamble_ack = 0;
+			} else if (!something_received && !radio_cca) {
+				/* PRINTF("COLLISION DETECTED\n"); */
+				preamble_ack_collision = 1;
 			}
 		}
-    }
+  }
 /*    powercycle_dual_turn_radio_on(BOTH_RADIO);
     CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2);
     PT_YIELD(&pt);*/
-    if(backoff || waiting_for_data) { // Do Backoff
+    if(backoff || waiting_for_data || preamble_ack_collision) { // Do Backoff
 //    	printf("backoff\n");
     	backoff = 0;
     	interference = 0;
@@ -1293,11 +1305,11 @@ send_packet(void)
 				packetbuf_clear();
 				len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
 				if(len > 0) {
-					printf("Waiting DATA_ACK: YEEEEEEEEEEAAAAAAAAAAAAAAHHHHHHHHHHHHHHH????\n");
+					/* printf("Waiting DATA_ACK: YEEEEEEEEEEAAAAAAAAAAAAAAHHHHHHHHHHHHHHH????\n"); */
 					packetbuf_set_datalen(len);
 					if(NETSTACK_FRAMER.parse() >= 0) {
 						hdr = packetbuf_dataptr();
-						printf("Waiting DATA_ACK: after parsing type %x\n",hdr->type);
+						/* printf("Waiting DATA_ACK: after parsing type %x\n",hdr->type); */
 						if(hdr->type == TYPE_DATA_ACK) {
 #if DUAL_RADIO
 							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
