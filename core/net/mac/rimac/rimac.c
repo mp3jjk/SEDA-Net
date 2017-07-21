@@ -566,71 +566,11 @@ cpowercycle(void *ptr)
   PT_BEGIN(&pt);
 
   while(1) {
+		printf("Really?? we_are_sending:%d waiting_for_packet:%d\n",we_are_sending, waiting_for_packet);
 
     if(someone_is_sending > 0) {
       someone_is_sending--;
     }
-
-    /* If there were a strobe in the air, turn radio on */
-/*#if DUAL_RADIO
-#if DUAL_ROUTING_CONVERGE
-		// JOOONKI is working on this	
-		if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
-    {
-    	dual_duty_cycle_count++;
-			if (short_duty_on == 1){
-	      powercycle_dual_turn_radio_on(SHORT_RADIO);
-			}
-    }
-    else
-    {
-    	dual_duty_cycle_count = 0;
-			if (short_duty_on == 1 && long_duty_on == 1) {
-	      powercycle_dual_turn_radio_on(BOTH_RADIO);
-			}	else if (long_duty_on == 1) {
-	      powercycle_dual_turn_radio_on(LONG_RADIO);
-			}	else if (short_duty_on == 1 ) {
-				powercycle_dual_turn_radio_on(SHORT_RADIO);
-			}
-    }
-
-#else  DUAL_ROUTING_CONVERGE
-#if LSA_MAC
-#if LSA_R
-#if CONVERGE_MODE == 1
-		if (LSA_converge == 1)
-#elif CONVERGE_MODE == 2
-		if (simple_convergence == 1) 
-#endif  CONVERGE_MODE
-		{
-			if (LSA_lr_child == 1) {
-				powercycle_dual_turn_radio_on(LONG_RADIO);
-			} else {
-				powercycle_dual_turn_radio_on(SHORT_RADIO);
-			}
-		} else {
-			powercycle_dual_turn_radio_on(LONG_RADIO);
-		}
-#else  LSA_R
-		powercycle_dual_turn_radio_on(LONG_RADIO);
-#endif  LSA_R
-#else  LSA_MAC
-    if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
-    {
-    	dual_duty_cycle_count++;
-      powercycle_dual_turn_radio_on(SHORT_RADIO);
-    }
-    else
-    {
-    	dual_duty_cycle_count = 0;
-      powercycle_dual_turn_radio_on(BOTH_RADIO);
-    }
-#endif  LSA_MAC
-#endif  DUAL_ROUTING_CONVERGE
-#else	 DUAL_RADIO
-    powercycle_turn_radio_on();
-#endif  DUAL_RADIO */
-
 
 	  if(rimac_is_on == 0) {
 		  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
@@ -748,6 +688,7 @@ cpowercycle(void *ptr)
 			}
 			if(got_preamble_ack) {
 				// wait data
+				powercycle_dual_turn_radio_off(BOTH_RADIO);
 				if(got_preamble_ack == SHORT_RADIO) {
 //					printf("sending %d waiting %d\n",we_are_sending,waiting_for_packet);
 					waiting_for_data = 1;
@@ -779,9 +720,15 @@ cpowercycle(void *ptr)
     	backoff = 0;
     	interference = 0;
     	waiting_for_data = 0;
-        powercycle_dual_turn_radio_off(BOTH_RADIO);
-        CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME); // random and exponential backoff
-        PT_YIELD(&pt);
+    	if(waiting_for_packet != 0) {
+    		waiting_for_packet++;
+    		if(waiting_for_packet > 2) {
+    			waiting_for_packet = 0;
+    		}
+    	}
+			powercycle_dual_turn_radio_off(BOTH_RADIO);
+			CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME); // random and exponential backoff
+			PT_YIELD(&pt);
     }
     else {
 //    	printf("sleep\n");
@@ -795,37 +742,11 @@ cpowercycle(void *ptr)
     		}
     	}
     	temp = random_rand()%DEFAULT_OFF_TIME + DEFAULT_OFF_TIME/2;
-        powercycle_dual_turn_radio_off(BOTH_RADIO);
-        CSCHEDULE_POWERCYCLE(temp);
-        PT_YIELD(&pt);
+			powercycle_dual_turn_radio_off(BOTH_RADIO);
+			CSCHEDULE_POWERCYCLE(temp);
+			PT_YIELD(&pt);
     }
 
-/*    CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
-    PT_YIELD(&pt);
-    if(rimac_config.off_time > 0) {
-#if DUAL_RADIO
-      powercycle_dual_turn_radio_off(BOTH_RADIO);
-#else
-      powercycle_turn_radio_off();
-#endif
-
-      if(waiting_for_packet != 0) {
-	waiting_for_packet++;
-	if(waiting_for_packet > 2) {
-	   We should not be awake for more than two consecutive
-	     power cycles without having heard a packet, so we turn off
-	     the radio.
-	  waiting_for_packet = 0;
-#if DUAL_RADIO
-	  powercycle_dual_turn_radio_off(BOTH_RADIO);
-#else
-	  powercycle_turn_radio_off();
-#endif
-	}
-      }
-      // printf("cpowerycle off\n");
-      CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME);
-      PT_YIELD(&pt);*/
   }
 
   PT_END(&pt);
