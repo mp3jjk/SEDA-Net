@@ -658,7 +658,7 @@ cpowercycle(void *ptr)
     	dual_radio_switch(LONG_RADIO);
 		packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
 //		printf("sending %d\n",packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1]);
-    	rtimer_clock_t t;
+    	rtimer_clock_t t,temp;
     	len = NETSTACK_FRAMER.create();
     	preamble_len = len + sizeof(struct rimac_hdr);
     	if(len < 0 || preamble_len > (int)sizeof(preamble)) {
@@ -679,10 +679,11 @@ cpowercycle(void *ptr)
 			//		packetbuf_clear();
 			powercycle_dual_turn_radio_on(LONG_RADIO);
 			t =  RTIMER_NOW();
+			temp = 0;
 			while(got_preamble_ack == 0 &&
-					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time * 2)) {
+					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time * 2 + temp)) {
 				if(NETSTACK_RADIO.receiving_packet() == 1) {
-					t = RTIMER_NOW();
+					temp = rimac_config.strobe_wait_time;
 				}
 				packetbuf_clear();
 				len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
@@ -726,8 +727,7 @@ cpowercycle(void *ptr)
 								}
 						}
 						else {
-							PRINTDEBUG("rimac: strobe from someone else\n");
-							backoff = 1;
+//							PRINTDEBUG("rimac: strobe from someone else\n");
 						}
 					}
 					else {
@@ -922,6 +922,7 @@ send_packet(void)
   struct queuebuf *packet;
   int is_already_streaming = 0;
   uint8_t collisions;
+  uint8_t ret;
 
   linkaddr_t recv_addr;
   linkaddr_t recv_addr_2;
@@ -1194,7 +1195,10 @@ send_packet(void)
 	  else {
 		  preamble_ack[len + 1] = TYPE_STROBE_LONG_ACK;
 	  }
-	  NETSTACK_RADIO.send(preamble_ack, ack_len);
+	  ret = NETSTACK_RADIO.send(preamble_ack, ack_len);
+	  if(ret != RADIO_TX_OK && !is_broadcast) {
+		  collisions++;
+	  }
   }
 		}
 	  }
@@ -1232,12 +1236,27 @@ send_packet(void)
 
   if(was_short) {
 	  target = SHORT_RADIO;
-	  dual_radio_switch(SHORT_RADIO);
+	  dual_radio_switch(target);
   }
   else {
 	  target = LONG_RADIO;
-	  dual_radio_switch(LONG_RADIO);
+	  dual_radio_switch(target);
   }
+  /* Who skip the preamble ack should do CS */
+#if COOJA
+			if ((is_broadcast && was_short == 1) || recv_addr.u8[1] == SERVER_NODE)
+#else
+			if ((is_broadcast && was_short == 1) || recv_addr.u8[7] == SERVER_NODE)
+#endif
+			{
+				dual_radio_on(target);
+				while(RTIMER_CLOCK_LT(RTIMER_NOW(), t + CARRIER_SENSING_TIME)) {
+					if(NETSTACK_RADIO.receiving_packet == 1) {
+						printf("detect collision\n");
+						collisions++;
+					}
+				}
+			}
 
   /* Send the data packet. */
   if((is_broadcast || got_strobe || is_streaming) && collisions == 0) {
@@ -1248,8 +1267,10 @@ send_packet(void)
 		{
 			printf("now %d\n",clock_time());
 		}*/
-	  NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
-	
+	  ret = NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
+	  if(ret != RADIO_TX_OK) {
+		  collisions++;
+	  }
 #if DATA_ACK
 		if(!is_broadcast)
 		{
@@ -1288,6 +1309,9 @@ send_packet(void)
 								} else {
 									PRINTDEBUG("rimac: data ack for someone else\n");
 								}
+						}
+						else {
+							collisions++;
 						}
 					} else {
 						PRINTF("rimac: send failed to parse %u\n", len);
