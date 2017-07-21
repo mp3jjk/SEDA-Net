@@ -232,6 +232,9 @@ static volatile unsigned char waiting_for_packet = 0;
 static volatile unsigned char someone_is_sending = 0;
 static volatile unsigned char we_are_sending = 0;
 static volatile unsigned char radio_is_on = 0;
+#if DUAL_RADIO
+static volatile unsigned char radio_long_is_on = 0;
+#endif
 static volatile unsigned char interference = 0;
 static volatile unsigned char backoff = 0;
 
@@ -242,7 +245,7 @@ static volatile unsigned char backoff = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 0
+#define DEBUG 1
 #define TIMING 0
 
 #if DEBUG
@@ -325,10 +328,15 @@ static void dual_radio_off(char target);
 static void
 on(void)
 {
+#if DUAL_RADIO
+  if(rimac_is_on && (radio_is_on == 0 || radio_long_is_on == 0)) {
+#else
   if(rimac_is_on && radio_is_on == 0) {
+#endif
     radio_is_on = 1;
 #if DUAL_RADIO
-		dual_radio_turn_on(BOTH_RADIO);
+    radio_long_is_on = 1;
+	dual_radio_turn_on(BOTH_RADIO);
 #else
     NETSTACK_RADIO.on();
     LEDS_ON(LEDS_RED);
@@ -339,10 +347,16 @@ on(void)
 static void
 off(void)
 {
-  if(rimac_is_on && radio_is_on != 0 && is_listening == 0 &&
+#if DUAL_RADIO
+  if(rimac_is_on && (radio_is_on != 0 || radio_long_is_on != 0) && is_listening == 0 &&
      is_streaming == 0) {
+#else
+	  if(rimac_is_on && radio_is_on != 0 && is_listening == 0 &&
+	     is_streaming == 0) {
+#endif
     radio_is_on = 0;
 #if DUAL_RADIO
+    radio_long_is_on = 0;
 		dual_radio_turn_off(BOTH_RADIO);
 #else
     NETSTACK_RADIO.off();
@@ -469,19 +483,22 @@ static void
 dual_radio_on(char target)
 {
 //	printf("dual_radio_on target %d %d\n",target, radio_is_on);
-	if(rimac_is_on && radio_is_on == 0) {
-		radio_is_on = 1;
+	if(rimac_is_on && (radio_is_on == 0 || radio_long_is_on == 0)) {
 		dual_radio_turn_on(target);
 		if(target == LONG_RADIO)
 		{
+			radio_long_is_on = 1;
 			LEDS_ON(LEDS_GREEN);
 		}
 		if(target == SHORT_RADIO)
 		{
+			radio_is_on = 1;
 			LEDS_ON(LEDS_RED);
 		}
 		if(target == BOTH_RADIO)
 		{
+			radio_is_on = 1;
+			radio_long_is_on = 1;
 			LEDS_ON(LEDS_GREEN);
 			LEDS_ON(LEDS_RED);
 		}
@@ -491,20 +508,23 @@ static void
 dual_radio_off(char target)
 {
 //	printf("dual_radio_off target %d %d\n",target, radio_is_on);
-	if(rimac_is_on && radio_is_on != 0 && is_listening == 0 &&
+	if(rimac_is_on && (radio_is_on != 0 || radio_long_is_on != 0) && is_listening == 0 &&
 			is_streaming == 0) {
-		radio_is_on = 0;
 		dual_radio_turn_off(target);
 		if(target == LONG_RADIO)
 		{
+			radio_long_is_on = 0;
 			LEDS_OFF(LEDS_GREEN);
 		}
 		if(target == SHORT_RADIO)
 		{
+			radio_is_on = 0;
 			LEDS_OFF(LEDS_RED);
 		}
 		if(target == BOTH_RADIO)
 		{
+			radio_is_on = 0;
+			radio_long_is_on = 0;
 			LEDS_OFF(LEDS_GREEN);
 			LEDS_OFF(LEDS_RED);
 		}
@@ -719,7 +739,7 @@ cpowercycle(void *ptr)
 			if(got_preamble_ack) {
 				// wait data
 				if(got_preamble_ack == SHORT_RADIO) {
-					//				printf("sending %d waiting %d\n",we_are_sending,waiting_for_packet);
+//					printf("sending %d waiting %d\n",we_are_sending,waiting_for_packet);
 					powercycle_dual_turn_radio_on(SHORT_RADIO);
 					CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
 					PT_YIELD(&pt);
@@ -1870,6 +1890,9 @@ rimac_init(void)
 	MLS = 0; // Initialize MLS
 #endif
   radio_is_on = 0;
+#if DUAL_RADIO
+  radio_long_is_on = 0;
+#endif
   waiting_for_packet = 0;
   interference = 0;
   backoff = 0;
