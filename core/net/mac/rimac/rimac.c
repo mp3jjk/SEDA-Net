@@ -414,8 +414,10 @@ PROCESS_THREAD(strobe_wait, ev, data)
 	if(!is_short_waiting)
 	{
 		uint8_t *cnt = (uint8_t *)data;
+		printf("cnt %d\n",*cnt);
 		t = (rimac_config.strobe_time) - (*cnt + 3)*(rimac_config.strobe_wait_time + 1);
 		t >= rimac_config.strobe_time ? t = 1 : t;
+		printf("t %d\n",t);
 #if DUAL_RADIO
 		dual_radio_off(BOTH_RADIO);
 #else
@@ -707,13 +709,14 @@ cpowercycle(void *ptr)
 							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
 									&linkaddr_node_addr) ||
 									linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-											&long_linkaddr_node_addr))
+											&long_linkaddr_node_addr) ||
+											is_long_broadcast_preamble_ack)
 #else
 								if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
 										&linkaddr_node_addr))
 #endif
 								{
-									PRINTF("got preamble_ack %c\n",is_short_preamble_ack ? 'S':'L');
+									PRINTF("got preamble_ack %c %x\n",is_short_preamble_ack ? 'S':'L',hdr->type);
 									someone_is_sending = 1;
 									if(is_short_preamble_ack) {
 										got_preamble_ack = SHORT_RADIO;
@@ -766,6 +769,12 @@ cpowercycle(void *ptr)
     	backoff = 0;
     	interference = 0;
     	waiting_for_data = 0;
+    	if(waiting_for_packet != 0) {
+    		waiting_for_packet++;
+    		if(waiting_for_packet > 2) {
+    			waiting_for_packet = 0;
+    		}
+    	}
         powercycle_dual_turn_radio_off(BOTH_RADIO);
         CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME); // random and exponential backoff
         PT_YIELD(&pt);
@@ -1829,6 +1838,11 @@ input_packet(void)
     	PRINTDEBUG("rimac: stray data_ack\n");
     }
 #endif
+    else if(hdr->type == TYPE_STROBE_LONG_BROADCAST_ACK) {
+    	PRINTDEBUG("rimac: stray long_broadcast_ack\n");
+    	uint8_t cnt = hdr->dispatch >> 2;
+    	process_start(&strobe_wait, &cnt);
+    }
     else {
       PRINTF("rimac: unknown type %u (%u)\n", hdr->type,
              packetbuf_datalen());
