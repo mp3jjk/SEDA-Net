@@ -227,6 +227,7 @@ PROCESS(strobe_wait, "strobe wait");
 static volatile uint8_t rimac_is_on = 0;
 
 static volatile unsigned char waiting_for_packet = 0;
+static volatile unsigned char waiting_for_data = 0;
 static volatile unsigned char someone_is_sending = 0;
 static volatile unsigned char we_are_sending = 0;
 static volatile unsigned char radio_is_on = 0;
@@ -740,11 +741,13 @@ cpowercycle(void *ptr)
 				// wait data
 				if(got_preamble_ack == SHORT_RADIO) {
 //					printf("sending %d waiting %d\n",we_are_sending,waiting_for_packet);
+					waiting_for_data = 1;
 					powercycle_dual_turn_radio_on(SHORT_RADIO);
 					CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
 					PT_YIELD(&pt);
 				}
 				else if(is_long_preamble_ack) {
+					waiting_for_data = 1;
 					powercycle_dual_turn_radio_on(LONG_RADIO);
 					CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2);
 					PT_YIELD(&pt);
@@ -759,10 +762,11 @@ cpowercycle(void *ptr)
 /*    powercycle_dual_turn_radio_on(BOTH_RADIO);
     CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2);
     PT_YIELD(&pt);*/
-    if(backoff) { // Do Backoff
+    if(backoff || waiting_for_data) { // Do Backoff
 //    	printf("backoff\n");
     	backoff = 0;
     	interference = 0;
+    	waiting_for_data = 0;
         powercycle_dual_turn_radio_off(BOTH_RADIO);
         CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME); // random and exponential backoff
         PT_YIELD(&pt);
@@ -1473,6 +1477,7 @@ input_packet(void)
 #endif
 //#endif
 		{		// The packet is for data
+		waiting_for_data = 0;
       someone_is_sending = 0;
 #if DUAL_RADIO
       if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
@@ -1922,6 +1927,7 @@ rimac_init(void)
   radio_long_is_on = 0;
 #endif
   waiting_for_packet = 0;
+  waiting_for_data = 0;
   interference = 0;
   backoff = 0;
   PT_INIT(&pt);
