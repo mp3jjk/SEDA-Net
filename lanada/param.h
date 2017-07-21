@@ -41,7 +41,7 @@ uint8_t MLS; // The candidates set of the most loaded node
 #define VALID_PARENT_RATIO	0
 
 /* Enabling Data ACK */
-#define DATA_ACK      0
+#define DATA_ACK      1
 
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
@@ -70,7 +70,7 @@ uint8_t MLS; // The candidates set of the most loaded node
 
 #define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
-#define PERIOD 30
+#define PERIOD 60
 #elif TRAFFIC_MODEL == 1
 #define ARRIVAL_RATE 0 // Mean value, 1/lambda
 #endif

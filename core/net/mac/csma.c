@@ -127,7 +127,7 @@ struct neighbor_queue {
 #ifdef CSMA_CONF_MAX_NEIGHBOR_QUEUES
 #define CSMA_MAX_NEIGHBOR_QUEUES CSMA_CONF_MAX_NEIGHBOR_QUEUES
 #else
-#define CSMA_MAX_NEIGHBOR_QUEUES 2
+#define CSMA_MAX_NEIGHBOR_QUEUES 5
 #endif /* CSMA_CONF_MAX_NEIGHBOR_QUEUES */
 
 /* The maximum number of pending packet per neighbor */
