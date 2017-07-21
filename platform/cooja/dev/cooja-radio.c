@@ -404,9 +404,11 @@ radio_send(const void *payload, unsigned short payload_len)
   }
 #endif
   if(payload_len > COOJA_RADIO_BUFSIZE) {
+	  leds_off(LEDS_BLUE);
     return RADIO_TX_ERR;
   }
   if(payload_len == 0) {
+	  leds_off(LEDS_BLUE);
     return RADIO_TX_ERR;
   }
 	// PRINTF("COOJA RADIO: Sending packet in cooja driver\n");
@@ -415,6 +417,7 @@ radio_send(const void *payload, unsigned short payload_len)
 /* IN CASE OF LONG RADIO */
 	if (sending_in_LR() == LONG_RADIO){
 	  if(simOutSizeLR > 0) {
+			leds_off(LEDS_BLUE);
 	    return RADIO_TX_ERR;
 	  }
 		PRINTF("$$$$$$$$$$$$$$$ Sending in LR ------------------------>\n");
@@ -423,6 +426,7 @@ radio_send(const void *payload, unsigned short payload_len)
 #if WITH_SEND_CCA
 		simRadioTarget = LONG_RADIO;
 	  if(!channel_clear()) {
+		  leds_off(LEDS_BLUE);
   	  return RADIO_TX_COLLISION;
 	  }	
 #endif /* WITH_SEND_CCA */
@@ -437,11 +441,13 @@ radio_send(const void *payload, unsigned short payload_len)
 		PRINTF("$$$$$$$$$$$$$$$$ Sending in SR ------->\n");
 		// PRINTF("LongRangeTransmit : %d\n",LongRangeTransmit);
 	  if(simOutSize > 0) {
+		  leds_off(LEDS_BLUE);
 	    return RADIO_TX_ERR;
 	  }
 	  /* Transmit on CCA */
 #if WITH_SEND_CCA
 	  if(!channel_clear()) {
+		  leds_off(LEDS_BLUE);
 	    return RADIO_TX_COLLISION;
 	  }
 #endif /* WITH_SEND_CCA */

@@ -224,8 +224,6 @@ struct rimac_config rimac_config = {
 
 static struct pt pt;
 PROCESS(strobe_wait, "strobe wait");
-static volatile unsigned char strobe_target;
-
 static volatile uint8_t rimac_is_on = 0;
 
 static volatile unsigned char waiting_for_packet = 0;
@@ -563,10 +561,10 @@ cpowercycle(void *ptr)
   PT_BEGIN(&pt);
 
   while(1) {
-	  /*
+
     if(someone_is_sending > 0) {
       someone_is_sending--;
-    }*/
+    }
 
     /* If there were a strobe in the air, turn radio on */
 /*#if DUAL_RADIO
@@ -714,6 +712,7 @@ cpowercycle(void *ptr)
 #endif
 								{
 									PRINTF("got preamble_ack %c\n",is_short_preamble_ack ? 'S':'L');
+									someone_is_sending = 1;
 									if(is_short_preamble_ack) {
 										got_preamble_ack = SHORT_RADIO;
 									}
@@ -1148,7 +1147,11 @@ send_packet(void)
 								} else {
 									PRINTDEBUG("rimac: strobe for someone else\n");
 								}
-							} else /*if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE)*/ {
+							} else if(hdr->dispatch == DISPATCH
+									&& (hdr->type == TYPE_STROBE_SHORT_ACK ||
+											hdr->type == TYPE_STROBE_LONG_ACK ||
+											hdr->type == TYPE_STROBE_LONG_BROADCAST_ACK)) {
+								collisions++;
 								PRINTDEBUG("rimac: not strobe\n");
 							}
 						} else {
@@ -1159,9 +1162,9 @@ send_packet(void)
 				t = RTIMER_NOW();
 
 #if COOJA
-	if (!((is_broadcast && was_short == 1) || recv_addr.u8[1] == SERVER_NODE) && got_strobe != 0)
+	if ((!((is_broadcast && was_short == 1) || recv_addr.u8[1] == SERVER_NODE) && got_strobe != 0) && collisions == 0)
 #else
-	if (!((is_broadcast && was_short == 1) || recv_addr.u8[7] == SERVER_NODE) && got_strobe != 0)
+	if ((!((is_broadcast && was_short == 1) || recv_addr.u8[7] == SERVER_NODE) && got_strobe != 0) && collisions == 0)
 #endif
 	{
 //		printf("got_strobe %d\n",got_strobe);
