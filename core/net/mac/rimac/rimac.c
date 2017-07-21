@@ -322,6 +322,7 @@ extern uint8_t remaining_energy;
 static void dual_radio_on(char target);
 static void dual_radio_off(char target);
 #endif
+static uint8_t collision_detection;
 /*---------------------------------------------------------------------------*/
 static void
 on(void)
@@ -1267,11 +1268,11 @@ send_packet(void)
 				packetbuf_clear();
 				len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
 				if(len > 0) {
-					// printf("YEEEEEEEEEEAAAAAAAAAAAAAAHHHHHHHHHHHHHHH????\n");
+					printf("Waiting DATA_ACK: YEEEEEEEEEEAAAAAAAAAAAAAAHHHHHHHHHHHHHHH????\n");
 					packetbuf_set_datalen(len);
 					if(NETSTACK_FRAMER.parse() >= 0) {
 						hdr = packetbuf_dataptr();
-						// printf("after parsing type %x\n",hdr->type);
+						printf("Waiting DATA_ACK: after parsing type %x\n",hdr->type);
 						if(hdr->type == TYPE_DATA_ACK) {
 #if DUAL_RADIO
 							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
