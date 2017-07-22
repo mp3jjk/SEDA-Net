@@ -68,7 +68,7 @@
 #endif /* DUAL_RADIO */
 #include "sys/log_message.h"
 
-#define DEBUG 0
+#define DEBUG 1
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -238,7 +238,7 @@ free_packet(struct neighbor_queue *n, struct rdc_buf_list *p, int status)
       n->collisions = CSMA_MIN_BE;
       if(n->addr.u8[1] != 0) {
     	  data_btb = 1; // unicast backtoback
-          printf("data BTB in MAC\n");
+//          printf("data BTB in MAC\n");
       }
       /* Schedule next transmissions */
       schedule_transmission(n);

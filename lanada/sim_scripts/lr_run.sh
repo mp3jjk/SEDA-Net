@@ -49,6 +49,11 @@ fi
 cd $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC
 echo "#########################  We are in $PWD  ########################"
 
+HERE=$PWD
+cd $CONTIKI/lanada
+make clean TARGET=cooja
+cd $HERE
+
 if [ ! -e COOJA.testlog ]
 then
     java -mx512m -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc -contiki="$CONTIKI"

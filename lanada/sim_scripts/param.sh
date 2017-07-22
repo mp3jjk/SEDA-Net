@@ -46,6 +46,7 @@ uint8_t MLS; // The candidates set of the most loaded node
 
 /* Enabling Data ACK */
 #define DATA_ACK      ${10}
+uint8_t data_btb; // Back to back data Tx
 
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
