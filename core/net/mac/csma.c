@@ -238,7 +238,7 @@ free_packet(struct neighbor_queue *n, struct rdc_buf_list *p, int status)
       n->collisions = CSMA_MIN_BE;
       if(n->addr.u8[1] != 0) {
     	  data_btb = 1; // unicast backtoback
-//          printf("data BTB in MAC\n");
+          printf("data BTB in MAC\n");
       }
       /* Schedule next transmissions */
       schedule_transmission(n);

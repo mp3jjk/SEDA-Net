@@ -249,7 +249,7 @@ static volatile unsigned char after_data_rx = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 1
+#define DEBUG 0
 #define TIMING 0
 
 #if DEBUG
@@ -1276,7 +1276,7 @@ send_packet(void)
   /* Send the data packet. */
   if((is_broadcast || got_strobe || is_streaming) && collisions == 0) {
 	  if(data_btb) {
-//		  printf("data BTB in rdc\n");
+		  printf("data BTB in rdc\n");
 		  data_btb = 0;
 	  }
 /*		if(is_broadcast && was_short == 1) {
