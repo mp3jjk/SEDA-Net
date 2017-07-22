@@ -1875,6 +1875,7 @@ cxmac_init(void)
 #endif
 #if RPL_LIFETIME_MAX_MODE2
 	MLS = 0; // Initialize MLS
+	data_btb = 0;
 #endif
   radio_is_on = 0;
 #if DUAL_RADIO

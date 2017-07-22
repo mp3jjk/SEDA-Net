@@ -28,6 +28,8 @@ DATE=${12}
 DATA_ACK=${13}
 LSA_MAC=${14}
 ALPHA_DIV=${15}
+CHECK=${16}
+
 
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
@@ -38,13 +40,13 @@ else
     cd $DATE\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK
 fi
 
-../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK $LSA_MAC $ALPHA_DIV 0
+../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK $LSA_MAC $ALPHA_DIV 0 $CHECK
 
-if [ ! -e $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_strobe$STROBE_CNT\_lsa$LSA_R\_ratio$REDUCTION_RATIO\_lsa_mac$LSA_MAC ]
+if [ ! -e $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC ]
 then
-    mkdir $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_strobe$STROBE_CNT\_lsa$LSA_R\_ratio$REDUCTION_RATIO\_lsa_mac$LSA_MAC
+    mkdir $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC
 fi
-cd $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_strobe$STROBE_CNT\_lsa$LSA_R\_ratio$REDUCTION_RATIO\_lsa_mac$LSA_MAC
+cd $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC
 echo "#########################  We are in $PWD  ########################"
 
 if [ ! -e COOJA.testlog ]

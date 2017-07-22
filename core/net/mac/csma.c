@@ -236,6 +236,8 @@ free_packet(struct neighbor_queue *n, struct rdc_buf_list *p, int status)
       /* There is a next packet. We reset current tx information */
       n->transmissions = 0;
       n->collisions = CSMA_MIN_BE;
+      data_btb = 1; // backtoback
+      printf("data BTB in MAC\n");
       /* Schedule next transmissions */
       schedule_transmission(n);
     } else {

@@ -20,8 +20,11 @@
 #define LONG_WEIGHT_RATIO 2
 
 /* Weight ratio between rank and parent's degree */
-#define ALPHA	0
+#define ALPHA	1
 #define ALPHA_DIV	2
+
+#undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 2
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
@@ -42,6 +45,7 @@ uint8_t MLS; // The candidates set of the most loaded node
 
 /* Enabling Data ACK */
 #define DATA_ACK      1
+uint8_t data_btb; // Back to back data Tx
 
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
@@ -70,7 +74,7 @@ uint8_t MLS; // The candidates set of the most loaded node
 
 #define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
-#define PERIOD 60
+#define PERIOD 30
 #elif TRAFFIC_MODEL == 1
 #define ARRIVAL_RATE 0 // Mean value, 1/lambda
 #endif

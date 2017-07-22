@@ -24,6 +24,9 @@ echo "#define RPL_ENERGY_MODE 0
 #define ALPHA	$2
 #define ALPHA_DIV	${12}
 
+#undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE ${14}
+
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
 #if RPL_LIFETIME_MAX_MODE2
