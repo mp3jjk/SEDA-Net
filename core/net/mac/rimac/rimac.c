@@ -226,6 +226,7 @@ struct rimac_config rimac_config = {
 
 static struct pt pt;
 static struct pt pt2;
+static struct pt pt3;
 PROCESS(strobe_wait, "strobe wait");
 static volatile uint8_t rimac_is_on = 0;
 
@@ -576,7 +577,7 @@ cpowercycle(void *ptr)
   PT_BEGIN(&pt);
 
   while(1) {
-	  printf("sending:%d waiting:%d tx:%d rx:%d\n",we_are_sending, waiting_for_packet,after_data_tx,after_data_rx);
+		/* printf("sending:%d waiting:%d tx:%d rx:%d\n",we_are_sending, waiting_for_packet,after_data_tx,after_data_rx); */
 
     if(someone_is_sending > 0) {
       someone_is_sending--;
@@ -692,7 +693,7 @@ cpowercycle(void *ptr)
 								}
 								else {
 									PRINTDEBUG("rimac: strobe ack for someone else\n");
-									backoff = 1;
+									backoff = 2;
 								}
 						}
 						else {
@@ -736,7 +737,6 @@ cpowercycle(void *ptr)
     PT_YIELD(&pt);*/
     if(backoff || waiting_for_data || preamble_ack_collision || after_data_tx || after_data_rx) { // Do Backoff
 //    	printf("backoff\n");
-    	backoff = 0;
     	interference = 0;
     	waiting_for_data = 0;
     	after_data_tx = 0;
@@ -745,7 +745,6 @@ cpowercycle(void *ptr)
 			} else {
 				backoff_exponent = 0;
 			}
-			preamble_ack_collision = 0;
     	if(waiting_for_packet != 0) {
     		waiting_for_packet++;
     		if(waiting_for_packet > 2) {
@@ -753,26 +752,32 @@ cpowercycle(void *ptr)
     		}
     	}
 //    	printf("waiting_for_pkt if %d\n",waiting_for_packet);
-        if(after_data_tx) {
-            powercycle_dual_turn_radio_off(BOTH_RADIO);
-        	CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME/2);
-        	after_data_tx = 0;
-        }
-        else if(after_data_rx == SHORT_RADIO) {
-        	CSCHEDULE_POWERCYCLE(DWELL_TIME);
-        	after_data_rx = 0;
-        }
-        else if(after_data_rx == LONG_RADIO) {
-        	CSCHEDULE_POWERCYCLE(DWELL_TIME * 2);
-        	after_data_rx = 0;
-        }
-        else {
-            powercycle_dual_turn_radio_off(BOTH_RADIO);
-        	CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME); // random and exponential backoff
-        }
-        PT_YIELD(&pt);
-    }
-    else {
+			if(after_data_tx) {
+				powercycle_dual_turn_radio_off(BOTH_RADIO);
+				CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME/2);
+				after_data_tx = 0;
+			}	else if(after_data_rx == SHORT_RADIO) {
+				CSCHEDULE_POWERCYCLE(DWELL_TIME);
+				after_data_rx = 0;
+			}	else if(after_data_rx == LONG_RADIO) {
+				CSCHEDULE_POWERCYCLE(DWELL_TIME * 2);
+				after_data_rx = 0;
+			}	else {
+				powercycle_dual_turn_radio_off(BOTH_RADIO);
+				if (backoff == 1 || waiting_for_data == 1) {
+					CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME); // random and exponential backoff
+				} else if (backoff == 2) {
+					CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME); // random and exponential backoff
+				} else {
+					CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME); // random and exponential backoff
+				}
+			}
+    	backoff = 0;
+			if (preamble_ack_collision == 0){
+				PT_YIELD(&pt);
+			}
+			preamble_ack_collision = 0;
+    } else {
 //    	printf("sleep\n");
     	rtimer_clock_t temp;
     	backoff = 0;
@@ -1189,6 +1194,7 @@ send_packet(void)
 						PT_YIELD(&pt2);
 						dual_radio_on(LONG_RADIO);
 						PT_END(&pt2);
+						sender_backoff_exponent = 0;
 					}
 				}
 #if COOJA
@@ -1305,6 +1311,7 @@ send_packet(void)
 					packetbuf_set_datalen(len);
 					if(NETSTACK_FRAMER.parse() >= 0) {
 						hdr = packetbuf_dataptr();
+						char dispatch_ext = hdr->dispatch << 6;
 						/* printf("Waiting DATA_ACK: after parsing type %x\n",hdr->type); */
 						if(hdr->type == TYPE_DATA_ACK) {
 #if DUAL_RADIO
@@ -1322,8 +1329,10 @@ send_packet(void)
 								} else {
 									PRINTDEBUG("rimac: data ack for someone else\n");
 								}
-						}
-						else {
+						} else if (dispatch_ext == DISPATCH || hdr->type == TYPE_STROBE) {
+								sender_backoff_exponent = hdr->dispatch >> 2;
+								PRINTF("SENDER_BACKOFF_EXPONENT: %d\n", sender_backoff_exponent);
+						} else {
 							collisions++;
 						}
 					} else {
@@ -1390,6 +1399,17 @@ send_packet(void)
     if(!is_broadcast && !got_strobe) 
 #endif
 		{
+			if (sender_backoff_exponent > 0) {
+				PT_BEGIN(&pt3);
+				sender_time = (random_rand() % (DEFAULT_ON_TIME * sender_backoff_exponent) + DEFAULT_ON_TIME * sender_backoff_exponent /2) \
+											* 1ul * CLOCK_SECOND / RTIMER_ARCH_SECOND;
+				PRINTF ("SENDER_BACKOFF_TIMER: %d\n",sender_time);
+				ctimer_set(&sender_backoff_timer, sender_time, (void (*)(void *))send_packet, NULL);
+				PT_YIELD(&pt3);
+				PT_END(&pt3);
+				sender_backoff_exponent = 0;
+			}
+				
       return MAC_TX_NOACK;
     } else {
     	after_data_tx = 1;
