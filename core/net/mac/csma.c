@@ -226,7 +226,6 @@ free_packet(struct neighbor_queue *n, struct rdc_buf_list *p, int status)
   if(p != NULL) {
     /* Remove packet from list and deallocate */
     list_remove(n->queued_packet_list, p);
-
     queuebuf_free(p->buf);
     memb_free(&metadata_memb, p->ptr);
     memb_free(&packet_memb, p);
@@ -234,10 +233,13 @@ free_packet(struct neighbor_queue *n, struct rdc_buf_list *p, int status)
            list_length(n->queued_packet_list), memb_numfree(&packet_memb));
     if(list_head(n->queued_packet_list) != NULL) {
       /* There is a next packet. We reset current tx information */
+//    	printf("BTB addr %d %d\n",n->addr.u8[0],n->addr.u8[1]);
       n->transmissions = 0;
       n->collisions = CSMA_MIN_BE;
-      data_btb = 1; // backtoback
-      printf("data BTB in MAC\n");
+      if(n->addr.u8[1] != 0) {
+    	  data_btb = 1; // unicast backtoback
+//          printf("data BTB in MAC\n");
+      }
       /* Schedule next transmissions */
       schedule_transmission(n);
     } else {
