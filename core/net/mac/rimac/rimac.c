@@ -1344,9 +1344,9 @@ send_packet(void)
 
   }
 #if COOJA
-  if(got_data_ack == 0 && recv_addr.u8[1] == SERVER_NODE)
+  if(got_data_ack == 0 && recv_addr.u8[1] == SERVER_NODE && !is_broadcast)
 #else
-  if(got_data_ack == 0 && recv_addr.u8[7] == SERVER_NODE)
+  if(got_data_ack == 0 && recv_addr.u8[7] == SERVER_NODE && !is_broadcast)
 #endif
   {
 	  collisions++;
@@ -1477,23 +1477,6 @@ input_packet(void)
     original_datalen = packetbuf_totlen();
     original_dataptr = packetbuf_dataptr();
 #endif
-/*
-#if STROBE_CNT_MODE
-    char dispatch_ext = hdr->dispatch << 6;
-//    printf("packet input dispatch %d\n",dispatch_ext);
-*/
-//#if DATA_ACK
-//    if(dispatch_ext != DISPATCH
-//    		|| (hdr->type != TYPE_STROBE_ACK && hdr->type != TYPE_STROBE && hdr->type != TYPE_ANNOUNCEMENT && hdr->type != TYPE_DATA_ACK))
-/*
-#else
-    if(dispatch_ext != DISPATCH
-       		|| (hdr->type != TYPE_STROBE_ACK && hdr->type != TYPE_STROBE && hdr->type != TYPE_ANNOUNCEMENT))
-*/
-
-//#endif
-//#else
-//    if(hdr->dispatch != DISPATCH)
 #if DATA_ACK
     if(dispatch_ext != DISPATCH
     		|| (hdr->type != TYPE_STROBE && hdr->type != TYPE_STROBE_SHORT_ACK && hdr->type != TYPE_STROBE_LONG_ACK
@@ -1504,7 +1487,6 @@ input_packet(void)
        				&& hdr->type != TYPE_STROBE_LONG_BROADCAST_ACK))
 
 #endif
-//#endif
 		{		// The packet is for data
 		waiting_for_data = 0;
 		someone_is_sending = 0;
@@ -1619,26 +1601,8 @@ input_packet(void)
 	    {
 #if DUAL_RADIO
 #if ADDR_MAP
-//	    	if(long_ip_from_lladdr_map(packetbuf_addr(PACKETBUF_ADDR_SENDER)))
-
-	    	// Update latest recv_id & avg_est_load
-/*	    	if(recv_id > latest_id + 1)
-	    	{
-	    		latest_id = recv_id-1;
-
-	    	}*/
-//	    	printf("recv sender ip: %d %d\n",
-/*//	    	packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[0],packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1]);
-	    	if(packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[0] == 0x80)
-	    	{*/
-////	    		printf("long!\n");
 		    	id_count[recv_id%BUF_SIZE]+=LONG_WEIGHT_RATIO;
-//	    	}
-//	    	else
-//	    	{
-//	    		printf("short!\n");
 	    		id_count[recv_id%BUF_SIZE]++;
-//	    	}
 #else
 	    	id_count[recv_id%BUF_SIZE]++;
 #endif
@@ -1742,112 +1706,9 @@ input_packet(void)
       }
 
     } else if(hdr->type == TYPE_STROBE) {
- /*     someone_is_sending = 2;
-#if DUAL_RADIO
-				if (radio_received_is_longrange()==LONG_RADIO){
-					dual_radio_switch(LONG_RADIO);
-				}	else if (radio_received_is_longrange() == SHORT_RADIO){
-					dual_radio_switch(SHORT_RADIO);
-				}
-#endif
-#if DUAL_RADIO
-      if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-                      &linkaddr_node_addr) ||
-    	 linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-    		  		     &long_linkaddr_node_addr)) 
-#else
-      if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-                      &linkaddr_node_addr)) 
-#endif
-			{	
-#if DUAL_RADIO
-#if LSA_MAC
-				if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),&linkaddr_node_addr) == 1){
-					for_short = 1;
-				} else if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),&long_linkaddr_node_addr) == 1) {
-					for_short = 0;
-				}
-#endif
-#endif
-	 This is a strobe packet for us.
-
-	 If the sender address is someone else, we should
-	   acknowledge the strobe and wait for the packet. By using
-	   the same address as both sender and receiver, we flag the
-	   message is a strobe ack.
-	hdr->type = TYPE_STROBE_ACK;
-	packetbuf_set_addr(PACKETBUF_ADDR_RECEIVER,
-			   packetbuf_addr(PACKETBUF_ADDR_SENDER));
- 
-#if DUAL_RADIO
-	if(sending_in_LR() == LONG_RADIO){
-		target = LONG_RADIO;
-		packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
-	}	else	{
-		target = SHORT_RADIO;
-		packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
-	}
-#else
-  	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
-#endif
-	packetbuf_compact();
-	if(NETSTACK_FRAMER.create() >= 0) {
-	   We turn on the radio in anticipation of the incoming
-	     packet.
-	  someone_is_sending = 1;
-	  waiting_for_packet = 1;
-
-#if DUAL_RADIO
-#if LSA_MAC
-		dual_radio_off(BOTH_RADIO);
-		if (for_short == 1) {
-			target = SHORT_RADIO;
-		} else if (for_short == 0) {
-			target = LONG_RADIO;
-		}
-#endif
-#endif
-
-#if DUAL_RADIO
-	  dual_radio_on(target);
-#else
-	  on();
-#endif
-	  // LOG_MESSAGE("SENDING STROBE ACK %d\n",NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen()));
-	  NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
-	 // printf("rimac: send strobe ack %u\n", packetbuf_totlen());
-	} else {
-	  PRINTF("rimac: failed to send strobe ack\n");
-	}
-      } else if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-                             &linkaddr_null)) {
-	 If the receiver address is null, the strobe is sent to
-	   prepare for an incoming broadcast packet. If this is the
-	   case, we turn on the radio and wait for the incoming
-	   broadcast packet.
-//    	  printf("rimac strobe_cnt %d\n",hdr->dispatch >> 2);
-    	  waiting_for_packet = 1;
-#if STROBE_CNT_MODE
-    	  uint8_t cnt = hdr->dispatch >> 2;
-#if DUAL_RADIO
-    	  strobe_target = radio_received_is_longrange();
-    	  dual_radio_off(BOTH_RADIO);
-    	   Wait based on strobe count, to Rx data
-    	  process_start(&strobe_wait, &cnt);
-#else
-    	  off();
-    	  process_start(&strobe_wait, &cnt);
-#endif
-#endif	 STROBE_CNT_MODE
-
-
-      } else {
-        PRINTDEBUG("rimac: strobe not for us\n");
-      }*/
-
       /* We are done processing the strobe and we therefore return
 	 to the caller. */
-//        PRINTDEBUG("rimac: stray strobe\n");
+			PRINTDEBUG("rimac: stray strobe\n");
         return;
 #if RIMAC_CONF_ANNOUNCEMENTS
     } else if(hdr->type == TYPE_ANNOUNCEMENT) {
@@ -1855,7 +1716,7 @@ input_packet(void)
       parse_announcements(packetbuf_addr(PACKETBUF_ADDR_SENDER));
 #endif /* RIMAC_CONF_ANNOUNCEMENTS */
     } else if(hdr->type == TYPE_STROBE_SHORT_ACK || hdr->type == TYPE_STROBE_LONG_ACK) {
-//      PRINTDEBUG("rimac: stray strobe ack\n");
+			PRINTDEBUG("rimac: stray strobe ack\n");
     }
 #if DATA_ACK
     else if(hdr->type == TYPE_DATA_ACK) {
