@@ -619,10 +619,18 @@ cpowercycle(void *ptr)
 //    	printf("tx preamble\n");
     	ret = NETSTACK_RADIO.send(preamble, preamble_len);
       /* PRINTF("preamble tx %d\n",ret); */
-		if(ret != RADIO_TX_OK) {
-			backoff = 1;
-		}
-		else {
+/*		if(ret != RADIO_TX_OK) {
+			backoff = 2;
+		}*/
+		if(ret == RADIO_TX_OK) {
+//    		waiting_for_data = 1;
+    		someone_is_sending = 1;
+    		powercycle_dual_turn_radio_on(BOTH_RADIO);
+    		CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2);
+        	PT_YIELD(&pt);
+    	}
+
+		/*else {
 			//		packetbuf_clear();
 			powercycle_dual_turn_radio_on(LONG_RADIO);
 			t =  RTIMER_NOW();
@@ -631,8 +639,8 @@ cpowercycle(void *ptr)
 			something_received = 0;
 			while(got_preamble_ack == 0 &&
 					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time * 2 + temp)) {
-				/*if(NETSTACK_RADIO.receiving_packet() == 1) {
-				}*/
+				if(NETSTACK_RADIO.receiving_packet() == 1) {
+				}
 				if (NETSTACK_RADIO.channel_clear() == 0) {
 					temp = rimac_config.strobe_wait_time;
 					radio_cca = 0;
@@ -716,61 +724,61 @@ cpowercycle(void *ptr)
 				PRINTF("COLLISION DETECTED\n");
 				preamble_ack_collision = 1;
 			}
-		}
-  }
-/*    powercycle_dual_turn_radio_on(BOTH_RADIO);
+		}*/
+    }
+    /*    powercycle_dual_turn_radio_on(BOTH_RADIO);
     CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2);
     PT_YIELD(&pt);*/
     if(backoff || waiting_for_data || preamble_ack_collision || after_data_tx || after_data_rx) { // Do Backoff
-//    	printf("backoff\n");
-//    		printf("sending %d waiting %d\n",we_are_sending,waiting_for_packet);
-    	backoff = 0;
+    	//    	printf("backoff\n");
+    	//    		printf("sending %d waiting %d\n",we_are_sending,waiting_for_packet);
     	interference = 0;
     	waiting_for_data = 0;
-			if (preamble_ack_collision) {
-				backoff_exponent ++;
-			} else {
-				backoff_exponent = 0;
-			}
+    	if (preamble_ack_collision) {
+    		backoff_exponent ++;
+    	} else {
+    		backoff_exponent = 0;
+    	}
     	if(waiting_for_packet != 0) {
     		waiting_for_packet++;
     		if(waiting_for_packet > 2) {
     			waiting_for_packet = 0;
     		}
     	}
-//    	printf("waiting_for_pkt if %d\n",waiting_for_packet);
-			if(after_data_tx) {
-				powercycle_dual_turn_radio_off(BOTH_RADIO);
-				CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME/2);
-				after_data_tx = 0;
-			}	else if(after_data_rx == SHORT_RADIO) {
-				CSCHEDULE_POWERCYCLE(DWELL_TIME);
-				after_data_rx = 0;
-			}	else if(after_data_rx == LONG_RADIO) {
-				CSCHEDULE_POWERCYCLE(DWELL_TIME * 2);
-				after_data_rx = 0;
-			}	else {
-				powercycle_dual_turn_radio_off(BOTH_RADIO);
-				if (backoff == 1 || waiting_for_data == 1) {
-					CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME); // random and exponential backoff
-				} else if (backoff == 2) {
-					CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME); // random and exponential backoff
-				} else {
-					CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2); // random and exponential backoff
-				}
-			}
-			backoff = 0;
-			if (preamble_ack_collision == 0){
-				PT_YIELD(&pt);
-			}
-			preamble_ack_collision = 0;
+    	//    	printf("waiting_for_pkt if %d\n",waiting_for_packet);
+    	if(after_data_tx) {
+    		powercycle_dual_turn_radio_off(BOTH_RADIO);
+    		CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME/2);
+    		after_data_tx = 0;
+    	}	else if(after_data_rx == SHORT_RADIO) {
+    		CSCHEDULE_POWERCYCLE(DWELL_TIME);
+    		after_data_rx = 0;
+    	}	else if(after_data_rx == LONG_RADIO) {
+    		CSCHEDULE_POWERCYCLE(DWELL_TIME * 2);
+    		after_data_rx = 0;
+    	} else {
+    		powercycle_dual_turn_radio_off(BOTH_RADIO);
+    		if (backoff == 1 || waiting_for_data == 1) {
+    			CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME); // random and exponential backoff
+//				} else if (backoff == 2) {
+//					CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME); // random and exponential backoff
+    		} else {
+    			CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2); // random and exponential backoff
+    		}
+    	}
+    	backoff = 0;
+    	if (preamble_ack_collision == 0){
+    		PT_YIELD(&pt);
+    	}
+    	preamble_ack_collision = 0;
     } else {
-//    	printf("sleep\n");
+    	//    	printf("sleep\n");
     	rtimer_clock_t temp;
     	backoff = 0;
     	interference = 0;
-			backoff_exponent = 0;
-			preamble_ack_collision = 0;
+    	backoff_exponent = 0;
+    	preamble_ack_collision = 0;
+    	someone_is_sending = 0;
     	if(waiting_for_packet != 0) {
     		waiting_for_packet++;
     		if(waiting_for_packet > 2) {
@@ -778,15 +786,15 @@ cpowercycle(void *ptr)
     		}
     	}
     	powercycle_dual_turn_radio_off(BOTH_RADIO);
-//    	printf("waiting_for_pkt %d\n",waiting_for_packet);
-        if(waiting_for_packet > 0) {
-        	CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME/4);
-//        	waiting_for_packet = 0;
-        }
-        else {
-        	temp = random_rand()%DEFAULT_OFF_TIME + DEFAULT_OFF_TIME/2;
-        	CSCHEDULE_POWERCYCLE(temp);
-        }
+    	//    	printf("waiting_for_pkt %d\n",waiting_for_packet);
+    	if(waiting_for_packet > 0) {
+    		CSCHEDULE_POWERCYCLE(DEFAULT_OFF_TIME/4);
+    		//        	waiting_for_packet = 0;
+    	}
+    	else {
+    		temp = random_rand()%DEFAULT_OFF_TIME + DEFAULT_OFF_TIME/2;
+    		CSCHEDULE_POWERCYCLE(temp);
+    	}
     	PT_YIELD(&pt);
     }
 
@@ -910,8 +918,6 @@ send_packet(void)
   linkaddr_t recv_addr;
   linkaddr_t recv_addr_2;
   linkaddr_t temp_addr;
-
-
 
 	/* for debug */
 #if TIMING
@@ -1095,7 +1101,7 @@ send_packet(void)
 				/* Strobe wait start time fixed */
 			while(got_strobe != 1 &&
 					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time)) {
-								rtimer_clock_t now = RTIMER_NOW();
+				rtimer_clock_t now = RTIMER_NOW();
 				/* See if we got an ACK */
 				packetbuf_clear();
 				len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
@@ -1106,25 +1112,21 @@ send_packet(void)
 						char dispatch_ext = hdr->dispatch << 6;
 						/* is_dispatch = hdr->dispatch == DISPATCH; */
 						is_dispatch = dispatch_ext == DISPATCH;
-						is_strobe = hdr->type == TYPE_STROBE;
+						is_strobe = hdr->type == TYPE_STROBE || hdr->type == TYPE_DATA_ACK;
 						if(is_dispatch && is_strobe) {
 #if DUAL_RADIO
-
 							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_SENDER),
 									&recv_addr) ||
 									linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_SENDER),
 											&recv_addr_2) ||
-											is_broadcast)// ||
-/*									linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_SENDER),
-											&long_linkaddr_node_addr)) */
+											is_broadcast)
 #else
 								if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
 										&linkaddr_node_addr)) 
 #endif
 								{
 //									  printf("here %d\n",packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1]);
-									/* We got an ACK from the receiver, so we can immediately send
-		   the packet. */
+									/* We got an ACK from the receiver, so we can immediately send the packet. */
 									if(is_broadcast) {
 										sender_backoff_exponent = hdr->dispatch >> 2;
 										PRINTF("SENDER_BACKOFF_EXPONENT: %d\n", sender_backoff_exponent);
@@ -1143,49 +1145,57 @@ send_packet(void)
 								} else {
 									PRINTDEBUG("rimac: strobe for someone else\n");
 								}
-							} 
-						/* else if(hdr->dispatch == DISPATCH */
-						else if (dispatch_ext == DISPATCH
-									&& (hdr->type == TYPE_STROBE_SHORT_ACK ||
-											hdr->type == TYPE_STROBE_LONG_ACK ||
-											hdr->type == TYPE_STROBE_LONG_BROADCAST_ACK)) {
-								collisions++;
-								PRINTDEBUG("rimac: not strobe\n");
-							} else if(hdr->dispatch == DISPATCH
-									&& hdr->type == TYPE_DATA_ACK) {
-								if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_SENDER),
-										&recv_addr) ||
-										linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_SENDER),
-												&recv_addr_2)) {
-//									printf("got strobe by data_ack\n");
-//									got_strobe = 1;
-								}
-							}
-						} else {
-							PRINTF("rimac: send failed to parse send_packet %u\n", len);
 						}
-					}
-				}
-				t = RTIMER_NOW();
-
-				if (sender_backoff_exponent > 0 ) {
-					if (is_broadcast) {
-						collisions++;
-						PRINTF("SENDER_BROADCAST_CANCELLED: %d\n", sender_backoff_exponent);
 					} else {
-						PT_BEGIN(&pt2);
-						sender_time = (random_rand() % (DEFAULT_ON_TIME * sender_backoff_exponent) + DEFAULT_ON_TIME * sender_backoff_exponent /2) \
-													* 1ul * CLOCK_SECOND / RTIMER_ARCH_SECOND;
-						PRINTF ("SENDER_BACKOFF_TIMER: %d\n",sender_time);
-						dual_radio_off(LONG_RADIO);
-						ctimer_set(&sender_backoff_timer, sender_time, (void (*)(void *))send_packet, NULL);
-						PT_YIELD(&pt2);
-						dual_radio_on(LONG_RADIO);
-						PT_END(&pt2);
-						sender_backoff_exponent = 0;
+						PRINTF("rimac: send failed to parse send_packet %u\n", len);
 					}
 				}
-#if COOJA
+			}
+			t = RTIMER_NOW();
+
+			if (sender_backoff_exponent > 0 ) {
+				if (is_broadcast) {
+					collisions++;
+					printf("collision1 %d\n",collisions);
+					PRINTF("SENDER_BROADCAST_CANCELLED: %d\n", sender_backoff_exponent);
+				} else {
+					PT_BEGIN(&pt2);
+					sender_time = (random_rand() % (DEFAULT_ON_TIME * sender_backoff_exponent) + DEFAULT_ON_TIME * sender_backoff_exponent /2) \
+							* 1ul * CLOCK_SECOND / RTIMER_ARCH_SECOND;
+					PRINTF ("SENDER_BACKOFF_TIMER: %d\n",sender_time);
+					dual_radio_off(LONG_RADIO);
+					ctimer_set(&sender_backoff_timer, sender_time, (void (*)(void *))send_packet, NULL);
+					PT_YIELD(&pt2);
+					dual_radio_on(LONG_RADIO);
+					PT_END(&pt2);
+					sender_backoff_exponent = 0;
+				}
+			}
+			if(got_strobe) {
+				if(was_short) {
+					target = SHORT_RADIO;
+				}
+				else {
+					target = LONG_RADIO;
+				}
+				dual_radio_switch(target);
+				queuebuf_to_packetbuf(packet);
+				if(got_strobe == 1) {
+					queuebuf_free(packet);
+				}
+				if(got_strobe == 2) {
+					got_strobe = 0;
+				}
+				ret = NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
+				/* PRINTF("data tx %d\n",ret); */
+				if(ret != RADIO_TX_OK && is_broadcast) {
+					collisions++;
+					printf("collision2 %d\n",collisions);
+				}
+			}
+
+
+/*#if COOJA
 				if ((!((is_broadcast && was_short == 1) || recv_addr.u8[1] == SERVER_NODE) && got_strobe != 0) && collisions == 0)
 #else
 				if ((!((is_broadcast && was_short == 1) || recv_addr.u8[7] == SERVER_NODE) && got_strobe != 0) && collisions == 0)
@@ -1223,8 +1233,30 @@ send_packet(void)
 					if(ret != RADIO_TX_OK && !is_broadcast) {
 						collisions++;
 					}
-				}
+				}*/
 			}
+		// At the end of broadcast Tx one more time
+		if(is_broadcast || recv_addr.u8[1] == SERVER_NODE) {
+			if(was_short) {
+				target = SHORT_RADIO;
+			}
+			else {
+				target = LONG_RADIO;
+			}
+			dual_radio_switch(target);
+			queuebuf_to_packetbuf(packet);
+			queuebuf_free(packet);
+			ret = NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
+/*			if(ret != RADIO_TX_OK) {
+				collisions++;
+				printf("collision3 %d\n",collisions);
+			}*/
+		}
+		else {
+			queuebuf_free(packet);
+		}
+
+
 	  }
 
 #if DUAL_RADIO
@@ -1237,7 +1269,7 @@ send_packet(void)
 
 
   /* restore the packet to send */
-  queuebuf_to_packetbuf(packet);
+/*  queuebuf_to_packetbuf(packet);
   queuebuf_free(packet);
 
   if(was_short) {
@@ -1246,7 +1278,7 @@ send_packet(void)
   else {
 	  target = LONG_RADIO;
   }
-  dual_radio_switch(target);
+  dual_radio_switch(target);*/
 
   /* Who skip the preamble ack should do CS */
 #if COOJA
@@ -1260,28 +1292,29 @@ send_packet(void)
 					if(NETSTACK_RADIO.channel_clear() == 0) {
 //						printf("detect collision\n");
 						collisions++;
+						printf("collision4 %d\n",collisions);
 					}
 				}
 			}
 
-  /* Send the data packet. */
+ /*  Send the data packet.
   if((is_broadcast || got_strobe || is_streaming) && collisions == 0) {
 	  if(data_btb) {
 //		  printf("data BTB in rdc\n");
 		  data_btb = 0;
 	  }
-/*		if(is_broadcast && was_short == 1) {
+		if(is_broadcast && was_short == 1) {
 			printf("now2 %d\n",clock_time());
 		}
 		else
 		{
 			printf("now %d\n",clock_time());
-		}*/
+		}
 	  ret = NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
-		/* PRINTF("data tx %d\n",ret); */
+		 PRINTF("data tx %d\n",ret);
 	  if(ret != RADIO_TX_OK) {
 		  collisions++;
-	  }
+	  }*/
 #if DATA_ACK
 		if(!is_broadcast && !collisions)
 		{
@@ -1342,14 +1375,14 @@ send_packet(void)
 		}
 #endif
 
-  }
 #if COOJA
-  if(got_data_ack == 0 && recv_addr.u8[1] == SERVER_NODE)
+  if(got_data_ack == 0 && recv_addr.u8[1] == SERVER_NODE && !is_broadcast)
 #else
-  if(got_data_ack == 0 && recv_addr.u8[7] == SERVER_NODE)
+  if(got_data_ack == 0 && recv_addr.u8[7] == SERVER_NODE && !is_broadcast)
 #endif
   {
 	  collisions++;
+		printf("collision5 %d\n",collisions);
   }
 
 #if WITH_ENCOUNTER_OPTIMIZATION
@@ -1362,8 +1395,8 @@ send_packet(void)
   watchdog_start();
 #endif
 	/* For debug */
-  PRINTF("rimac: send (strobes=%u,len=%u,%s), done\n", strobes,
-	 packetbuf_totlen(), got_strobe ? "ack" : "no ack");
+  PRINTF("rimac: send (strobes=%u,len=%u,coll=%u,%s), done\n", strobes,
+	 packetbuf_totlen(), collisions, got_strobe ? "ack" : "no ack");
 #if DATA_ACK
   if(!is_broadcast && got_strobe)
   {
@@ -1508,6 +1541,7 @@ input_packet(void)
 		{		// The packet is for data
 		waiting_for_data = 0;
 		someone_is_sending = 0;
+		interference = 0;
 #if DUAL_RADIO
       if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
                                            &linkaddr_node_addr) ||
