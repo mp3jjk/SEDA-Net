@@ -874,13 +874,19 @@ send_packet(void)
 #if DUAL_RADIO
 	if(sending_in_LR() == LONG_RADIO){
 //		target = LONG_RADIO;
-		strobe_time = rimac_config.strobe_time * DUAL_DUTY_RATIO;
 	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
 	}	else	{
 //		target = SHORT_RADIO;
 		strobe_time = rimac_config.strobe_time;
 	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 	}
+	if(is_broadcast) {
+		strobe_time = rimac_config.strobe_time * 1.5;
+	}
+	else {
+		strobe_time = rimac_config.strobe_time;
+	}
+
 #else
 	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 #endif
