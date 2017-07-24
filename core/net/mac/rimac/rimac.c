@@ -237,7 +237,7 @@ static volatile unsigned char interference = 0;
 static volatile unsigned char backoff = 0;
 static volatile unsigned char after_data_tx = 0;
 static volatile unsigned char after_data_rx = 0;
-static volatile unsigned char radio_cca = 0;
+//static volatile unsigned char radio_cca = 0;
 static volatile unsigned char something_received = 0;
 
 
@@ -248,7 +248,7 @@ static volatile unsigned char something_received = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 0
+#define DEBUG 1
 #define TIMING 0
 
 #if DEBUG
@@ -617,9 +617,8 @@ cpowercycle(void *ptr)
 		  if(ret != RADIO_TX_OK) {
 			  backoff = 1;
 		  } else {
-			  //    		waiting_for_data = 1;
 			  someone_is_sending = 1;
-			  radio_cca = 1;
+//			  radio_cca = 1;
 			  something_received = 0;
 			  powercycle_dual_turn_radio_on(BOTH_RADIO);
 			  t = RTIMER_NOW();
@@ -653,12 +652,11 @@ cpowercycle(void *ptr)
 //       	printf("after rx %d\n",after_data_rx);
 		  }
 	  }
-	  if(backoff || waiting_for_data || preamble_ack_collision || after_data_tx || after_data_rx) { // Do Backoff
+	  if(backoff || preamble_ack_collision || after_data_tx || after_data_rx) { // Do Backoff
 //    	printf("sending %d waiting %d\n",we_are_sending,waiting_for_packet);
-//    	printf("backoff %d data %d coll %d tx %d rx %d\n",backoff,waiting_for_data,
+//    	printf("backoff %d coll %d tx %d rx %d\n",backoff,
 //    			preamble_ack_collision,after_data_tx,after_data_rx);
 		  interference = 0;
-		  waiting_for_data = 0;
 		  if (preamble_ack_collision) {
 			  backoff_exponent ++;
 		  } else {
@@ -688,7 +686,7 @@ cpowercycle(void *ptr)
 				  after_data_rx = 0;
 			  } else {
 				  powercycle_dual_turn_radio_off(BOTH_RADIO);
-				  if (backoff == 1 || waiting_for_data == 1) {
+				  if (backoff == 1) {
 					  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME); // random and exponential backoff
 				  } else {
 					  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2); // random and exponential backoff
@@ -1076,8 +1074,7 @@ send_packet(void)
 								} else {
 									PRINTDEBUG("rimac: strobe for someone else\n");
 								}
-						}
-						else {
+						} else {
 #if DUAL_RADIO
 							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_SENDER),
 									&recv_addr) ||
@@ -1089,7 +1086,7 @@ send_packet(void)
 #endif
 								{
 									collisions++;
-									printf("Recv target's data Tx\n");
+//									printf("Recv target's data Tx\n");
 								}
 						}
 					} else {
@@ -1305,8 +1302,19 @@ send_packet(void)
 									PRINTDEBUG("rimac: data ack for someone else\n");
 								}
 						} else if (dispatch_ext == DISPATCH || hdr->type == TYPE_STROBE) {
-								sender_backoff_exponent = hdr->dispatch >> 2;
-								PRINTF("SENDER_BACKOFF_EXPONENT: %d\n", sender_backoff_exponent);
+#if DUAL_RADIO
+							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+									&linkaddr_node_addr) ||
+									linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+											&long_linkaddr_node_addr))
+#else
+								if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+										&linkaddr_node_addr))
+#endif
+								{
+									sender_backoff_exponent = hdr->dispatch >> 2;
+									PRINTF("SENDER_BACKOFF_EXPONENT: %d\n", sender_backoff_exponent);
+								}
 						}/* else {
 							collisions++;
 						}*/
@@ -1441,6 +1449,7 @@ input_packet(void)
 {
 	interference = 1;
 	struct rimac_hdr *hdr;
+	uint8_t duplicated = 0;
 	// JJH
 #if DUAL_RADIO
   int target = SHORT_RADIO;
@@ -1609,6 +1618,7 @@ input_packet(void)
 	    if(id_array[ip] >= recv_id)
 	    {
 //	    	printf("rimac: duplicated data %d\n",recv_id);
+	    	duplicated = 1;
 	    }
 	    else
 	    {
@@ -1730,7 +1740,9 @@ input_packet(void)
 #endif
 
         PRINTDEBUG("rimac: data(%u)\n", packetbuf_datalen());
-        NETSTACK_MAC.input();
+        if(duplicated == 0) {
+        	NETSTACK_MAC.input();
+        }
         if(!(waiting_for_packet && is_short_waiting) && !after_data_rx) {
         	dual_radio_off(BOTH_RADIO);
         }
