@@ -253,7 +253,7 @@ static volatile unsigned char something_received = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 1
+#define DEBUG 0
 #define TIMING 0
 
 #if DEBUG
@@ -613,7 +613,7 @@ cpowercycle(void *ptr)
 
 		  memcpy(preamble, packetbuf_hdrptr(), len);
 		  preamble[len] = DISPATCH | (backoff_exponent << 2);
-		  /* PRINTF("SENDERa backoff_exponent %d\n", backoff_exponent); */
+		  /* PRINTF("SENDER backoff_exponent %d\n", backoff_exponent); */
 		  preamble[len+1] = TYPE_STROBE;
 
 		  //    	printf("tx preamble\n");
@@ -627,25 +627,25 @@ cpowercycle(void *ptr)
 			  something_received = 0;
 			  powercycle_dual_turn_radio_on(BOTH_RADIO);
 //			  t = RTIMER_NOW();
-			  uint8_t count;
+/*			  uint8_t count;
 			  for(count = 0;count < (DEFAULT_ON_TIME * CLOCK_SECOND)/ RTIMER_ARCH_SECOND; count++) {
 				  CSCHEDULE_POWERCYCLE(1);
 				  PT_YIELD(&pt);
 				  dual_radio_switch(SHORT_RADIO);
 				  if(NETSTACK_RADIO.receiving_packet() == 1) {
 					  powercycle_dual_turn_radio_off(LONG_RADIO);
-					  printf("Recv S something\n");
+//					  printf("Recv S something\n");
 					  something_received = SHORT_RADIO;
 					  break;
 				  }
 				  dual_radio_switch(LONG_RADIO);
 				  if(NETSTACK_RADIO.receiving_packet() == 1) {
 					  powercycle_dual_turn_radio_off(SHORT_RADIO);
-					  printf("Recv L something\n");
+//					  printf("Recv L something\n");
 					  something_received = LONG_RADIO;
 					  break;
 				  }
-			  }
+			  }*/
 
 /*			  while(RTIMER_CLOCK_LT(RTIMER_NOW(),t + DEFAULT_ON_TIME)) {
 				  dual_radio_switch(SHORT_RADIO);
@@ -665,18 +665,18 @@ cpowercycle(void *ptr)
 			  }*/
 
 
-			  if(something_received != 0) {
-				  printf("before rx PC\n");
+/*			  if(something_received != 0) {
+//				  printf("before rx PC\n");
 				  if(something_received == SHORT_RADIO) {
 					  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
 				  }
-				  else {
+				  else {*/
 					  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2);
-				  }
+//				  }
 				  something_received = 0;
 				  PT_YIELD(&pt);
-				  printf("after rx PC\n");
-			  }
+//				  printf("after rx PC\n");
+//			  }
 /*			  if(NETSTACK_RADIO.receiving_packet() == 1) {
 				  radio_cca = 0;
 				  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
