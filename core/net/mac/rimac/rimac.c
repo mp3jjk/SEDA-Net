@@ -631,18 +631,19 @@ cpowercycle(void *ptr)
 			  for(count = 0;count < (DEFAULT_ON_TIME * CLOCK_SECOND)/ RTIMER_ARCH_SECOND; count++) {
 				  CSCHEDULE_POWERCYCLE(1);
 				  PT_YIELD(&pt);
-				  dual_radio_switch(SHORT_RADIO);
-				  if(NETSTACK_RADIO.receiving_packet() == 1) {
-					  powercycle_dual_turn_radio_off(LONG_RADIO);
-//					  printf("Recv S something\n");
-					  something_received = SHORT_RADIO;
-					  break;
-				  }
+
 				  dual_radio_switch(LONG_RADIO);
 				  if(NETSTACK_RADIO.receiving_packet() == 1) {
 					  powercycle_dual_turn_radio_off(SHORT_RADIO);
 //					  printf("Recv L something\n");
 					  something_received = LONG_RADIO;
+					  break;
+				  }
+				  dual_radio_switch(SHORT_RADIO);
+				  if(NETSTACK_RADIO.receiving_packet() == 1) {
+					  powercycle_dual_turn_radio_off(LONG_RADIO);
+//					  printf("Recv S something\n");
+					  something_received = SHORT_RADIO;
 					  break;
 				  }
 			  }
