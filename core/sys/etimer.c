@@ -193,6 +193,7 @@ etimer_reset(struct etimer *et)
 void
 etimer_restart(struct etimer *et)
 {
+	timer_restart(&et->timer);
   add_timer(et);
 }
 /*---------------------------------------------------------------------------*/

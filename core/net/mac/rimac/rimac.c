@@ -626,8 +626,8 @@ cpowercycle(void *ptr)
 //			  radio_cca = 1;
 			  something_received = 0;
 			  powercycle_dual_turn_radio_on(BOTH_RADIO);
-//			  t = RTIMER_NOW();
-/*			  uint8_t count;
+			  t = RTIMER_NOW();
+			  uint8_t count;
 			  for(count = 0;count < (DEFAULT_ON_TIME * CLOCK_SECOND)/ RTIMER_ARCH_SECOND; count++) {
 				  CSCHEDULE_POWERCYCLE(1);
 				  PT_YIELD(&pt);
@@ -645,38 +645,38 @@ cpowercycle(void *ptr)
 					  something_received = LONG_RADIO;
 					  break;
 				  }
-			  }*/
+			  }
 
 /*			  while(RTIMER_CLOCK_LT(RTIMER_NOW(),t + DEFAULT_ON_TIME)) {
 				  dual_radio_switch(SHORT_RADIO);
 				  if(NETSTACK_RADIO.receiving_packet() == 1) {
-//					  powercycle_dual_turn_radio_off(LONG_RADIO);
-					  printf("Recv S something\n");
-					  something_received = 1;
+					  powercycle_dual_turn_radio_off(LONG_RADIO);
+//					  printf("Recv S something\n");
+					  something_received = SHORT_RADIO;
 					  break;
 				  }
 				  dual_radio_switch(LONG_RADIO);
 				  if(NETSTACK_RADIO.receiving_packet() == 1) {
-//					  powercycle_dual_turn_radio_off(SHORT_RADIO);
-					  printf("Recv L something\n");
-					  something_received = 1;
+					  powercycle_dual_turn_radio_off(SHORT_RADIO);
+//					  printf("Recv L something\n");
+					  something_received = LONG_RADIO;
 					  break;
 				  }
 			  }*/
 
 
-/*			  if(something_received != 0) {
+			  if(something_received != 0) {
 //				  printf("before rx PC\n");
 				  if(something_received == SHORT_RADIO) {
 					  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
 				  }
-				  else {*/
+				  else {
 					  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2);
-//				  }
+				  }
 				  something_received = 0;
 				  PT_YIELD(&pt);
 //				  printf("after rx PC\n");
-//			  }
+			  }
 /*			  if(NETSTACK_RADIO.receiving_packet() == 1) {
 				  radio_cca = 0;
 				  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
@@ -1310,7 +1310,7 @@ send_packet(void)
 #endif
 			t = RTIMER_NOW();
 			while(got_data_ack == 0 &&
-					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time)) {
+					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time*2)) {
 				 // printf("wait for data ack %d\n",got_data_ack);
 				packetbuf_clear();
 				len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);

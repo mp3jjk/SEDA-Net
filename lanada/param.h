@@ -74,7 +74,7 @@ uint8_t data_btb; // Back to back data Tx
 
 #define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
-#define PERIOD 30
+#define PERIOD 60
 #elif TRAFFIC_MODEL == 1
 #define ARRIVAL_RATE 0 // Mean value, 1/lambda
 #endif
