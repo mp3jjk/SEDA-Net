@@ -517,7 +517,12 @@ static int
 receiving_packet(void)
 {
 #if DUAL_RADIO
-	return simReceiving|simReceivingLR;
+	if (sending_in_LR() == LONG_RADIO)	{
+		return simReceivingLR;
+	} else if (sending_in_LR() == SHORT_RADIO) {
+		return simReceiving; 
+	}
+	/* return simReceiving|simReceivingLR; */
 #else
 	return simReceiving;
 #endif
@@ -527,7 +532,12 @@ static int
 pending_packet(void)
 {
 #if DUAL_RADIO
-  return (!simReceiving && simInSize > 0)|(!simReceivingLR && simInSizeLR > 0);
+	if (sending_in_LR() == LONG_RADIO) {
+		return !simReceiving && simInSize >0;
+	} else if (sending_in_LR() == SHORT_RADIO) {
+		return !simReceivingLR && simInSizeLR >0;
+	}
+  /* return (!simReceiving && simInSize > 0)|(!simReceivingLR && simInSizeLR > 0); */
 #else
   return !simReceiving && simInSize >0;
 #endif
