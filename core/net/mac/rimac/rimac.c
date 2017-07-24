@@ -613,7 +613,7 @@ cpowercycle(void *ptr)
 
 		  memcpy(preamble, packetbuf_hdrptr(), len);
 		  preamble[len] = DISPATCH | (backoff_exponent << 2);
-		  /* PRINTF("SENDER backoff_exponent %d\n", backoff_exponent); */
+		  /* PRINTF("SENDERa backoff_exponent %d\n", backoff_exponent); */
 		  preamble[len+1] = TYPE_STROBE;
 
 		  //    	printf("tx preamble\n");
@@ -627,6 +627,7 @@ cpowercycle(void *ptr)
 			  something_received = 0;
 			  powercycle_dual_turn_radio_on(BOTH_RADIO);
 //			  t = RTIMER_NOW();
+			  uint8_t count;
 			  for(count = 0;count < (DEFAULT_ON_TIME * CLOCK_SECOND)/ RTIMER_ARCH_SECOND; count++) {
 				  CSCHEDULE_POWERCYCLE(1);
 				  PT_YIELD(&pt);
@@ -634,18 +635,17 @@ cpowercycle(void *ptr)
 				  if(NETSTACK_RADIO.receiving_packet() == 1) {
 					  powercycle_dual_turn_radio_off(LONG_RADIO);
 					  printf("Recv S something\n");
-					  something_received = 1;
+					  something_received = SHORT_RADIO;
 					  break;
 				  }
 				  dual_radio_switch(LONG_RADIO);
 				  if(NETSTACK_RADIO.receiving_packet() == 1) {
 					  powercycle_dual_turn_radio_off(SHORT_RADIO);
 					  printf("Recv L something\n");
-					  something_received = 1;
+					  something_received = LONG_RADIO;
 					  break;
 				  }
 			  }
-
 
 /*			  while(RTIMER_CLOCK_LT(RTIMER_NOW(),t + DEFAULT_ON_TIME)) {
 				  dual_radio_switch(SHORT_RADIO);
@@ -665,14 +665,15 @@ cpowercycle(void *ptr)
 			  }*/
 
 
-			  if(something_received == 1) {
-				  something_received = 0;
+			  if(something_received != 0) {
 				  printf("before rx PC\n");
-				  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2);
-				  #if CONTIKI_TARGET_COOJA
-				  				  simProcessRunValue = 1;
-				  				  cooja_mt_yield();
-				  #endif  CONTIKI_TARGET_COOJA
+				  if(something_received == SHORT_RADIO) {
+					  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
+				  }
+				  else {
+					  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2);
+				  }
+				  something_received = 0;
 				  PT_YIELD(&pt);
 				  printf("after rx PC\n");
 			  }
@@ -1121,7 +1122,7 @@ send_packet(void)
 #endif
 								{
 									collisions++;
-//									printf("Recv target's data Tx\n");
+									/* printf("Recv target's data Tx\n"); */
 								}
 						}
 					} else {
@@ -1309,7 +1310,7 @@ send_packet(void)
 #endif
 			t = RTIMER_NOW();
 			while(got_data_ack == 0 &&
-					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time * 2)) {
+					RTIMER_CLOCK_LT(RTIMER_NOW(), t + rimac_config.strobe_wait_time)) {
 				 // printf("wait for data ack %d\n",got_data_ack);
 				packetbuf_clear();
 				len = NETSTACK_RADIO.read(packetbuf_dataptr(), PACKETBUF_SIZE);
@@ -1343,16 +1344,14 @@ send_packet(void)
 									linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
 											&long_linkaddr_node_addr))
 #else
-								if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-										&linkaddr_node_addr))
+							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+									&linkaddr_node_addr))
 #endif
 								{
 									sender_backoff_exponent = hdr->dispatch >> 2;
 									PRINTF("SENDER_BACKOFF_EXPONENT: %d\n", sender_backoff_exponent);
 								}
-						}/* else {
-							collisions++;
-						}*/
+						}
 					} else {
 						PRINTF("rimac: send failed to parse %u\n", len);
 					}

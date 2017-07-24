@@ -72,7 +72,6 @@ PROCESS_THREAD(ctimer_process, ev, data)
 
   while(1) {
     PROCESS_YIELD_UNTIL(ev == PROCESS_EVENT_TIMER);
-    printf("ctimer\n");
     for(c = list_head(ctimer_list); c != NULL; c = c->next) {
       if(&c->etimer == data) {
 	list_remove(ctimer_list, c);

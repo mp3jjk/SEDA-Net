@@ -245,7 +245,7 @@ doInterfaceActionsBeforeTick(void)
 //  printf("simInsize\n");
 #if DUAL_RADIO
   if(simInSize > 0 || simInSizeLR > 0) {
-	   printf("In the simInsize\n");
+//	   printf("In the simInsize\n");
 	    process_poll(&cooja_radio_process);
   }
 #else
@@ -517,7 +517,12 @@ static int
 receiving_packet(void)
 {
 #if DUAL_RADIO
-	return simReceiving|simReceivingLR;
+	if (sending_in_LR() == LONG_RADIO)	{
+		return simReceivingLR;
+	} else if (sending_in_LR() == SHORT_RADIO) {
+		return simReceiving; 
+	}
+	/* return simReceiving|simReceivingLR; */
 #else
 	return simReceiving;
 #endif
@@ -527,7 +532,12 @@ static int
 pending_packet(void)
 {
 #if DUAL_RADIO
-  return (!simReceiving && simInSize > 0)|(!simReceivingLR && simInSizeLR > 0);
+	if (sending_in_LR() == LONG_RADIO) {
+		return !simReceiving && simInSize >0;
+	} else if (sending_in_LR() == SHORT_RADIO) {
+		return !simReceivingLR && simInSizeLR >0;
+	}
+  /* return (!simReceiving && simInSize > 0)|(!simReceivingLR && simInSizeLR > 0); */
 #else
   return !simReceiving && simInSize >0;
 #endif
@@ -547,7 +557,7 @@ PROCESS_THREAD(cooja_radio_process, ev, data)
 
     len = radio_read(packetbuf_dataptr(), PACKETBUF_SIZE);
 		if(len > 0) {
-			printf("radio input\n");
+//			printf("radio input\n");
       packetbuf_set_datalen(len);
    	  NETSTACK_RDC.input();
    	}

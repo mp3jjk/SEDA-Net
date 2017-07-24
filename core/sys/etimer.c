@@ -171,7 +171,6 @@ add_timer(struct etimer *timer)
 void
 etimer_set(struct etimer *et, clock_time_t interval)
 {
-//	printf("etimer_set\n");
   timer_set(&et->timer, interval);
   add_timer(et);
 }
@@ -179,7 +178,6 @@ etimer_set(struct etimer *et, clock_time_t interval)
 void
 etimer_reset_with_new_interval(struct etimer *et, clock_time_t interval)
 {
-//	printf("etimer_reset_with_new_interval\n");
   timer_reset(&et->timer);
   et->timer.interval = interval;
   add_timer(et);
@@ -188,7 +186,6 @@ etimer_reset_with_new_interval(struct etimer *et, clock_time_t interval)
 void
 etimer_reset(struct etimer *et)
 {
-//	printf("etimer_reset\n");
   timer_reset(&et->timer);
   add_timer(et);
 }
@@ -196,8 +193,6 @@ etimer_reset(struct etimer *et)
 void
 etimer_restart(struct etimer *et)
 {
-//	printf("etimer_restart\n");
-  timer_restart(&et->timer);
   add_timer(et);
 }
 /*---------------------------------------------------------------------------*/
