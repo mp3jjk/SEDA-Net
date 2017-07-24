@@ -68,7 +68,7 @@
 #endif /* DUAL_RADIO */
 #include "sys/log_message.h"
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -270,6 +270,8 @@ tx_done(int status, struct rdc_buf_list *q, struct neighbor_queue *n)
   case MAC_TX_NOACK:
     PRINTF("csma: drop with status %d after %d transmissions, %d collisions\n",
                  status, n->transmissions, n->collisions);
+    LOG_MESSAGE("csma: drop with status %d after %d transmissions, %d collisions\n",
+    		status, n->transmissions, n->collisions);
 #ifdef ZOUL_MOTE
     LOG_MESSAGE("csma: drop with status %d after %d transmissions, %d collisions\n",
                  status, n->transmissions, n->collisions);
