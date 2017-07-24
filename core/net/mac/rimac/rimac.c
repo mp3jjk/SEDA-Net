@@ -608,7 +608,7 @@ cpowercycle(void *ptr)
 
 		  memcpy(preamble, packetbuf_hdrptr(), len);
 		  preamble[len] = DISPATCH | (backoff_exponent << 2);
-		  /* PRINTF("SENDER backoff_exponent %d\n", backoff_exponent); */
+		  /* PRINTF("SENDERa backoff_exponent %d\n", backoff_exponent); */
 		  preamble[len+1] = TYPE_STROBE;
 
 		  //    	printf("tx preamble\n");
@@ -623,16 +623,16 @@ cpowercycle(void *ptr)
 			  something_received = 0;
 			  powercycle_dual_turn_radio_on(BOTH_RADIO);
 			  t = RTIMER_NOW();
-			  while(RTIMER_CLOCK_LT(RTIMER_NOW(),t + DEFAULT_ON_TIME)) {
+			  while(RTIMER_CLOCK_LT(RTIMER_NOW(),t + DEFAULT_ON_TIME/4)) {
 				  dual_radio_switch(SHORT_RADIO);
 				  if(NETSTACK_RADIO.receiving_packet() == 1) {
-//					  powercycle_dual_turn_radio_off(LONG_RADIO);
+						/* powercycle_dual_turn_radio_off(LONG_RADIO); */
 					  something_received = 1;
 					  break;
 				  }
 				  dual_radio_switch(LONG_RADIO);
 				  if(NETSTACK_RADIO.receiving_packet() == 1) {
-//					  powercycle_dual_turn_radio_off(SHORT_RADIO);
+						/* powercycle_dual_turn_radio_off(SHORT_RADIO); */
 					  something_received = 1;
 					  break;
 				  }
@@ -1083,7 +1083,7 @@ send_packet(void)
 #endif
 								{
 									collisions++;
-									printf("Recv target's data Tx\n");
+									/* printf("Recv target's data Tx\n"); */
 								}
 						}
 					} else {
@@ -1299,11 +1299,21 @@ send_packet(void)
 									PRINTDEBUG("rimac: data ack for someone else\n");
 								}
 						} else if (dispatch_ext == DISPATCH || hdr->type == TYPE_STROBE) {
-								sender_backoff_exponent = hdr->dispatch >> 2;
-								PRINTF("SENDER_BACKOFF_EXPONENT: %d\n", sender_backoff_exponent);
-						}/* else {
-							collisions++;
-						}*/
+
+#if DUAL_RADIO
+							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+									&linkaddr_node_addr) ||
+									linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+											&long_linkaddr_node_addr))
+#else
+							if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
+									&linkaddr_node_addr))
+#endif
+								{
+									sender_backoff_exponent = hdr->dispatch >> 2;
+									PRINTF("SENDER_BACKOFF_EXPONENT: %d\n", sender_backoff_exponent);
+								}
+						}
 					} else {
 						PRINTF("rimac: send failed to parse %u\n", len);
 					}
