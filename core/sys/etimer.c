@@ -51,7 +51,6 @@
 
 static struct etimer *timerlist;
 static clock_time_t next_expiration;
-int debug_a=0;
 PROCESS(etimer_process, "Event timer");
 /*---------------------------------------------------------------------------*/
 static void
@@ -59,7 +58,6 @@ update_time(void)
 {
   clock_time_t tdist;
   clock_time_t now;
-  clock_time_t temp_add;
   struct etimer *t;
 
   if (timerlist == NULL) {
@@ -68,19 +66,13 @@ update_time(void)
     now = clock_time();
     t = timerlist;
     /* Must calculate distance to next time into account due to wraps */
-    debug_a = 0;
     tdist = t->timer.start + t->timer.interval - now;
-//    printf("before for\n");
     for(t = t->next; t != NULL; t = t->next) {
-    	temp_add = t->timer.start + t->timer.interval;
-//    	if(t->timer.start + t->timer.interval - now < tdist) {
-    	if(temp_add - now < tdist) {
+    	if(t->timer.start + t->timer.interval - now < tdist) {
     		tdist = t->timer.start + t->timer.interval - now;
     	}
     }
-    debug_a = -1;
     next_expiration = now + tdist;
-//    printf("after for\n");
   }
 }
 /*---------------------------------------------------------------------------*/
@@ -94,7 +86,6 @@ PROCESS_THREAD(etimer_process, ev, data)
   
   while(1) {
     PROCESS_YIELD();
-
     if(ev == PROCESS_EVENT_EXITED) {
       struct process *p = data;
 
@@ -117,13 +108,11 @@ PROCESS_THREAD(etimer_process, ev, data)
     }
 
   again:
-    
     u = NULL;
     
     for(t = timerlist; t != NULL; t = t->next) {
       if(timer_expired(&t->timer)) {
 	if(process_post(t->p, PROCESS_EVENT_TIMER, t) == PROCESS_ERR_OK) {
-	  
 	  /* Reset the process ID of the event timer, to signal that the
 	     etimer has expired. This is later checked in the
 	     etimer_expired() function. */
@@ -161,9 +150,7 @@ add_timer(struct etimer *timer)
 
   etimer_request_poll();
   if(timer->p != PROCESS_NONE) {
-//	  printf("timer in list %s %p\n",timer->p->name,timer);
 	  for(t = timerlist; t != NULL; t = t->next) {
-//		  printf("list timer %s %p\n",t->p->name,t);
 		  if(t == timer) {
 			  /* Timer already on list, bail out. */
 			  timer->p = PROCESS_CURRENT();
@@ -172,7 +159,6 @@ add_timer(struct etimer *timer)
 		  }
 	  }
   }
-//  printf("timer not in list %p\n",timer);
 
   /* Timer not on list. */
   timer->p = PROCESS_CURRENT();

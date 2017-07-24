@@ -58,6 +58,11 @@
 #include "experiment-setup.h"
 #endif
 
+#if CONTIKI_TARGET_COOJA
+#include "lib/simEnvChange.h"
+#include "sys/cooja_mt.h"
+#endif /* CONTIKI_TARGET_COOJA */
+
 #include <string.h>
 
 #include "../lanada/param.h"
@@ -621,25 +626,55 @@ cpowercycle(void *ptr)
 //			  radio_cca = 1;
 			  something_received = 0;
 			  powercycle_dual_turn_radio_on(BOTH_RADIO);
-			  t = RTIMER_NOW();
-			  while(RTIMER_CLOCK_LT(RTIMER_NOW(),t + DEFAULT_ON_TIME)) {
+//			  t = RTIMER_NOW();
+			  for(count = 0;count < (DEFAULT_ON_TIME * CLOCK_SECOND)/ RTIMER_ARCH_SECOND; count++) {
+				  CSCHEDULE_POWERCYCLE(1);
+				  PT_YIELD(&pt);
+				  dual_radio_switch(SHORT_RADIO);
+				  if(NETSTACK_RADIO.receiving_packet() == 1) {
+					  powercycle_dual_turn_radio_off(LONG_RADIO);
+					  printf("Recv S something\n");
+					  something_received = 1;
+					  break;
+				  }
+				  dual_radio_switch(LONG_RADIO);
+				  if(NETSTACK_RADIO.receiving_packet() == 1) {
+					  powercycle_dual_turn_radio_off(SHORT_RADIO);
+					  printf("Recv L something\n");
+					  something_received = 1;
+					  break;
+				  }
+			  }
+
+
+/*			  while(RTIMER_CLOCK_LT(RTIMER_NOW(),t + DEFAULT_ON_TIME)) {
 				  dual_radio_switch(SHORT_RADIO);
 				  if(NETSTACK_RADIO.receiving_packet() == 1) {
 //					  powercycle_dual_turn_radio_off(LONG_RADIO);
+					  printf("Recv S something\n");
 					  something_received = 1;
 					  break;
 				  }
 				  dual_radio_switch(LONG_RADIO);
 				  if(NETSTACK_RADIO.receiving_packet() == 1) {
 //					  powercycle_dual_turn_radio_off(SHORT_RADIO);
+					  printf("Recv L something\n");
 					  something_received = 1;
 					  break;
 				  }
-			  }
+			  }*/
+
+
 			  if(something_received == 1) {
 				  something_received = 0;
+				  printf("before rx PC\n");
 				  CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME * 2);
+				  #if CONTIKI_TARGET_COOJA
+				  				  simProcessRunValue = 1;
+				  				  cooja_mt_yield();
+				  #endif  CONTIKI_TARGET_COOJA
 				  PT_YIELD(&pt);
+				  printf("after rx PC\n");
 			  }
 /*			  if(NETSTACK_RADIO.receiving_packet() == 1) {
 				  radio_cca = 0;
@@ -1724,6 +1759,21 @@ input_packet(void)
 //			printf("after_data_rx!\n");
 			dual_radio_on(target);
 		}
+/*		else { // Fail to tx Data ACK retry until sender's waiting time
+			rtimer_clock_t wait;
+			wait = RTIMER_NOW();
+			while(RTIMER_CLOCK_LT(RTIMER_NOW(), wait + rimac_config.strobe_wait_time*2)) {
+				ret = NETSTACK_RADIO.send(ack, ack_len);
+		    	PRINTF("data ack re-tx %d\n",ret);
+				if(ret == RADIO_TX_OK) {
+					after_data_rx = target;
+			    	someone_is_sending = 1;
+		//			printf("after_data_rx!\n");
+					dual_radio_on(target);
+					break;
+				}
+			}
+		}*/
 		// is_short_waiting = 1;
 		// process_start(&strobe_wait, NULL);
 	  // NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());

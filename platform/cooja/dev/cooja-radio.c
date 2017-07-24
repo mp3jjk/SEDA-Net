@@ -245,7 +245,7 @@ doInterfaceActionsBeforeTick(void)
 //  printf("simInsize\n");
 #if DUAL_RADIO
   if(simInSize > 0 || simInSizeLR > 0) {
-	  // printf("In the simInsize\n");
+	   printf("In the simInsize\n");
 	    process_poll(&cooja_radio_process);
   }
 #else
@@ -547,6 +547,7 @@ PROCESS_THREAD(cooja_radio_process, ev, data)
 
     len = radio_read(packetbuf_dataptr(), PACKETBUF_SIZE);
 		if(len > 0) {
+			printf("radio input\n");
       packetbuf_set_datalen(len);
    	  NETSTACK_RDC.input();
    	}
