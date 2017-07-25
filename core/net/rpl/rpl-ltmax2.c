@@ -189,7 +189,7 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
   }
   uip_ds6_nbr_t *nbr = NULL;
 #if DUAL_RADIO
-  uint8_t is_longrange;
+  uint8_t is_longrange = 0;
 #endif
 
   nbr = rpl_get_nbr(p);
@@ -244,7 +244,7 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
     {
     	is_longrange = 0;
     }*/
-	is_longrange = long_ip_from_lladdr_map(&(nbr->ipaddr)) == 1 ? 1 : 0;
+//	is_longrange = long_ip_from_lladdr_map(&(nbr->ipaddr)) == 1 ? 1 : 0;
 
 #if RPL_ETX_WEIGHT
 	if(nbr->link_metric == 0)

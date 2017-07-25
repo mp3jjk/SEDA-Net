@@ -336,7 +336,7 @@ void polling(void* ptr){
 /*---------------------------------------------------------------------------*/
 PROCESS_THREAD(udp_client_process, ev, data)
 {
-  static struct etimer arrival;
+  static struct etimer arrival,routing;
   static struct ctimer backoff_timer;
 #if TRAFFIC_MODEL == 1 // Poisson traffic
   static clock_time_t poisson_int;
@@ -364,7 +364,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
 
   print_local_addresses();
 	// for debug
-	// NETSTACK_MAC.off(1);
+	 NETSTACK_MAC.off(1);
 
   /* new connection with remote host */
   client_conn = udp_new(NULL, UIP_HTONS(UDP_SERVER_PORT), NULL); 
@@ -408,7 +408,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
 #if ZOUL_MOTE
 	led_end = 1;
 #endif
-
+	etimer_set(&routing,60 * CLOCK_SECOND);
 #if TRAFFIC_MODEL == 0 // Periodic
   etimer_set(&arrival, SEND_INTERVAL);
 #elif TRAFFIC_MODEL == 1 // Poisson traffic
@@ -488,6 +488,10 @@ PROCESS_THREAD(udp_client_process, ev, data)
       }
 #endif
 
+    }
+    if(etimer_expired(&routing)) {
+    	etimer_stop(&routing);
+    	NETSTACK_MAC.on();
     }
   }
 
