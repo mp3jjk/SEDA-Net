@@ -557,7 +557,7 @@ PROCESS_THREAD(cooja_radio_process, ev, data)
 
     len = radio_read(packetbuf_dataptr(), PACKETBUF_SIZE);
 		if(len > 0) {
-			printf("radio input\n");
+			/* printf("radio input\n"); */
       packetbuf_set_datalen(len);
    	  NETSTACK_RDC.input();
    	}

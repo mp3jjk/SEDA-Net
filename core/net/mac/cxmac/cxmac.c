@@ -761,6 +761,10 @@ send_packet(void)
   struct queuebuf *packet;
   int is_already_streaming = 0;
   uint8_t collisions;
+
+  linkaddr_t recv_addr;
+  linkaddr_t recv_addr_2;
+  linkaddr_t temp_addr;
 	
 	/* for debug */
 #if TIMING
@@ -828,6 +832,21 @@ send_packet(void)
            packetbuf_addr(PACKETBUF_ADDR_RECEIVER)->u8[1]);
 #endif /* NETSTACK_CONF_WITH_IPV6 */
   }
+
+
+  linkaddr_copy(&recv_addr,packetbuf_addr(PACKETBUF_ADDR_RECEIVER));
+//  printf("recv_addr %d\n",recv_addr.u8[1]);
+  if(!is_broadcast) {
+	  linkaddr_copy(&recv_addr_2,&recv_addr);
+	  if(recv_addr.u8[0]==0x80) {
+		  recv_addr_2.u8[0] = 0x00;
+	  }
+	  else {
+		  recv_addr_2.u8[0] = 0x80;
+	  }
+  }
+
+
   len = NETSTACK_FRAMER.create();
   strobe_len = len + sizeof(struct cxmac_hdr);
   if(len < 0 || strobe_len > (int)sizeof(strobe)) {
@@ -989,6 +1008,16 @@ send_packet(void)
 #if ZOUL_MOTE
 			watchdog_periodic();
 #endif
+
+
+#if COOJA
+			if (recv_addr.u8[1] == SERVER_NODE )
+#else
+			if (recv_addr.u8[7] == SERVER_NODE )
+#endif
+			{
+				got_strobe_ack = 1;
+			}
 			/* JOONKI
 			 * short range broadcast skip sending strobed preambles */
 #if DUAL_RADIO
