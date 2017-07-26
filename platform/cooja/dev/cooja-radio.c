@@ -405,22 +405,30 @@ radio_send(const void *payload, unsigned short payload_len)
 #endif
   if(payload_len > COOJA_RADIO_BUFSIZE) {
 	  leds_off(LEDS_BLUE);
+#if DUAL_RADIO
 	  if(sending_in_LR() == LONG_RADIO) {
 		  simRadioHWOnLR = radiostateLR;
 	  }
 	  else {
 		  simRadioHWOn = radiostate;
 	  }
+#else
+	  simRadioHWOn = radiostate;
+#endif
     return RADIO_TX_ERR;
   }
   if(payload_len == 0) {
 	  leds_off(LEDS_BLUE);
+#if DUAL_RADIO
 	  if(sending_in_LR() == LONG_RADIO) {
 		  simRadioHWOnLR = radiostateLR;
 	  }
 	  else {
 		  simRadioHWOn = radiostate;
 	  }
+#else
+	  simRadioHWOn = radiostate;
+#endif
     return RADIO_TX_ERR;
   }
 	// PRINTF("COOJA RADIO: Sending packet in cooja driver\n");

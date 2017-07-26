@@ -1075,7 +1075,7 @@ send_packet(void)
 								} else {
 									PRINTDEBUG("cxmac: strobe ack for someone else\n");
 								}
-							} else /*if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE)*/ {
+							} else if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE) {
 								PRINTDEBUG("cxmac: strobe from someone else\n");
 								collisions++;
 							}
@@ -1212,34 +1212,6 @@ send_packet(void)
   /* Send the data packet. */
   if((is_broadcast || got_strobe_ack || is_streaming) && collisions == 0) {
 
-#if RPL_ENERGY_MODE
-//	     Relaying Tx energy consumption for Data packet JJH
-	  original_datalen = packetbuf_totlen();
-	  original_dataptr = packetbuf_hdrptr();
-	  if(original_dataptr[original_datalen-1]=='X')
-	  {
-//	    	 For each data relay, energy reduction 1 for short 2 for long
-	  	if(remaining_energy >1){
-#if DUAL_RADIO
-	    	if(radio_received_is_longrange()==LONG_RADIO)
-	    	{
-	    		if(remaining_energy-2 < 1)
-	    			remaining_energy=1;
-	    		else
-	    			remaining_energy-=2;
-				}	else {
-	    		remaining_energy--;
-				}
-#else
-				remaining_energy--;
-#endif
-			}
-			PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
-	   	if(remaining_energy == 1) { // A node dies first 
-	   		PRINTF("ENERGY DEPLETION\n");
-			}
-		}
-#endif
 #if TIMING
 		 mark_time=RTIMER_NOW();
 //		printf("cxmac: send data here\n");
@@ -1398,6 +1370,8 @@ static void
 input_packet(void)
 {
   struct cxmac_hdr *hdr;
+  uint8_t duplicated = 0;
+
 	// JJH
 #if DUAL_RADIO
   int target = SHORT_RADIO;
@@ -1548,6 +1522,7 @@ input_packet(void)
 	    if(id_array[ip] >= recv_id)
 	    {
 //	    	printf("cxmac: duplicated data %d\n",recv_id);
+	    	duplicated = 1;
 	    }
 	    else
 	    {
@@ -1563,6 +1538,7 @@ input_packet(void)
 	    	}*/
 //	    	printf("recv sender ip: %d %d\n",
 //	    	packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[0],packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1]);
+/*
 	    	if(packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[0] == 0x80)
 	    	{
 ////	    		printf("long!\n");
@@ -1570,9 +1546,10 @@ input_packet(void)
 	    	}
 	    	else
 	    	{
+*/
 //	    		printf("short!\n");
 	    		id_count[recv_id%BUF_SIZE]++;
-	    	}
+//	    	}
 #else
 	    	id_count[recv_id%BUF_SIZE]++;
 #endif
@@ -1687,7 +1664,9 @@ input_packet(void)
 #endif
 
         PRINTDEBUG("cxmac: data(%u)\n", packetbuf_datalen());
-        NETSTACK_MAC.input();
+        if(duplicated == 0) {
+        	NETSTACK_MAC.input();
+        }
         return;
       } else {
         PRINTDEBUG("cxmac: data not for us\n");

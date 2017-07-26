@@ -39,6 +39,8 @@
  *         Joakim Eriksson <joakime@sics.se>
  */
 
+#if DUAL_RADIO
+
 #include "dev/leds.h"
 #include "dev/radio.h"
 #include "dev/watchdog.h"
@@ -57,11 +59,6 @@
 #ifdef EXPERIMENT_SETUP
 #include "experiment-setup.h"
 #endif
-
-#if CONTIKI_TARGET_COOJA
-#include "lib/simEnvChange.h"
-#include "sys/cooja_mt.h"
-#endif /* CONTIKI_TARGET_COOJA */
 
 #include <string.h>
 
@@ -127,7 +124,7 @@ struct rimac_hdr {
 #define MAX_STROBE_SIZE 50
 
 #define CARRIER_SENSING_TIME RTIMER_ARCH_SECOND / 1000 * 2
-#define DWELL_TIME RTIMER_ARCH_SECOND / 1000 * 7
+#define DWELL_TIME RTIMER_ARCH_SECOND / 1000 * 2
 
 #ifdef RIMAC_CONF_ON_TIME
 #define DEFAULT_ON_TIME (RIMAC_CONF_ON_TIME)
@@ -625,13 +622,16 @@ cpowercycle(void *ptr)
 			  someone_is_sending = 1;
 //			  radio_cca = 1;
 			  something_received = 0;
+#if DUAL_RADIO
 			  powercycle_dual_turn_radio_on(BOTH_RADIO);
+#else
+			  on();
+#endif
 			  t = RTIMER_NOW();
 			  uint8_t count;
-			  for(count = 0;count < (DEFAULT_ON_TIME * CLOCK_SECOND)/ RTIMER_ARCH_SECOND; count++) {
+			  for(count = 0;count < (DEFAULT_ON_TIME * CLOCK_SECOND)/ RTIMER_ARCH_SECOND / 2 + 2; count++) {
 				  CSCHEDULE_POWERCYCLE(1);
 				  PT_YIELD(&pt);
-
 				  dual_radio_switch(LONG_RADIO);
 				  if(NETSTACK_RADIO.receiving_packet() == 1) {
 					  powercycle_dual_turn_radio_off(SHORT_RADIO);
@@ -755,6 +755,7 @@ cpowercycle(void *ptr)
 		  }
 		  else {
 			  temp = random_rand()%DEFAULT_OFF_TIME + DEFAULT_OFF_TIME/2;
+//			  temp = DEFAULT_OFF_TIME;
 			  CSCHEDULE_POWERCYCLE(temp);
 		  }
 		  PT_YIELD(&pt);
@@ -912,7 +913,6 @@ send_packet(void)
 	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
 	}	else	{
 //		target = SHORT_RADIO;
-		strobe_time = rimac_config.strobe_time;
 	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 	}
 	if(is_broadcast) {
@@ -1054,9 +1054,9 @@ send_packet(void)
 #if DUAL_RADIO
 #if LSA_MAC
 #if COOJA
-			if (recv_addr.u8[1] == SERVER_NODE || data_btb)
+			if (rimac_is_on == 0 || recv_addr.u8[1] == SERVER_NODE || data_btb)
 #else
-			if (recv_addr.u8[7] == SERVER_NODE || data_btb)
+			if (rimac_is_on == 0 || recv_addr.u8[7] == SERVER_NODE || data_btb)
 #endif
 			{
 				got_strobe = 1;
@@ -1175,47 +1175,6 @@ send_packet(void)
 				}
 			}
 
-
-/*#if COOJA
-				if ((!((is_broadcast && was_short == 1) || recv_addr.u8[1] == SERVER_NODE) && got_strobe != 0) && collisions == 0)
-#else
-				if ((!((is_broadcast && was_short == 1) || recv_addr.u8[7] == SERVER_NODE) && got_strobe != 0) && collisions == 0)
-#endif
-				{
-					printf("got_strobe %d\n",got_strobe);
-					if(got_strobe == 2) {
-						got_strobe = 0;
-					}
-			//	  printf("sender %d\n",packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1]);
-					linkaddr_copy(&temp_addr,packetbuf_addr(PACKETBUF_ADDR_SENDER));
-					packetbuf_clear();
-					packetbuf_set_addr(PACKETBUF_ADDR_SENDER,&long_linkaddr_node_addr);
-					packetbuf_set_addr(PACKETBUF_ADDR_RECEIVER,&temp_addr);
-
-					len = NETSTACK_FRAMER.create();
-					ack_len = len + sizeof(struct rimac_hdr);
-					if(len < 0 || ack_len > (int)sizeof(preamble_ack)) {
-						PRINTF("rimac: send failed, too large header\n");
-						return MAC_TX_ERR_FATAL;
-					}
-					memcpy(preamble_ack, packetbuf_hdrptr(), len);
-					preamble_ack[len] = DISPATCH | (++strobes << 2);
-					if(was_short) {
-						preamble_ack[len + 1] = TYPE_STROBE_SHORT_ACK;
-					}
-					else if(is_broadcast){
-						preamble_ack[len + 1] = TYPE_STROBE_LONG_BROADCAST_ACK;
-					}
-					else {
-						preamble_ack[len + 1] = TYPE_STROBE_LONG_ACK;
-					}
-					ret = NETSTACK_RADIO.send(preamble_ack, ack_len);
-					PRINTF("preamble ack tx %d\n",ret);
-					if(ret != RADIO_TX_OK && !is_broadcast) {
-						collisions++;
-					}
-				}*/
-			}
 		// At the end of broadcast Tx one more time
 		if(is_broadcast) {
 			if(was_short) {
@@ -1240,6 +1199,7 @@ send_packet(void)
 
 
 	  }
+  }
 
 #if DUAL_RADIO
   dual_radio_off(BOTH_RADIO);
@@ -1251,54 +1211,10 @@ send_packet(void)
 
 
   /* restore the packet to send */
-/*  queuebuf_to_packetbuf(packet);
-  queuebuf_free(packet);
-
-  if(was_short) {
-	  target = SHORT_RADIO;
+  if(data_btb) {
+//	  printf("data BTB in rdc\n");
+	  data_btb = 0;
   }
-  else {
-	  target = LONG_RADIO;
-  }
-  dual_radio_switch(target);*/
-
-  /* Who skip the preamble ack should do CS */
-/*#if COOJA
-			if (recv_addr.u8[1] == SERVER_NODE)
-#else
-			if (recv_addr.u8[7] == SERVER_NODE)
-#endif
-			{
-				dual_radio_on(target);
-				while(RTIMER_CLOCK_LT(RTIMER_NOW(), t + CARRIER_SENSING_TIME)) {
-					if(NETSTACK_RADIO.channel_clear() == 0) {
-//						printf("detect collision\n");
-						collisions++;
-//						printf("collision4 %d\n",collisions);
-					}
-				}
-			}*/
-			if(data_btb) {
-//				printf("data BTB in rdc\n");
-				data_btb = 0;
-			} /*  Send the data packet.
-  if((is_broadcast || got_strobe || is_streaming) && collisions == 0) {
-	  if(data_btb) {
-//		  printf("data BTB in rdc\n");
-		  data_btb = 0;
-	  }
-		if(is_broadcast && was_short == 1) {
-			printf("now2 %d\n",clock_time());
-		}
-		else
-		{
-			printf("now %d\n",clock_time());
-		}
-	  ret = NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
-		 PRINTF("data tx %d\n",ret);
-	  if(ret != RADIO_TX_OK) {
-		  collisions++;
-	  }*/
 #if DATA_ACK
 		if(!is_broadcast && !collisions && got_strobe == 1)
 		{
@@ -1510,34 +1426,15 @@ input_packet(void)
     original_datalen = packetbuf_totlen();
     original_dataptr = packetbuf_dataptr();
 #endif
-/*
-#if STROBE_CNT_MODE
-    char dispatch_ext = hdr->dispatch << 6;
-//    printf("packet input dispatch %d\n",dispatch_ext);
-*/
-//#if DATA_ACK
-//    if(dispatch_ext != DISPATCH
-//    		|| (hdr->type != TYPE_STROBE_ACK && hdr->type != TYPE_STROBE && hdr->type != TYPE_ANNOUNCEMENT && hdr->type != TYPE_DATA_ACK))
-/*
-#else
-    if(dispatch_ext != DISPATCH
-       		|| (hdr->type != TYPE_STROBE_ACK && hdr->type != TYPE_STROBE && hdr->type != TYPE_ANNOUNCEMENT))
-*/
 
-//#endif
-//#else
-//    if(hdr->dispatch != DISPATCH)
 #if DATA_ACK
     if(dispatch_ext != DISPATCH
-    		|| (hdr->type != TYPE_STROBE && hdr->type != TYPE_STROBE_SHORT_ACK && hdr->type != TYPE_STROBE_LONG_ACK
-    				&& hdr->type != TYPE_STROBE_LONG_BROADCAST_ACK && hdr->type != TYPE_DATA_ACK))
+    		|| (hdr->type != TYPE_STROBE && hdr->type != TYPE_DATA_ACK))
 #else
     if(dispatch_ext != DISPATCH
-       		|| (hdr->type != TYPE_STROBE && hdr->type != TYPE_STROBE_SHORT_ACK && hdr->type != TYPE_STROBE_LONG_ACK
-       				&& hdr->type != TYPE_STROBE_LONG_BROADCAST_ACK))
+       		|| (hdr->type != TYPE_STROBE))
 
 #endif
-//#endif
 		{		// The packet is for data
 		waiting_for_data = 0;
 		someone_is_sending = 0;
@@ -1564,38 +1461,12 @@ input_packet(void)
 
 
 #if DUAL_RADIO
-/*
-#if LSA_MAC
-//				 JOONKI
-//				 waiting for incoming short broadcast
-				if (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER), &linkaddr_null) &&
-						radio_received_is_longrange()==LONG_RADIO &&
-						linkaddr_node_addr.u8[1] != SERVER_NODE){
-#ifdef	COOJA
-//					printf("long broadcast\n");
-					dual_radio_off(LONG_RADIO);
-					dual_radio_on(SHORT_RADIO);
-					waiting_for_packet = 1;
-					is_short_waiting = 1;
-//					someone_is_sending = 1;kk
-					process_start(&strobe_wait, NULL);
-#endif
-				}	else{
-					dual_radio_off(BOTH_RADIO);
-					waiting_for_packet = 0;
-				}
-#else // LSA_MAC
-				dual_radio_off(BOTH_RADIO);
-				waiting_for_packet = 0;
-#endif // LSA_MAC
-*/
+    	  dual_radio_off(BOTH_RADIO);
+    	  waiting_for_packet = 0;
 #else
     	  off();
     	  waiting_for_packet = 0;
 #endif
-
-			dual_radio_off(BOTH_RADIO);
-			waiting_for_packet = 0;
 
 
 #if RIMAC_CONF_COMPOWER
@@ -1672,7 +1543,7 @@ input_packet(void)
 	    	if(packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[0] == 0x80)
 	    	{*/
 ////	    		printf("long!\n");
-		    	id_count[recv_id%BUF_SIZE]+=LONG_WEIGHT_RATIO;
+//		    	id_count[recv_id%BUF_SIZE]+=LONG_WEIGHT_RATIO;
 //	    	}
 //	    	else
 //	    	{
@@ -1754,26 +1625,36 @@ input_packet(void)
 		ret = NETSTACK_RADIO.send(ack, ack_len);
     	PRINTF("data ack tx %d\n",ret);
 		if(ret == RADIO_TX_OK) {
+#if DUAL_RADIO
 			after_data_rx = target;
+			dual_radio_on(target);
+#else
+			after_data_rx = 1;
+			on();
+#endif
 	    	someone_is_sending = 1;
 //			printf("after_data_rx!\n");
-			dual_radio_on(target);
 		}
-/*		else { // Fail to tx Data ACK retry until sender's waiting time
+		else { // Fail to tx Data ACK retry until sender's waiting time
 			rtimer_clock_t wait;
 			wait = RTIMER_NOW();
-			while(RTIMER_CLOCK_LT(RTIMER_NOW(), wait + rimac_config.strobe_wait_time*2)) {
+			while(RTIMER_CLOCK_LT(RTIMER_NOW(), wait + rimac_config.strobe_wait_time)) {
 				ret = NETSTACK_RADIO.send(ack, ack_len);
 		    	PRINTF("data ack re-tx %d\n",ret);
 				if(ret == RADIO_TX_OK) {
+#if DUAL_RADIO
 					after_data_rx = target;
+					dual_radio_on(target);
+#else
+					after_data_rx = 1;
+					on();
+#endif
 			    	someone_is_sending = 1;
 		//			printf("after_data_rx!\n");
-					dual_radio_on(target);
 					break;
 				}
 			}
-		}*/
+		}
 		// is_short_waiting = 1;
 		// process_start(&strobe_wait, NULL);
 	  // NETSTACK_RADIO.send(packetbuf_hdrptr(), packetbuf_totlen());
@@ -1783,7 +1664,11 @@ input_packet(void)
 	}
 	else {
 		after_data_rx = 3;
+#if DUAL_RADIO
 		dual_radio_off(BOTH_RADIO);
+#else
+		off();
+#endif
 	}
 	queuebuf_to_packetbuf(packet);
 	queuebuf_free(packet);
@@ -1794,7 +1679,11 @@ input_packet(void)
         	NETSTACK_MAC.input();
         }
         if(!(waiting_for_packet && is_short_waiting) && !after_data_rx) {
+#if DUAL_RADIO
         	dual_radio_off(BOTH_RADIO);
+#else
+        	off();
+#endif
         }
         return;
       } else {
@@ -1914,20 +1803,20 @@ input_packet(void)
       packetbuf_hdrreduce(sizeof(struct rimac_hdr));
       parse_announcements(packetbuf_addr(PACKETBUF_ADDR_SENDER));
 #endif /* RIMAC_CONF_ANNOUNCEMENTS */
-    } else if(hdr->type == TYPE_STROBE_SHORT_ACK || hdr->type == TYPE_STROBE_LONG_ACK) {
+    } /*else if(hdr->type == TYPE_STROBE_SHORT_ACK || hdr->type == TYPE_STROBE_LONG_ACK) {
 //      PRINTDEBUG("rimac: stray strobe ack\n");
-    }
+    }*/
 #if DATA_ACK
     else if(hdr->type == TYPE_DATA_ACK) {
     	PRINTDEBUG("rimac: stray data_ack\n");
     }
 #endif
-    else if(hdr->type == TYPE_STROBE_LONG_BROADCAST_ACK && linkaddr_node_addr.u8[1] != SERVER_NODE) {
+    /*else if(hdr->type == TYPE_STROBE_LONG_BROADCAST_ACK && linkaddr_node_addr.u8[1] != SERVER_NODE) {
 //    	someone_is_sending = 1;kk
     	PRINTDEBUG("rimac: stray long_broadcast_ack\n");
     	uint8_t cnt = hdr->dispatch >> 2;
     	process_start(&strobe_wait, &cnt);
-    }
+    }*/
     else {
       PRINTF("rimac: unknown type %u (%u)\n", hdr->type,
              packetbuf_datalen());
@@ -2096,3 +1985,4 @@ const struct rdc_driver rimac_driver =
     turn_off,
     channel_check_interval,
   };
+#endif
