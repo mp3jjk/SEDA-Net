@@ -29,7 +29,7 @@ DATE=$7
 DATA_ACK=$8
 ALPHA_DIV=$9
 ONLY_LONG=${10}
-CHECK=${11}
+CHECK=${12}
 
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
