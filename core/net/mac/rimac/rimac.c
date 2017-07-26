@@ -39,6 +39,8 @@
  *         Joakim Eriksson <joakime@sics.se>
  */
 
+#if DUAL_RADIO
+
 #include "dev/leds.h"
 #include "dev/radio.h"
 #include "dev/watchdog.h"
@@ -57,11 +59,6 @@
 #ifdef EXPERIMENT_SETUP
 #include "experiment-setup.h"
 #endif
-
-#if CONTIKI_TARGET_COOJA
-#include "lib/simEnvChange.h"
-#include "sys/cooja_mt.h"
-#endif /* CONTIKI_TARGET_COOJA */
 
 #include <string.h>
 
@@ -253,7 +250,7 @@ static volatile unsigned char something_received = 0;
 #define LEDS_ON(x) leds_on(x)
 #define LEDS_OFF(x) leds_off(x)
 #define LEDS_TOGGLE(x) leds_toggle(x)
-#define DEBUG 1
+#define DEBUG 0
 #define TIMING 0
 
 #if DEBUG
@@ -625,7 +622,11 @@ cpowercycle(void *ptr)
 			  someone_is_sending = 1;
 //			  radio_cca = 1;
 			  something_received = 0;
+#if DUAL_RADIO
 			  powercycle_dual_turn_radio_on(BOTH_RADIO);
+#else
+			  on();
+#endif
 			  t = RTIMER_NOW();
 			  uint8_t count;
 			  for(count = 0;count < (DEFAULT_ON_TIME * CLOCK_SECOND)/ RTIMER_ARCH_SECOND / 2 + 2; count++) {
@@ -1624,10 +1625,15 @@ input_packet(void)
 		ret = NETSTACK_RADIO.send(ack, ack_len);
     	PRINTF("data ack tx %d\n",ret);
 		if(ret == RADIO_TX_OK) {
+#if DUAL_RADIO
 			after_data_rx = target;
+			dual_radio_on(target);
+#else
+			after_data_rx = 1;
+			on();
+#endif
 	    	someone_is_sending = 1;
 //			printf("after_data_rx!\n");
-			dual_radio_on(target);
 		}
 		else { // Fail to tx Data ACK retry until sender's waiting time
 			rtimer_clock_t wait;
@@ -1636,10 +1642,15 @@ input_packet(void)
 				ret = NETSTACK_RADIO.send(ack, ack_len);
 		    	PRINTF("data ack re-tx %d\n",ret);
 				if(ret == RADIO_TX_OK) {
+#if DUAL_RADIO
 					after_data_rx = target;
+					dual_radio_on(target);
+#else
+					after_data_rx = 1;
+					on();
+#endif
 			    	someone_is_sending = 1;
 		//			printf("after_data_rx!\n");
-					dual_radio_on(target);
 					break;
 				}
 			}
@@ -1653,7 +1664,11 @@ input_packet(void)
 	}
 	else {
 		after_data_rx = 3;
+#if DUAL_RADIO
 		dual_radio_off(BOTH_RADIO);
+#else
+		off();
+#endif
 	}
 	queuebuf_to_packetbuf(packet);
 	queuebuf_free(packet);
@@ -1664,7 +1679,11 @@ input_packet(void)
         	NETSTACK_MAC.input();
         }
         if(!(waiting_for_packet && is_short_waiting) && !after_data_rx) {
+#if DUAL_RADIO
         	dual_radio_off(BOTH_RADIO);
+#else
+        	off();
+#endif
         }
         return;
       } else {
@@ -1966,3 +1985,4 @@ const struct rdc_driver rimac_driver =
     turn_off,
     channel_check_interval,
   };
+#endif

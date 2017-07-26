@@ -20,7 +20,7 @@
 #define LONG_WEIGHT_RATIO 2
 
 /* Weight ratio between rank and parent's degree */
-#define ALPHA	0
+#define ALPHA	1
 #define ALPHA_DIV	2
 
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
@@ -74,7 +74,7 @@ uint8_t data_btb; // Back to back data Tx
 
 #define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
-#define PERIOD 60
+#define PERIOD 30
 #elif TRAFFIC_MODEL == 1
 #define ARRIVAL_RATE 0 // Mean value, 1/lambda
 #endif

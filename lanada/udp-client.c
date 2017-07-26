@@ -408,7 +408,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
 #if ZOUL_MOTE
 	led_end = 1;
 #endif
-	etimer_set(&routing,60 * CLOCK_SECOND);
+//	etimer_set(&routing,60 * CLOCK_SECOND);
 #if TRAFFIC_MODEL == 0 // Periodic
   etimer_set(&arrival, SEND_INTERVAL);
 #elif TRAFFIC_MODEL == 1 // Poisson traffic
