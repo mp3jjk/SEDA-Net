@@ -37,7 +37,10 @@ then
 		    do
 			for alpha_div in "${VAR_ALPHA_DIV[@]}"
 			do
-			    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div $ONLY_LONG $range
+			    for check in "${VAR_CHECK_RATE[@]}"
+			    do
+			    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div $ONLY_LONG $range $check
+			    done
 			done
 		    done
 		done
@@ -54,7 +57,10 @@ then
 		    do
 			for alpha_div in "${VAR_ALPHA_DIV[@]}"
 			do
-			    ./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div $ONLY_LONG $range
+			    for check in "${VAR_CHECK_RATE[@]}"
+			    do
+				./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div $ONLY_LONG $range $check
+			    done
 			done
 		    done
 		done
