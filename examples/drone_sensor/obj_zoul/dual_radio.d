@@ -38,7 +38,8 @@ obj_zoul/dual_radio.o: ../../platform/zoul/./dual_radio.c \
  ../../core/./net/ipv6/multicast/uip-mcast6-route.h \
  ../../core/./net/ipv6/multicast/smrf.h \
  ../../core/./net/ipv6/multicast/roll-tm.h \
- ../../core/./net/ipv6/multicast/uip-mcast6-stats.h
+ ../../core/./net/ipv6/multicast/uip-mcast6-stats.h \
+ ../../core/./net/rpl/rpl-icmp6.h
 ../../platform/zoul/./dual_radio.c :
  ../../platform/zoul/./dual_radio.h ../../platform/zoul/./contiki-conf.h :
  ../../core/./dev/radio.h ../../platform/zoul/firefly/board.h :
@@ -80,3 +81,4 @@ obj_zoul/dual_radio.o: ../../platform/zoul/./dual_radio.c \
  ../../core/./net/ipv6/multicast/smrf.h :
  ../../core/./net/ipv6/multicast/roll-tm.h :
  ../../core/./net/ipv6/multicast/uip-mcast6-stats.h :
+ ../../core/./net/rpl/rpl-icmp6.h :

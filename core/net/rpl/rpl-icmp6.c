@@ -794,7 +794,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 	  if(dag->preferred_parent->parent_weight == 0)
 	  {
 #if DUAL_RADIO
-		  PRINTF("send dio weight %d default\n",sending_in_LR()==LONG_RADIO ? LONG_WEIGHT_RATIO : 1);
+		  PRINTF("send dio weight %d %d default\n",sending_in_LR()==LONG_RADIO ? LONG_WEIGHT_RATIO : 1,sending_in_LR());
 		  buffer[pos++] = sending_in_LR()==LONG_RADIO ? LONG_WEIGHT_RATIO : 1; /* parent's weight default */
 #else	/* DUAL_RADIO */
 			PRINTF("send dio weight %d default\n",1);

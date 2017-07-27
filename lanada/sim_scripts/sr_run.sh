@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JOONKI=0
+JOONKI=1
 
 if [ $JOONKI -eq 0 ]
 then
@@ -29,6 +29,7 @@ DATE=$7
 DATA_ACK=$8
 ALPHA_DIV=$9
 ONLY_LONG=${10}
+CHECK=${12}
 
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
@@ -39,13 +40,13 @@ else
     cd $DATE\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK
 fi
 
-../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK 1 $ALPHA_DIV $ONLY_LONG
+../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK 1 $ALPHA_DIV $ONLY_LONG $CHECK
 
-if [ ! -e $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range ]
+if [ ! -e $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range\_$CHECK ]
 then
-    mkdir $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range
+    mkdir $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range\_$CHECK
 fi
-cd $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range
+cd $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range\_$CHECK
 echo "#########################  We are in $PWD  ########################"
 
 if [ ! -e COOJA.testlog ]

@@ -1022,9 +1022,22 @@ send_packet(void)
 			 * short range broadcast skip sending strobed preambles */
 #if DUAL_RADIO
 #if LSA_MAC
+#if LSA_R
+			if (LSA_SR_preamble == 0) {
+				if (is_broadcast && was_short == 1){
+					break;
+				} 
+			} else {
+				if (is_broadcast && was_short == 0) {
+					printf("Long bradcast skip when LSA_SR_preamble\n");
+      		return MAC_TX_OK;
+				}
+			}
+#else /* LSA_R */
 			if (is_broadcast && was_short == 1){
 				break;
 			} 
+#endif /* LSA_R */
 #endif /* LSA_MAC */ 
 #endif
 			/* for debug */
