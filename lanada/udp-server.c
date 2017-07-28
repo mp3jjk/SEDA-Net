@@ -51,6 +51,8 @@
 
 #define UDP_EXAMPLE_ID  190
 
+#define BUF_SIZE_SERVER 1000
+
 #include "param.h"
 /* Remaining energy init JJH*/
 #if RPL_ENERGY_MODE
@@ -60,6 +62,7 @@ uint8_t alpha = ALPHA;
 uint8_t my_weight = 0;
 int id_array[MAX_NUM_NODE]={0,};
 uint8_t id_count[BUF_SIZE]={0,};
+uint8_t id_server_count[BUF_SIZE_SERVER]={0,};
 #endif
 
 static struct uip_udp_conn *server_conn;
@@ -73,6 +76,8 @@ tcpip_handler(void)
   char *appdata;
   int recv_id=0;
   int recv_ip=0;
+  int count_index=0;
+  uint8_t init = 0;
   if(uip_newdata()) {
     appdata = (char *)uip_appdata;
     appdata[uip_datalen()] = 0;
@@ -83,18 +88,19 @@ tcpip_handler(void)
 //    printf("id %d ip %d\n",recv_id,recv_ip);
 //    printf("id_array %d %d %d %d %d %d\n",id_array[1],id_array[2],id_array[3],id_array[4],id_array[5],id_array[6]);
 //    if(id_array[UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1]] >= recv_id)
+//    count_index = recv_id % BUF_SIZE;
     if(id_array[recv_ip] >= recv_id)
     {
     	printf("app: duplicated data %d\n",recv_id);
     	return;
     }
-    id_count[recv_id]++;
+    id_server_count[recv_id]++;
 
     id_array[recv_ip] = recv_id;
     PRINTF("recv DATA '%s' from ", appdata);
     PRINTF("%d %c count: %d \n",
            UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1],\
-					  UIP_IP_BUF->srcipaddr.u8[8]>128?'L':'S',id_count[recv_id]);
+					  UIP_IP_BUF->srcipaddr.u8[8]>128?'L':'S',id_server_count[recv_id]);
 
 /*		
 		PRINTF("%d %d",

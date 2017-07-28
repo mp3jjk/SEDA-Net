@@ -1291,7 +1291,7 @@ LSA_converge_input(void)
 	int pos;
 	unsigned char * buffer;
 	uint8_t buffer_length;
-	uint8_t LSA_lr_child;
+	uint8_t lr_child;
 	rpl_parent_t * preferred_parent;
 	uip_ds6_nbr_t *nbr;
 
@@ -1306,7 +1306,7 @@ LSA_converge_input(void)
 	pos = 0;
 	buffer = UIP_ICMP_PAYLOAD;
 
-	LSA_lr_child = buffer[pos++];
+	lr_child = buffer[pos++];
 
 	rpl_parent_t *p = nbr_table_head(rpl_parents);
 	if (p != NULL) {
@@ -1319,7 +1319,7 @@ LSA_converge_input(void)
 
 	if (uip_ip6addr_cmp(&from, &nbr->ipaddr)) {
 		rpl_LSA_convergence_timer(2);
-		LSA_SR_preamble = !LSA_lr_child;
+		LSA_SR_preamble = !lr_child;
 		LSA_message_input = 1;
 		printf("LSA: LSA_SR_preamble is %d\n",LSA_SR_preamble);
 	}

@@ -336,7 +336,9 @@ noack(struct rdc_buf_list *q, struct neighbor_queue *n, int num_transmissions)
 #if LSA_MAC
 #if LSA_R
 #if CONVERGE_MODE == 2
-		LSA_SR_preamble = !LSA_SR_preamble;
+		if (simple_convergence == 1) {
+			LSA_SR_preamble = !LSA_SR_preamble;
+		}
 #endif 
 #endif
 #endif

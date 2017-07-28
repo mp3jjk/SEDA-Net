@@ -45,6 +45,7 @@
 #include "dev/leds.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 //#include "platform-conf.h"
 
 #if DUAL_RADIO
@@ -67,8 +68,11 @@ static void
 recv_uc(struct broadcast_conn *c, const linkaddr_t *from)
 {
 
-  printf("unicast message received from %d.%d\n",
+  printf("From %d.%d: ",
 	 from->u8[0], from->u8[1]);
+
+  printf("%s\n",
+         (char *)packetbuf_dataptr());
 
 	led_count ++;
 	switch (led_count%3) {
@@ -112,6 +116,7 @@ PROCESS_THREAD(example_unicast_process, ev, data)
   while(1) {
 		count ++;
     static struct etimer et;
+		static char * buf;
     linkaddr_t addr;
   	/*
  		if(count%2 ==0){
@@ -120,19 +125,22 @@ PROCESS_THREAD(example_unicast_process, ev, data)
 			dual_radio_switch(LONG_RADIO);
  		}*/
 
-    etimer_set(&et, CLOCK_SECOND);
+    etimer_set(&et, CLOCK_SECOND/10);
     
     PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 
-    packetbuf_copyfrom("Hello", 5);
+		buf = (char *) malloc(20);
+		sprintf(buf,"Hello %d\0",count);
+    packetbuf_copyfrom(buf, 20);
     addr.u8[0] = 0;
-    addr.u8[1] = 40;
+    addr.u8[1] = 1;
 		// printf("ADDRESS: %d %d\n", linkaddr_node_addr.u8[0], linkaddr_node_addr.u8[1]);
     if(!linkaddr_cmp(&addr, &linkaddr_node_addr)) {
       broadcast_send(&broadcast);
 			printf("COUNT = %d\n",count);
     }
-		if (count == 1000){
+		free (buf);
+		if (count == 10000){
 			break;
 		}
   }

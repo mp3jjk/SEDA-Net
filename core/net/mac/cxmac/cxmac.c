@@ -1009,6 +1009,31 @@ send_packet(void)
 			watchdog_periodic();
 #endif
 
+			/* JOONKI
+			 * short range broadcast skip sending strobed preambles */
+#if DUAL_RADIO
+#if LSA_MAC
+#if LSA_R
+			if (is_broadcast){
+				/* printf (" Broadcast going out\n"); */
+			}
+			if (LSA_lr_child == 1 | linkaddr_node_addr.u8[1] == SERVER_NODE) {
+				if (is_broadcast && was_short == 1){
+					break;
+				} 
+			} else {
+				if (is_broadcast && was_short == 0) {
+					printf("Long bradcast skip when LSA_SR_preamble\n");
+      		return MAC_TX_OK;
+				}
+			}
+#else /* LSA_R */
+			if (is_broadcast && was_short == 1){
+				break;
+			} 
+#endif /* LSA_R */
+#endif /* LSA_MAC */ 
+#endif
 
 #if COOJA
 			if (recv_addr.u8[1] == SERVER_NODE )
@@ -1018,15 +1043,7 @@ send_packet(void)
 			{
 				got_strobe_ack = 1;
 			}
-			/* JOONKI
-			 * short range broadcast skip sending strobed preambles */
-#if DUAL_RADIO
-#if LSA_MAC
-			if (is_broadcast && was_short == 1){
-				break;
-			} 
-#endif /* LSA_MAC */ 
-#endif
+
 			/* for debug */
 #if TIMING
 			mark_time=RTIMER_NOW();
@@ -1876,6 +1893,7 @@ cxmac_init(void)
 #if LSA_R
 	LSA_converge = 0;
 	LSA_SR_preamble = 0;
+	LSA_lr_child = 1;
 	LSA_message_input = 0;
 	LSA_broadcast_count = 1;
 #endif
