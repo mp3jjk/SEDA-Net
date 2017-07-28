@@ -20,7 +20,7 @@
 #define LONG_WEIGHT_RATIO 2
 
 /* Weight ratio between rank and parent's degree */
-#define ALPHA	1
+#define ALPHA	0
 #define ALPHA_DIV	2
 
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
@@ -64,7 +64,7 @@ uint8_t data_btb; // Back to back data Tx
  * Only long duty cylce, long preamble */
 #if DUAL_RADIO
 #define LSA_MAC	1
-#define LSA_R	1
+#define LSA_R	0
 #else	/* DUAL_RADIO */
 #define LSA_MAC 0
 #define LSA_R 0
@@ -133,7 +133,7 @@ uint8_t my_parent_number;
 uint8_t my_valid_parent_number;
 #endif
 #define MAX_NUM_NODE 100
-#define BUF_SIZE 100
+#define BUF_SIZE 1000
 extern int id_array[MAX_NUM_NODE];
 extern uint8_t id_count[BUF_SIZE];
 int latest_id;

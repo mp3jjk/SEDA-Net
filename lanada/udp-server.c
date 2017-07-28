@@ -51,8 +51,6 @@
 
 #define UDP_EXAMPLE_ID  190
 
-#define BUF_SIZE_SERVER 1000
-
 #include "param.h"
 /* Remaining energy init JJH*/
 #if RPL_ENERGY_MODE
@@ -62,7 +60,6 @@ uint8_t alpha = ALPHA;
 uint8_t my_weight = 0;
 int id_array[MAX_NUM_NODE]={0,};
 uint8_t id_count[BUF_SIZE]={0,};
-uint8_t id_server_count[BUF_SIZE_SERVER]={0,};
 #endif
 
 static struct uip_udp_conn *server_conn;
@@ -94,13 +91,13 @@ tcpip_handler(void)
     	printf("app: duplicated data %d\n",recv_id);
     	return;
     }
-    id_server_count[recv_id]++;
+    id_count[recv_id]++;
 
     id_array[recv_ip] = recv_id;
     PRINTF("recv DATA '%s' from ", appdata);
     PRINTF("%d %c count: %d \n",
            UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1],\
-					  UIP_IP_BUF->srcipaddr.u8[8]>128?'L':'S',id_server_count[recv_id]);
+					  UIP_IP_BUF->srcipaddr.u8[8]>128?'L':'S',id_count[recv_id]);
 
 /*		
 		PRINTF("%d %d",
