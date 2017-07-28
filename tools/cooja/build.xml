@@ -81,6 +81,7 @@ The COOJA Simulator
         <pathelement location="lib/log4j.jar"/>
         <pathelement location="lib/jsyntaxpane.jar"/>
         <pathelement location="lib/swingx-all-1.6.4.jar"/>
+				<pathelement location="apps/mrm/lib/mrm.jar"/>
       </classpath>
     </javac>
   </target>
@@ -114,6 +115,7 @@ The COOJA Simulator
         <pathelement location="lib/log4j.jar"/>
         <pathelement location="lib/jsyntaxpane.jar"/>
         <pathelement location="lib/swingx-all-1.6.4.jar"/>
+				<pathelement location="apps/mrm/lib/mrm.jar"/>
       </classpath>
     </java>
   </target>
@@ -130,6 +132,7 @@ The COOJA Simulator
         <pathelement location="lib/log4j.jar"/>
         <pathelement location="lib/jsyntaxpane.jar"/>
         <pathelement location="lib/swingx-all-1.6.4.jar"/>
+				<pathelement location="apps/mrm/lib/mrm.jar"/>
       </classpath>
     </java>
   </target>
@@ -145,6 +148,7 @@ The COOJA Simulator
         <pathelement location="lib/log4j.jar"/>
         <pathelement location="lib/jsyntaxpane.jar"/>
         <pathelement location="lib/swingx-all-1.6.4.jar"/>
+				<pathelement location="apps/mrm/lib/mrm.jar"/>
       </classpath>
     </java>
   </target>
@@ -160,6 +164,7 @@ The COOJA Simulator
         <pathelement location="lib/log4j.jar"/>
         <pathelement location="lib/jsyntaxpane.jar"/>
         <pathelement location="lib/swingx-all-1.6.4.jar"/>
+				<pathelement location="apps/mrm/lib/mrm.jar"/>
       </classpath>
     </java>
   </target>
@@ -176,6 +181,7 @@ The COOJA Simulator
         <pathelement location="lib/swingx-all-1.6.4.jar"/>
         <pathelement location="../mspsim/lib/jfreechart-1.0.11.jar"/>
         <pathelement location="../mspsim/lib/jcommon-1.0.14.jar"/>
+				<pathelement location="apps/mrm/lib/mrm.jar"/>
       </classpath>
     </java>
   </target>
@@ -190,6 +196,7 @@ The COOJA Simulator
         <pathelement location="lib/log4j.jar"/>
         <pathelement location="lib/jsyntaxpane.jar"/>
         <pathelement location="lib/swingx-all-1.6.4.jar"/>
+				<pathelement location="apps/mrm/lib/mrm.jar"/>
       </classpath>
     </java>
   </target>
@@ -212,6 +219,7 @@ The COOJA Simulator
         <pathelement location="lib/jdom.jar"/>
         <pathelement location="lib/log4j.jar"/>
         <pathelement location="lib/jsyntaxpane.jar"/>
+				<pathelement location="apps/mrm/lib/mrm.jar"/>
       </classpath>
     </java>
   </target>
@@ -222,6 +230,7 @@ The COOJA Simulator
       <arg value="cooja.html"/>
       <env key="LD_LIBRARY_PATH" value="."/>
       <env key="CLASSPATH" path="${build}"/>
+				<pathelement location="apps/mrm/lib/mrm.jar"/>
     </exec>
   </target>
 

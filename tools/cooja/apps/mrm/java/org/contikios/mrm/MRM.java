@@ -122,7 +122,16 @@ public class MRM extends AbstractRadioMedium {
     sim.getCooja().registerPlugin(FormulaViewer.class);
     Visualizer.registerVisualizerSkin(MRMVisualizerSkin.class);
   }
-
+  public void setForLongRange_MRM(boolean forLongRange) {
+	    isForLongRange = forLongRange;
+	    logger.warn("MRM setting...");
+	    if(isForLongRange){
+	        sim.getCooja().registerPlugin(AreaViewerLR.class);
+	        sim.getCooja().registerPlugin(FormulaViewerLR.class);
+	      logger.warn("MRM set for Long Range");
+	    }
+	  }
+  
   public void removed() {
     super.removed();
 
