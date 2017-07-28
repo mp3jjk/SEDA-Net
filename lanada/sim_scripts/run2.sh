@@ -1,13 +1,13 @@
 #!/bin/bash
 
-SR=0 # Decide whether SR simulation runs or not
-LR=1 # For LR case
-ONLY_LONG=0 # SR = 1 with only Long
+SR=1 # Decide whether SR simulation runs or not
+LR=0 # For LR case
+ONLY_LONG=1 # SR = 1 with only Long
 TRAFFIC=0 # 0 = periodic, 1 = poisson
-VAR_PERIOD=(30 60)
+VAR_PERIOD=(30)
 VAR_ARRIVAL=(30)
 VAR_TOPOLOGY=("36grid")
-VAR_LR_RANGE=("2X")
+VAR_LR_RANGE=("4X")
 VAR_LR_WEIGHT=(2)
 VAR_LSA_R=0
 VAR_STROBE_CNT=1
@@ -37,7 +37,10 @@ then
 		    do
 			for alpha_div in "${VAR_ALPHA_DIV[@]}"
 			do
-			    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div $ONLY_LONG $range
+			    for check in "${VAR_CHECK_RATE[@]}"
+			    do
+			    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div $ONLY_LONG $range $check
+			    done
 			done
 		    done
 		done
@@ -54,7 +57,10 @@ then
 		    do
 			for alpha_div in "${VAR_ALPHA_DIV[@]}"
 			do
-			    ./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div $ONLY_LONG $range
+			    for check in "${VAR_CHECK_RATE[@]}"
+			    do
+				./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div $ONLY_LONG $range $check
+			    done
 			done
 		    done
 		done

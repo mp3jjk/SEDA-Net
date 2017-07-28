@@ -3,7 +3,7 @@
 #define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
 
 #if DUAL_RADIO == 0
-#define ONLY_LONG	0
+#define ONLY_LONG	1
 #endif
 
 /* Distributed weight update problem solutions */
@@ -17,10 +17,10 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 2
+#define LONG_WEIGHT_RATIO 1
 
 /* Weight ratio between rank and parent's degree */
-#define ALPHA	0
+#define ALPHA	1
 #define ALPHA_DIV	2
 
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
