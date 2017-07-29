@@ -3,7 +3,7 @@
 #define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
 
 #if DUAL_RADIO == 0
-#define ONLY_LONG	0
+#define ONLY_LONG	1
 #endif
 
 /* Distributed weight update problem solutions */
@@ -133,7 +133,7 @@ uint8_t my_parent_number;
 uint8_t my_valid_parent_number;
 #endif
 #define MAX_NUM_NODE 100
-#define BUF_SIZE 100
+#define BUF_SIZE 1000
 extern int id_array[MAX_NUM_NODE];
 extern uint8_t id_count[BUF_SIZE];
 int latest_id;

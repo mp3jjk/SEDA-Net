@@ -1092,7 +1092,7 @@ send_packet(void)
 								} else {
 									PRINTDEBUG("cxmac: strobe ack for someone else\n");
 								}
-							} else if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE) {
+							} else /*if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE)*/ {
 								PRINTDEBUG("cxmac: strobe from someone else\n");
 								collisions++;
 							}
@@ -1565,10 +1565,10 @@ input_packet(void)
 	    	{
 */
 //	    		printf("short!\n");
-	    		id_count[recv_id%BUF_SIZE]++;
+	    		id_count[recv_id]++;
 //	    	}
 #else
-	    	id_count[recv_id%BUF_SIZE]++;
+	    	id_count[recv_id]++;
 #endif
 #endif
 	    	id_array[ip] = recv_id;

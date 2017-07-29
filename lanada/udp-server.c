@@ -73,6 +73,8 @@ tcpip_handler(void)
   char *appdata;
   int recv_id=0;
   int recv_ip=0;
+  int count_index=0;
+  uint8_t init = 0;
   if(uip_newdata()) {
     appdata = (char *)uip_appdata;
     appdata[uip_datalen()] = 0;
@@ -83,6 +85,7 @@ tcpip_handler(void)
 //    printf("id %d ip %d\n",recv_id,recv_ip);
 //    printf("id_array %d %d %d %d %d %d\n",id_array[1],id_array[2],id_array[3],id_array[4],id_array[5],id_array[6]);
 //    if(id_array[UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1]] >= recv_id)
+//    count_index = recv_id % BUF_SIZE;
     if(id_array[recv_ip] >= recv_id)
     {
     	printf("app: duplicated data %d\n",recv_id);

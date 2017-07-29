@@ -217,9 +217,9 @@ send_packet(void *ptr)
 	if(seq_id > (latest_id + 1)) // Update latest id here
 	{
 		latest_id = (seq_id-1);
-		count_index = latest_id % BUF_SIZE;
+//		count_index = latest_id % BUF_SIZE;
 //		printf("load %d at %d\n",id_count[count_index],count_index);
-		int temp_load = id_count[count_index] * 256;
+		int temp_load = id_count[latest_id] * 256;
 		if(avg_est_load == -1) {
 			avg_est_load = temp_load;
 		}
@@ -363,7 +363,6 @@ PROCESS_THREAD(udp_client_process, ev, data)
 #endif
 
   print_local_addresses();
-	// for debug
 	 /* NETSTACK_MAC.off(1); */
 
   /* new connection with remote host */
