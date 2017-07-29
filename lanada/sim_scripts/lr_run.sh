@@ -56,7 +56,10 @@ cd $HERE
 
 if [ ! -e COOJA.testlog ]
 then
-    java -mx512m -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc -contiki="$CONTIKI"
+	cd $CONTIKI/tools/cooja
+    # java -mx512m -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc -contiki="$CONTIKI"
+		ant run_nogui -Dargs=/home/user/Desktop/Double-MAC/lanada/sim_scripts/scripts/0729_36grid_2X.csc
+	cd $HERE
 fi
 ../../pp.sh
 cd ../..

@@ -17,14 +17,14 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 2
+#define LONG_WEIGHT_RATIO 1
 
 /* Weight ratio between rank and parent's degree */
-#define ALPHA	1
+#define ALPHA	0
 #define ALPHA_DIV	2
 
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
-#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 2
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
@@ -64,7 +64,7 @@ uint8_t data_btb; // Back to back data Tx
  * Only long duty cylce, long preamble */
 #if DUAL_RADIO
 #define LSA_MAC	1
-#define LSA_R	1
+#define LSA_R	0
 #else	/* DUAL_RADIO */
 #define LSA_MAC 0
 #define LSA_R 0

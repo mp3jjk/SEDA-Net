@@ -137,7 +137,11 @@ public class ChannelModel {
     obstacle_attenuation,
     captureEffect,
     captureEffectPreambleDuration,
-    captureEffectSignalTreshold;
+    captureEffectSignalTreshold,
+    frequencyLR,
+    rx_sensitivityLR;
+
+
 
     public static Object getDefaultValue(Parameter p) {
       switch (p) {
@@ -155,12 +159,16 @@ public class ChannelModel {
         return new Double(4);
       case frequency: /* MHz */
         return new Double(2400);
+      case frequencyLR: /* MHz */
+          return new Double(868);
       case tx_power:
         return new Double(1.5);
       case tx_with_gain:
         return new Boolean(true);
       case rx_sensitivity:
         return new Double(-100);
+      case rx_sensitivityLR:
+          return new Double(-109);
       case rx_with_gain:
         return new Boolean(false);
       case rt_disallow_direct_path:
@@ -217,6 +225,8 @@ public class ChannelModel {
         return tx_power;
       } else if (name.equals("rx_sensitivity")) {
         return rx_sensitivity;
+      } else if (name.equals("rx_sensitivityLR")) {
+          return rx_sensitivityLR;
       } else if (name.equals("rt_disallow_direct_path")) {
         return rt_disallow_direct_path;
       } else if (name.equals("rt_ignore_non_direct")) {
@@ -265,6 +275,7 @@ public class ChannelModel {
       case tx_power: return "Default transmitter output power (dBm)";
       case tx_with_gain: return "Directional antennas: with TX gain";
       case rx_sensitivity: return "Receiver sensitivity (dBm)";
+      case rx_sensitivityLR: return "Receiver sensitivity (dBm)";
       case rx_with_gain: return "Directional antennas: with RX gain";
       case rt_disallow_direct_path: return "Disallow direct path";
       case rt_ignore_non_direct: return "If existing: return only use direct path";

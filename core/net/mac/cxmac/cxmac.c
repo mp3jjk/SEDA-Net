@@ -1220,7 +1220,7 @@ send_packet(void)
 #endif
 #endif
 
-//	got_strobe_ack=1;
+	got_strobe_ack=1;
 
   /* restore the packet to send */
   queuebuf_to_packetbuf(packet);
