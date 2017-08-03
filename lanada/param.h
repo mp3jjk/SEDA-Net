@@ -3,7 +3,7 @@
 #define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
 
 #if DUAL_RADIO == 0
-#define ONLY_LONG	1
+#define ONLY_LONG	0
 #endif
 
 /* Distributed weight update problem solutions */
@@ -24,7 +24,7 @@
 #define ALPHA_DIV	2
 
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
-#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 4
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1

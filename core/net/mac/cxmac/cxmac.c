@@ -1020,7 +1020,7 @@ send_packet(void)
 			if (LSA_lr_child == 1 | linkaddr_node_addr.u8[1] == SERVER_NODE) {
 				if (is_broadcast && was_short == 1){
 					break;
-				} 
+				}
 			} else {
 				if (is_broadcast && was_short == 0) {
 					printf("Long bradcast skip when LSA_SR_preamble\n");
@@ -1092,7 +1092,7 @@ send_packet(void)
 								} else {
 									PRINTDEBUG("cxmac: strobe ack for someone else\n");
 								}
-							} else /*if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE)*/ {
+							} else if(hdr->dispatch == DISPATCH && hdr->type == TYPE_STROBE) {
 								PRINTDEBUG("cxmac: strobe from someone else\n");
 								collisions++;
 							}

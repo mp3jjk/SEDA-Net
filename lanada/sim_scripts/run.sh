@@ -1,23 +1,23 @@
 #!/bin/bash
 
-SR=1 # Decide whether SR simulation runs or not
-LR=0 # For LR case
-ONLY_LONG=1 # SR = 1 with only Long
+SR=0 # Decide whether SR simulation runs or not
+LR=1 # For LR case
+ONLY_LONG=0 # SR = 1 with only Long
 TRAFFIC=0 # 0 = periodic, 1 = poisson
 VAR_PERIOD=(30)
 VAR_ARRIVAL=(30)
 VAR_TOPOLOGY=("36grid")
-VAR_LR_RANGE=("2X")
+VAR_LR_RANGE=("4X")
 VAR_LR_WEIGHT=(2)
-VAR_LSA_R=1
+VAR_LSA_R=0
 VAR_STROBE_CNT=1
-VAR_ALPHA=(0 1)
+VAR_ALPHA=(0)
 VAR_ALPHA_DIV=(2)
 VAR_PARENT_REDUCTION=0
 VAR_REDUCTION_RATIO=0
 VAR_DATA_ACK=1
-VAR_CHECK_RATE=(1 2 4 8)
-DATE="0727"
+VAR_CHECK_RATE=(4)
+DATE="0728"
 LSA_MAC=1
 
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JOONKI=1
+JOONKI=0
 
 if [ $JOONKI -eq 0 ]
 then
