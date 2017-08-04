@@ -163,6 +163,7 @@ struct cxmac_hdr {
 
 
 /*------------------ COOJA LONG -------------------------------------------------------------------*/
+#if DUAL_RADIO
 
 #ifdef CXMAC_CONF_LONG_ON_TIME
 #define DEFAULT_LONG_ON_TIME (CXMAC_CONF_LONG_ON_TIME)
@@ -198,6 +199,7 @@ struct cxmac_hdr {
 
 #define DEFAULT_LONG_STROBE_WAIT_TIME (7 * DEFAULT_LONG_ON_TIME / 16)
 
+#endif /* DUAL_RADIO */
 #else /*------------------ ZOUL_MOTE -------------------------------------------------------------------*/
 
 #define MAX_STROBE_SIZE 50
@@ -249,6 +251,16 @@ struct cxmac_config cxmac_config = {
   5 * DEFAULT_ON_TIME + DEFAULT_OFF_TIME,
   DEFAULT_STROBE_WAIT_TIME
 };
+
+
+#if DUAL_RADIO
+struct cxmac_config cxmac_long_config = {
+  DEFAULT_ON_TIME,
+  DEFAULT_OFF_TIME,
+  5 * DEFAULT_ON_TIME + DEFAULT_OFF_TIME,
+  DEFAULT_STROBE_WAIT_TIME
+};
+#endif
 
 #include <stdio.h>
 
@@ -660,10 +672,16 @@ cpowercycle(void *ptr)
     powercycle_turn_radio_on();
 #endif /* DUAL_RADIO */
 
-
-
-    // printf("cpowerycle on\n");
+#if DUAL_RADIO
+		if (radio_long_is_on == 1 && radio_is_on == 0 ) {
+			CSCHEDULE_POWERCYCLE(DEFAULT_LONG_ON_TIME);
+		} else if {
+			CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
+		}
+#else /* DUAL_RADIO */
     CSCHEDULE_POWERCYCLE(DEFAULT_ON_TIME);
+#endif /* DUAL_RADIO */ 
+
     PT_YIELD(&pt);
     if(cxmac_config.off_time > 0) {
 #if DUAL_RADIO

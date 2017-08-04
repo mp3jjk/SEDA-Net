@@ -1918,3 +1918,489 @@
 [16:03:24 - Thread-12] [PowerTracker.java:97] [WARN] - PowerTracker Started
 [16:03:25 - Thread-17] [Simulation.java:251] [INFO] - Simulation main loop started, system time: 1501830205331
 [16:04:08 - Thread-17] [Simulation.java:310] [INFO] - Simulation main loop stopped, system time: 1501830248747	Duration: 43416 ms	Simulated time 6607842 ms	Ratio 152.1983139856274
+[18:03:36 - Thread-18] [Cooja.java:3395] [WARN] - CONFIG = <?xml version="1.0" encoding="UTF-8"?>
+<simconf><simulation><title>My simulation</title><randomseed>123456</randomseed><motedelay_us>1000000</motedelay_us><radiomedium>org.contikios.cooja.radiomediums.UDGM<transmitting_range>50.0</transmitting_range><interference_range>50.0</interference_range><success_ratio_tx>1.0</success_ratio_tx><success_ratio_rx>1.0</success_ratio_rx><transmitting_range_lr>100.0</transmitting_range_lr><interference_range_lr>100.0</interference_range_lr><success_ratio_tx_lr>1.0</success_ratio_tx_lr><success_ratio_rx_lr>1.0</success_ratio_rx_lr></radiomedium><events><logoutput>40000</logoutput></events><motetype>org.contikios.cooja.contikimote.ContikiMoteType<identifier>mtype980</identifier><description>Cooja Mote Type #1</description><source>[CONTIKI_DIR]/lanada/udp-server.c</source><commands>make udp-server.cooja TARGET=cooja</commands><moteinterface>org.contikios.cooja.interfaces.Position</moteinterface><moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiVib</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiMoteID</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiRS232</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiBeeper</moteinterface><moteinterface>org.contikios.cooja.interfaces.RimeAddress</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiIPAddress</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiRadio</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiRadioLR</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiButton</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiPIR</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiClock</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiLED</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiCFS</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiEEPROM</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker</moteinterface><moteinterface>org.contikios.cooja.interfaces.Mote2MoteRelations</moteinterface><moteinterface>org.contikios.cooja.interfaces.MoteAttributes</moteinterface><symbols>false</symbols></motetype><motetype>org.contikios.cooja.contikimote.ContikiMoteType<identifier>mtype954</identifier><description>Cooja Mote Type #2</description><source>[CONTIKI_DIR]/lanada/udp-client.c</source><commands>make udp-client.cooja TARGET=cooja</commands><moteinterface>org.contikios.cooja.interfaces.Position</moteinterface><moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiVib</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiMoteID</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiRS232</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiBeeper</moteinterface><moteinterface>org.contikios.cooja.interfaces.RimeAddress</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiIPAddress</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiRadio</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiRadioLR</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiButton</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiPIR</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiClock</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiLED</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiCFS</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiEEPROM</moteinterface><moteinterface>org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker</moteinterface><moteinterface>org.contikios.cooja.interfaces.Mote2MoteRelations</moteinterface><moteinterface>org.contikios.cooja.interfaces.MoteAttributes</moteinterface><symbols>false</symbols></motetype><mote><interface_config>org.contikios.cooja.interfaces.Position<x>86.99008035180697</x><y>18.661152862664366</y><z>0.0</z></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiMoteID<id>1</id></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadio<bitrate>250.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadioLR<bitrate>50.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiEEPROM<eeprom>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</eeprom></interface_config><motetype_identifier>mtype980</motetype_identifier></mote><mote><interface_config>org.contikios.cooja.interfaces.Position<x>4.334943676623915</x><y>42.557105285785376</y><z>0.0</z></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiMoteID<id>2</id></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadio<bitrate>250.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadioLR<bitrate>50.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiEEPROM<eeprom>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</eeprom></interface_config><motetype_identifier>mtype954</motetype_identifier></mote><mote><interface_config>org.contikios.cooja.interfaces.Position<x>-36.47130585486357</x><y>56.657852300679664</y><z>0.0</z></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiMoteID<id>3</id></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadio<bitrate>250.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadioLR<bitrate>50.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiEEPROM<eeprom>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</eeprom></interface_config><motetype_identifier>mtype954</motetype_identifier></mote><mote><interface_config>org.contikios.cooja.interfaces.Position<x>-126.05633007493567</x><y>83.79517004060298</y><z>0.0</z></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiMoteID<id>4</id></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadio<bitrate>250.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadioLR<bitrate>50.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiEEPROM<eeprom>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</eeprom></interface_config><motetype_identifier>mtype954</motetype_identifier></mote><mote><interface_config>org.contikios.cooja.interfaces.Position<x>-125.12950226064376</x><y>34.65098405331526</y><z>0.0</z></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiMoteID<id>5</id></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadio<bitrate>250.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadioLR<bitrate>50.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiEEPROM<eeprom>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</eeprom></interface_config><motetype_identifier>mtype954</motetype_identifier></mote><mote><interface_config>org.contikios.cooja.interfaces.Position<x>-114.2207258156623</x><y>113.50641533111484</y><z>0.0</z></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiMoteID<id>6</id></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadio<bitrate>250.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadioLR<bitrate>50.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiEEPROM<eeprom>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</eeprom></interface_config><motetype_identifier>mtype954</motetype_identifier></mote><mote><interface_config>org.contikios.cooja.interfaces.Position<x>-76.14714237933563</x><y>136.42386382719636</y><z>0.0</z></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiMoteID<id>7</id></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadio<bitrate>250.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiRadioLR<bitrate>50.0</bitrate></interface_config><interface_config>org.contikios.cooja.contikimote.interfaces.ContikiEEPROM<eeprom>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</eeprom></interface_config><motetype_identifier>mtype954</motetype_identifier></mote></simulation><plugin>org.contikios.cooja.plugins.SimControl<width>280</width><z>0</z><height>160</height><location_x>400</location_x><location_y>0</location_y></plugin><plugin>org.contikios.cooja.plugins.Visualizer<plugin_config><moterelations>true</moterelations><skin>org.contikios.cooja.plugins.skins.IDVisualizerSkin</skin><skin>org.contikios.cooja.plugins.skins.UDGMVisualizerSkin</skin><skin>org.contikios.cooja.plugins.skins.UDGMLongRangeVisualizerSkin</skin><skin>org.contikios.cooja.plugins.skins.MoteTypeVisualizerSkin</skin><skin>org.contikios.cooja.plugins.skins.AttributeVisualizerSkin</skin><viewport>1.180932743263019 0.0 0.0 1.180932743263019 238.3943507113654 156.00298676460142</viewport></plugin_config><width>400</width><z>4</z><height>503</height><location_x>1</location_x><location_y>1</location_y></plugin><plugin>org.contikios.cooja.plugins.LogListener<plugin_config><filter>Lifetime</filter><formatted_time /><coloring /></plugin_config><width>1459</width><z>1</z><height>533</height><location_x>400</location_x><location_y>160</location_y></plugin><plugin>org.contikios.cooja.plugins.TimeLine<plugin_config><mote>0</mote><mote>1</mote><mote>2</mote><mote>3</mote><mote>4</mote><mote>5</mote><mote>6</mote><showRadioRXTX /><showRadioHW /><showLEDs /><zoomfactor>500.0</zoomfactor></plugin_config><width>1891</width><z>3</z><height>261</height><location_x>0</location_x><location_y>739</location_y></plugin><plugin>org.contikios.cooja.plugins.Notes<plugin_config><notes>Enter notes here</notes><decorations>true</decorations></plugin_config><width>1179</width><z>5</z><height>160</height><location_x>680</location_x><location_y>0</location_y></plugin><plugin>PowerTracker<width>950</width><z>2</z><height>400</height><location_x>1443</location_x><location_y>99</location_y></plugin></simconf>
+
+[18:03:36 - Thread-18] [Simulation.java:419] [INFO] - Simulation random seed: 123456
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : 50.0
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : 50.0
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : 1.0
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : 1.0
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : 100.0
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : 100.0
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : 1.0
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : 1.0
+[18:03:36 - Thread-18] [Simulation.java:623] [WARN] - Trying to Load currentRadioMedium : Class = org.contikios.cooja.radiomediums.UDGM
+[18:03:36 - Thread-18] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
+[18:03:36 - Thread-18] [Simulation.java:625] [WARN] - Trying to Load currentRadioMedium_LR
+[18:03:36 - Thread-18] [UDGM.java:155] [WARN] - Adding Visualizer, isLongRange=false
+[18:03:36 - Thread-18] [UDGM.java:95] [WARN] - UDGM setting...
+[18:03:36 - Thread-18] [UDGM.java:99] [WARN] - UDGM set for Long Range
+[18:03:36 - Thread-18] [Simulation.java:628] [WARN] - Successfully Loaded Two Radio Medium, one for SR and one for LR
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : 40000
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : mtype563
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : Cooja Mote Type #1
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : [CONTIKI_DIR]/lanada/udp-server.c
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : make udp-server.cooja TARGET=cooja
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Position
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Battery
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.RimeAddress
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.MoteAttributes
+[18:03:36 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : false
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Position
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Battery
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.RimeAddress
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:36 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.MoteAttributes
+[18:03:36 - Thread-18] [CompileContiki.java:140] [INFO] - > make udp-server.cooja TARGET=cooja 
+[18:03:36 - Thread-18] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib7 and Contiki library '/home/user/Desktop/Double-MAC/lanada/obj_cooja/mtype563.cooja
+[18:03:37 - Thread-18] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x30020 ( 674 == 0x2a2 bytes)
+[18:03:37 - Thread-18] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x302e0 ( 39176 == 0x9908 bytes)
+[18:03:37 - Thread-18] [ContikiMoteType.java:502] [INFO] - mtype563.cooja: offsetting Cooja mote address space: 0xb1c38000
+[18:03:37 - Thread-18] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb1c68020 ( 674 == 0x2a2 bytes)
+[18:03:37 - Thread-18] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb1c682e0 ( 39176 == 0x9908 bytes)
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : mtype579
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : Cooja Mote Type #2
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : [CONTIKI_DIR]/lanada/udp-client.c
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : make udp-client.cooja TARGET=cooja
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Position
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Battery
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.RimeAddress
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.MoteAttributes
+[18:03:37 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : false
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Position
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Battery
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.RimeAddress
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:37 - Thread-18] [ContikiMoteType.java:1277] [WARN] - Loading Element org.contikios.cooja.interfaces.MoteAttributes
+[18:03:37 - Thread-18] [CompileContiki.java:140] [INFO] - > make udp-client.cooja TARGET=cooja 
+[18:03:38 - Thread-18] [ContikiMoteType.java:406] [INFO] - Creating core communicator between Java class Lib8 and Contiki library '/home/user/Desktop/Double-MAC/lanada/obj_cooja/mtype579.cooja
+[18:03:38 - Thread-18] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x31020 ( 674 == 0x2a2 bytes)
+[18:03:38 - Thread-18] [ContikiMoteType.java:575] [INFO] - Parsed section at 0x312e0 ( 39400 == 0x99e8 bytes)
+[18:03:38 - Thread-18] [ContikiMoteType.java:502] [INFO] - mtype579.cooja: offsetting Cooja mote address space: 0xb1b5b000
+[18:03:38 - Thread-18] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb1b8c020 ( 674 == 0x2a2 bytes)
+[18:03:39 - Thread-18] [ContikiMoteType.java:575] [INFO] - Parsed section at 0xb1b8c2e0 ( 39400 == 0x99e8 bytes)
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Position86.9900803518069718.6611528626643660.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiMoteID1
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadio250.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadioLR50.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiEEPROMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : mtype563
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 250.0
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 50.0
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@180ef93
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@5e25cc
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Position4.33494367662391542.5571052857853760.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiMoteID2
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadio250.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadioLR50.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiEEPROMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : mtype579
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 250.0
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 50.0
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@180ef93
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@5e25cc
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Position-36.4713058548635756.6578523006796640.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiMoteID3
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadio250.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadioLR50.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiEEPROMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : mtype579
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 250.0
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 50.0
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@180ef93
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@5e25cc
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Position-126.0563300749356783.795170040602980.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiMoteID4
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadio250.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadioLR50.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiEEPROMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : mtype579
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 250.0
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 50.0
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@180ef93
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@5e25cc
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Position-125.1295022606437634.650984053315260.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiMoteID5
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadio250.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadioLR50.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiEEPROMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : mtype579
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 250.0
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 50.0
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@180ef93
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@5e25cc
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Position-114.2207258156623113.506415331114840.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiMoteID6
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadio250.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadioLR50.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiEEPROMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : mtype579
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 250.0
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 50.0
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@180ef93
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@5e25cc
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.interfaces.Position-76.14714237933563136.423863827196360.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiMoteID7
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadio250.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiRadioLR50.0
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : org.contikios.cooja.contikimote.interfaces.ContikiEEPROMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==
+[18:03:39 - Thread-18] [Simulation.java:566] [WARN] - Parsed Element Child : mtype579
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Position
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Battery
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiVib
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRS232
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiBeeper
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.RimeAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiIPAddress
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadio
+[18:03:39 - Thread-18] [ContikiRadio.java:132] [WARN] - Radio For Short Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiRadioLR
+[18:03:39 - Thread-18] [ContikiRadioLR.java:28] [WARN] - Radio For Long Range Initialized
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiButton
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPIR
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiClock
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiLED
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiCFS
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.contikimote.interfaces.ContikiPowerTracker
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.Mote2MoteRelations
+[18:03:39 - Thread-18] [MoteInterface.java:81] [WARN] - Generating Interface org.contikios.cooja.interfaces.MoteAttributes
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 250.0
+[18:03:39 - Thread-18] [ContikiRadio.java:447] [INFO] - Radio bitrate reconfigured to (kbps): 50.0
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioto org.contikios.cooja.radiomediums.UDGM@180ef93
+[18:03:39 - Thread-18] [AbstractRadioMedium.java:455] [WARN] - [REGISTERING] Radio class org.contikios.cooja.contikimote.interfaces.ContikiRadioLRto org.contikios.cooja.radiomediums.UDGM@5e25cc
+[18:03:39 - Thread-18] [TimeLine.java:567] [INFO] - Zoom level: 500.0 microseconds/pixel 
+[18:03:39 - Thread-18] [PowerTracker.java:97] [WARN] - PowerTracker Started
