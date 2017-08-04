@@ -2,7 +2,7 @@
 
 SR=1 # Decide whether SR simulation runs or not
 LR=0 # For LR case
-ONLY_LONG=1 # SR = 1 with only Long
+ONLY_LONG=0 # SR = 1 with only Long
 TRAFFIC=0 # 0 = periodic, 1 = poisson
 VAR_PERIOD=(30)
 VAR_ARRIVAL=(30)

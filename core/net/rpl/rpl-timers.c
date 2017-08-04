@@ -81,8 +81,11 @@ static void handle_dio_timer(void *ptr);
 static void convergence_radio_off(void);
 #endif
 #if LSA_R
+#if CONVERGE_MODE == 2
 static void simple_convergence_radio_off(void);
+#elif CONVERGE_MODE == 1
 static void LSA_convergence_radio_broadcast(void);
+#endif
 #endif
 
 #endif

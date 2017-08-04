@@ -3,7 +3,7 @@
 #define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
 
 #if DUAL_RADIO == 0
-#define ONLY_LONG	1
+#define ONLY_LONG	0
 #endif
 
 /* Distributed weight update problem solutions */
@@ -17,14 +17,14 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 1
+#define LONG_WEIGHT_RATIO 2
 
 /* Weight ratio between rank and parent's degree */
 #define ALPHA	0
 #define ALPHA_DIV	2
 
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
-#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 2
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
@@ -64,7 +64,7 @@ uint8_t data_btb; // Back to back data Tx
  * Only long duty cylce, long preamble */
 #if DUAL_RADIO
 #define LSA_MAC	1
-#define LSA_R	0
+#define LSA_R	1
 #else	/* DUAL_RADIO */
 #define LSA_MAC 0
 #define LSA_R 0
@@ -105,13 +105,13 @@ uint8_t LSA_broadcast_count;
 
 /* CONVERGE_MODE 2 */
 uint8_t simple_convergence;
-#define SIMPLE_CONV_TIME (1800ul * CLOCK_SECOND)
+#define SIMPLE_CONV_TIME (300ul * CLOCK_SECOND)
 
 
 #ifdef RPL_LIFETIME_MAX_MODE
 #undef RPL_LIFETIME_MAX_MODE
 #endif /* RPL_LIFETIME_MAX_MODE */
-#define RPL_LIFETIME_MAX_MODE 1	// Child information is saved in each node
+#define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
 #define RPL_LIFETIME_MAX_MODE2 1 // Is it fine?
 #endif /* LSA_R */
 

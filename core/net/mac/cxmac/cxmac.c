@@ -120,7 +120,7 @@ struct cxmac_hdr {
 */
 };
 
-#ifdef COOJA
+#ifdef COOJA /*------------------ COOJA SHORT -------------------------------------------------------------------*/
 
 #define MAX_STROBE_SIZE 50
 
@@ -161,8 +161,44 @@ struct cxmac_hdr {
 #define DEFAULT_STROBE_WAIT_TIME (7 * DEFAULT_ON_TIME / 16)
 // #define DEFAULT_STROBE_WAIT_TIME (5 * DEFAULT_ON_TIME / 6)
 
-#else /* COOJA */
 
+/*------------------ COOJA LONG -------------------------------------------------------------------*/
+
+#ifdef CXMAC_CONF_LONG_ON_TIME
+#define DEFAULT_LONG_ON_TIME (CXMAC_CONF_LONG_ON_TIME)
+#else
+#define DEFAULT_LONG_ON_TIME (RTIMER_ARCH_SECOND / 80)
+#endif
+
+#ifdef CXMAC_CONF_LONG_OFF_TIME
+#define DEFAULT_LONG_OFF_TIME (CXMAC_CONF_LONG_OFF_TIME)
+#else
+#define DEFAULT_LONG_OFF_TIME (RTIMER_ARCH_SECOND / NETSTACK_RDC_CHANNEL_CHECK_RATE - DEFAULT_LONG_ON_TIME)
+#endif
+
+#define DEFAULT_PERIOD (DEFAULT_LONG_OFF_TIME + DEFAULT_LONG_ON_TIME)
+
+#define WAIT_TIME_BEFORE_LONG_STROBE_ACK RTIMER_ARCH_SECOND / 1000
+
+/* On some platforms, we may end up with a DEFAULT_PERIOD that is 0
+   which will make compilation fail due to a modulo operation in the
+   code. To ensure that DEFAULT_PERIOD is greater than zero, we use
+   the construct below. */
+#if DEFAULT_LONG_PERIOD == 0
+#undef DEFAULT_LONG_PERIOD
+#define DEFAULT_LONG_PERIOD 1
+#endif
+
+/* The cycle time for announcements. */
+#define LONG_ANNOUNCEMENT_PERIOD 4 * CLOCK_SECOND
+
+/* The time before sending an announcement within one announcement
+   cycle. */
+#define LONG_ANNOUNCEMENT_TIME (random_rand() % (LONG_ANNOUNCEMENT_PERIOD))
+
+#define DEFAULT_LONG_STROBE_WAIT_TIME (7 * DEFAULT_LONG_ON_TIME / 16)
+
+#else /*------------------ ZOUL_MOTE -------------------------------------------------------------------*/
 
 #define MAX_STROBE_SIZE 50
 
@@ -422,7 +458,11 @@ PROCESS_THREAD(strobe_wait, ev, data)
 #ifdef ZOUL_MOTE
 	else if (is_short_waiting == 2)
 	{
+#if DUAL_RADIO
 		dual_radio_off(BOTH_RADIO);
+#else
+		off();
+#endif
 //		dual_radio_on(SHORT_RADIO);
 		t = BEFORE_SHORT_SLOT;
 	}
@@ -590,6 +630,8 @@ cpowercycle(void *ptr)
 		if (simple_convergence == 1) 
 #endif /* CONVERGE_MODE */ 
 		{
+			if (linkaddr_node_addr.u8[1] == 2)
+				LSA_lr_child = 0; // for debug
 			if (LSA_lr_child == 1) {
 				powercycle_dual_turn_radio_on(LONG_RADIO);
 			} else {
@@ -1013,25 +1055,9 @@ send_packet(void)
 			 * short range broadcast skip sending strobed preambles */
 #if DUAL_RADIO
 #if LSA_MAC
-#if LSA_R
-			if (is_broadcast){
-				/* printf (" Broadcast going out\n"); */
-			}
-			if (LSA_lr_child == 1 | linkaddr_node_addr.u8[1] == SERVER_NODE) {
-				if (is_broadcast && was_short == 1){
-					break;
-				} 
-			} else {
-				if (is_broadcast && was_short == 0) {
-					printf("Long bradcast skip when LSA_SR_preamble\n");
-      		return MAC_TX_OK;
-				}
-			}
-#else /* LSA_R */
 			if (is_broadcast && was_short == 1){
 				break;
 			} 
-#endif /* LSA_R */
 #endif /* LSA_MAC */ 
 #endif
 

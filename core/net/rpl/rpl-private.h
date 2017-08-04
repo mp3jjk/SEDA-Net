@@ -76,7 +76,9 @@
 #endif
 
 #if LSA_R
+#if CONVERGE_MODE == 1
 #define RPL_CODE_LSA                   0x05 	/* LSA_R converge message */
+#endif
 #endif
 
 #define RPL_CODE_SEC_DIS               0x80   /* Secure DIS */
