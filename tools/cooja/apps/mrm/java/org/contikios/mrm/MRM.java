@@ -52,6 +52,7 @@ import org.contikios.cooja.radiomediums.AbstractRadioMedium;
 import org.contikios.mrm.ChannelModel.Parameter;
 import org.contikios.mrm.ChannelModel.RadioPair;
 import org.contikios.mrm.ChannelModel.TxPair;
+import org.contikios.mrm.ChannelModelLR;
 
 /**
  * Multi-path Ray-tracing radio medium (MRM).
@@ -89,6 +90,7 @@ public class MRM extends AbstractRadioMedium {
   private Simulation sim;
   private Random random = null;
   private ChannelModel currentChannelModel = null;
+  private ChannelModelLR currentChannelModelLR = null;
 
   /**
    * Notifies observers when this radio medium has changed settings.
@@ -130,7 +132,9 @@ public class MRM extends AbstractRadioMedium {
 	        sim.getCooja().unregisterPlugin(FormulaViewer.class);
 	        sim.getCooja().registerPlugin(AreaViewerLR.class);
 	        sim.getCooja().registerPlugin(FormulaViewerLR.class);
+	        currentChannelModelLR = new ChannelModelLR(sim);
 	      logger.warn("MRM set for Long Range");
+	      
 	    }
 	  }
   
@@ -402,12 +406,20 @@ public class MRM extends AbstractRadioMedium {
   }
 
   public Collection<Element> getConfigXML() {
-    return currentChannelModel.getConfigXML();
+	  if (isForLongRange){
+		  return currentChannelModelLR.getConfigXML();
+	  } else {
+		  return currentChannelModel.getConfigXML();
+	  }
   }
 
   public boolean setConfigXML(Collection<Element> configXML,
       boolean visAvailable) {
-    return currentChannelModel.setConfigXML(configXML);
+    if (isForLongRange){
+        return currentChannelModelLR.setConfigXML(configXML);
+	  } else {
+		    return currentChannelModel.setConfigXML(configXML);
+	  }
   }
 
 
@@ -459,6 +471,10 @@ public class MRM extends AbstractRadioMedium {
   public ChannelModel getChannelModel() {
     return currentChannelModel;
   }
+  
+  public ChannelModelLR getChannelModel_LR() {
+	    return currentChannelModelLR;
+	  }
 
   class SettingsObservable extends Observable {
     private void notifySettingsChanged() {

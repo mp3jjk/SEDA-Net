@@ -363,8 +363,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
 #endif
 
   print_local_addresses();
-	// for debug
-//	 NETSTACK_MAC.off(1);
+	 /* NETSTACK_MAC.off(1); */
 
   /* new connection with remote host */
   client_conn = udp_new(NULL, UIP_HTONS(UDP_SERVER_PORT), NULL); 
@@ -489,10 +488,12 @@ PROCESS_THREAD(udp_client_process, ev, data)
 #endif
 
     }
-    if(etimer_expired(&routing)) {
-    	etimer_stop(&routing);
-    	NETSTACK_MAC.on();
-    }
+		/*
+     * if(etimer_expired(&routing)) {
+     * 	etimer_stop(&routing);
+     * 	NETSTACK_MAC.on();
+     * }
+		 */
   }
 
   PROCESS_END();
