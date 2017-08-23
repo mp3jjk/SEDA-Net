@@ -66,6 +66,7 @@ uint8_t data_btb; // Back to back data Tx
 #if DUAL_RADIO
 #define LSA_MAC	${11}
 #define LSA_R	$4
+#define LSA_ENHANCED ${15}
 #else	/* DUAL_RADIO */
 #define LSA_MAC 0
 #define LSA_R 0
@@ -112,7 +113,7 @@ uint8_t simple_convergence;
 #ifdef RPL_LIFETIME_MAX_MODE
 #undef RPL_LIFETIME_MAX_MODE
 #endif /* RPL_LIFETIME_MAX_MODE */
-#define RPL_LIFETIME_MAX_MODE 1	// Child information is saved in each node
+#define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
 #define RPL_LIFETIME_MAX_MODE2 1 // Is it fine?
 #endif /* LSA_R */
 
@@ -134,7 +135,7 @@ uint8_t my_parent_number;
 uint8_t my_valid_parent_number;
 #endif
 #define MAX_NUM_NODE 100
-#define BUF_SIZE 1000
+#define BUF_SIZE 2000
 extern int id_array[MAX_NUM_NODE];
 extern uint8_t id_count[BUF_SIZE];
 int latest_id;

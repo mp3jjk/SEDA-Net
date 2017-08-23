@@ -416,6 +416,9 @@ dio_input(void)
 
   uip_ipaddr_copy(&from, &UIP_IP_BUF->srcipaddr);
 
+
+
+
   /* DAG Information Object */
   PRINTF("RPL: Received a DIO from ");
   PRINT6ADDR(&from);
@@ -437,6 +440,11 @@ dio_input(void)
          (unsigned)dio.version,
          (unsigned)dio.rank);
 
+#if LSA_ENHANCED
+  if(dio.rank == 512 && from.u8[8] == 0x82) {
+	  goto discard;
+  }
+#endif
   dio.grounded = buffer[i] & RPL_DIO_GROUNDED;
   dio.mop = (buffer[i]& RPL_DIO_MOP_MASK) >> RPL_DIO_MOP_SHIFT;
   dio.preference = buffer[i++] & RPL_DIO_PREFERENCE_MASK;
@@ -564,10 +572,10 @@ dio_input(void)
     case RPL_OPTION_PREFIX_INFO:
 #if RPL_LIFETIME_MAX_MODE
 //    	if(len != 48) {
-   		if(len != 33) {
+   		if(len != 34) {
 #elif RPL_LIFETIME_MAX_MODE2
 //    	if(len != 50) {
-    	if(len != 36) {
+    	if(len != 37) {
 #else
     	if(len != 32) {
 #endif
@@ -586,20 +594,21 @@ dio_input(void)
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
 //      memcpy(&dio.parent_addr,&buffer[i + 32],16);
       dio.parent_id = buffer[i + 32];
+      dio.parent_long = buffer[i + 33];
 //      PRINTF("recv dio addr: ");
-      PRINTF("recv dio parent_id: %d\n",dio.parent_id);
+      PRINTF("recv dio parent_id: %x %d\n",dio.parent_long,dio.parent_id);
 //      PRINT6ADDR(&dio.parent_addr);
 //      PRINTF("\n");
 #endif
 #if RPL_LIFETIME_MAX_MODE2
 //      dio.MLS_id = buffer[i+48];
-      dio.MLS_id = buffer[i+33];
+      dio.MLS_id = buffer[i+34];
       PRINTF("recv dio MLS_id %d\n",dio.MLS_id);
 //      dio.est_load = buffer[i+49];
-      dio.est_load = buffer[i+34];
+      dio.est_load = buffer[i+35];
       PRINTF("recv dio Est_load %d\n",dio.est_load);
 //      printf("recv dio Est_load %d\n",dio.est_load);
-      dio.latest_id = buffer[i+35];
+      dio.latest_id = buffer[i+36];
       PRINTF("recv dio data_id %d\n",dio.latest_id);
 //      printf("recv dio data_id %d\n",dio.latest_id);
 #endif
@@ -649,7 +658,8 @@ dio_input(void)
 			  || (is_longrange == SHORT_RADIO
 					  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)))
 */
-	  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == dio.parent_id)
+	  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == dio.parent_id &&
+			  ((is_longrange && dio.parent_long==0x82) || (!is_longrange && dio.parent_long==0x02)))
 //	  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)
 //		   || uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
 #else
@@ -684,7 +694,8 @@ dio_input(void)
 			  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
 			  || (is_longrange == SHORT_RADIO
 					  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)))*/
-	  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == dio.parent_id)
+	  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == dio.parent_id &&
+			  ((is_longrange && dio.parent_long==0x82) || (!is_longrange && dio.parent_long==0x02)))
 #else
 //		  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr))
 			  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == dio.parent_id)
@@ -886,10 +897,10 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     buffer[pos++] = RPL_OPTION_PREFIX_INFO;
 #if RPL_LIFETIME_MAX_MODE
 //    buffer[pos++] = 46; /* always 30 bytes + 2 long + 16 bytes addr JJH */
-    buffer[pos++] = 31; /* always 30 bytes + 2 long + 1 byte parent_id JJH */
+    buffer[pos++] = 32; /* always 30 bytes + 2 long + 1 byte parent_id JJH */
 #elif RPL_LIFETIME_MAX_MODE2
 //    buffer[pos++] = 48; /* always 30 bytes + 2 long + 16 bytes addr + MLS_id + Est_load JJH */
-    buffer[pos++] = 34; /* always 30 bytes + 2 long + 1 byte parent_id + MLS_id + Est_load + data_id JJH */
+    buffer[pos++] = 35; /* always 30 bytes + 2 long + 1 byte parent_id + MLS_id + Est_load + data_id JJH */
 #else
     buffer[pos++] = 30; /* always 30 bytes + 2 long */
 #endif
@@ -913,16 +924,18 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
     if(dag->preferred_parent != NULL)
     {
-    	PRINTF("send dio parent id: %d\n",rpl_get_parent_ipaddr(dag->preferred_parent)->u8[15]);
+    	PRINTF("send dio parent id: %x %d\n",rpl_get_parent_ipaddr(dag->preferred_parent)->u8[8], rpl_get_parent_ipaddr(dag->preferred_parent)->u8[15]);
 //    	PRINT6ADDR(rpl_get_parent_ipaddr(dag->preferred_parent));
 //    	PRINTF("\n");
 //    	memcpy(&buffer[pos],rpl_get_parent_ipaddr(dag->preferred_parent),16);
     	buffer[pos++] = rpl_get_parent_ipaddr(dag->preferred_parent)->u8[15];
+    	buffer[pos++] = rpl_get_parent_ipaddr(dag->preferred_parent)->u8[8];
 //    	pos += 16;
     }
     else
     {
 //    	memset(&buffer[pos],0,16);
+    	buffer[pos++] = 0;
     	buffer[pos++] = 0;
 //    	pos += 16;
     }

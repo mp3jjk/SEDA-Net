@@ -76,7 +76,9 @@
 #endif
 
 #if LSA_R
+#if CONVERGE_MODE == 1
 #define RPL_CODE_LSA                   0x05 	/* LSA_R converge message */
+#endif
 #endif
 
 #define RPL_CODE_SEC_DIS               0x80   /* Secure DIS */
@@ -264,6 +266,7 @@ struct rpl_dio {
   uint8_t rem_energy; //dio remaining energy JJH
 #elif RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
   uint8_t parent_id;
+  uint8_t parent_long;
   uint8_t parent_weight; /* dio parent's weight info. JJH */
   uint8_t dio_weight; /* dio sender's total weight JJH */
 #endif

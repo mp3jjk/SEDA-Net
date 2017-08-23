@@ -124,7 +124,14 @@ PROCESS_THREAD(dual_dio_broadcast, ev, data)
 	long_duty_on_local = long_duty_on;
 	short_duty_on_local = short_duty_on;
 #endif
-
+/*
+#if LSA_ENHANCED
+	if(MLS == 2)
+	{
+		long_duty_on_local = 0;
+	}
+#endif
+*/
 	PROCESS_BEGIN();
 //	dual_radio_switch(SHORT_RADIO);
 	dual_radio_switch(LONG_RADIO);

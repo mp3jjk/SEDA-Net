@@ -263,7 +263,7 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
 
   public double getCurrentOutputPower() {
     /* TODO Implement method */
-//    logger.warn("Not implemented, always returning 0 dBm");
+    logger.warn("Not implemented, always returning 0 dBm");
     return 0;
   }
 
@@ -440,9 +440,9 @@ public class ContikiRadio extends Radio implements ContikiMoteInterface, PolledA
          for (Element element : configXML) {
                  if (element.getName().equals("bitrate")) {
                          RADIO_TRANSMISSION_RATE_kbps = Double.parseDouble(element.getText());
-												 /* JOONKI */
-
-												 if(this instanceof LongRangeInterface){
+												 /* JOONKI */	
+				//RADIO_TRANSMISSION_RATE_kbps = 50;
+if(this instanceof LongRangeInterface){
 												   RADIO_TRANSMISSION_RATE_kbps = 50;
 												 }  
                          logger.info("Radio bitrate reconfigured to (kbps): " + RADIO_TRANSMISSION_RATE_kbps);

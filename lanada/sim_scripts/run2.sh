@@ -1,23 +1,24 @@
 #!/bin/bash
 
-SR=1 # Decide whether SR simulation runs or not
-LR=0 # For LR case
-ONLY_LONG=1 # SR = 1 with only Long
+SR=0 # Decide whether SR simulation runs or not
+LR=1 # For LR case
+ONLY_LONG=0 # SR = 1 with only Long
 TRAFFIC=0 # 0 = periodic, 1 = poisson
 VAR_PERIOD=(30)
 VAR_ARRIVAL=(30)
 VAR_TOPOLOGY=("36grid")
-VAR_LR_RANGE=("2X")
+VAR_LR_RANGE=("4X")
 VAR_LR_WEIGHT=(2)
 VAR_LSA_R=0
-VAR_STROBE_CNT=1
+VAR_STROBE_CNT=0
 VAR_ALPHA=(0)
 VAR_ALPHA_DIV=(2)
 VAR_PARENT_REDUCTION=0
 VAR_REDUCTION_RATIO=0
 VAR_DATA_ACK=1
 VAR_CHECK_RATE=(4 8)
-DATE="0728"
+VAR_LSA_ENHANCED=1
+DATE="0823"
 LSA_MAC=1
 
 
@@ -74,7 +75,7 @@ if [ $LR -eq 1 ]
 then
     if [ $TRAFFIC -eq 0 ]
     then
-	for period in $VAR_PERIOD
+	for period in "${VAR_PERIOD[@]}"
 	do
 	    for topology in "${VAR_TOPOLOGY[@]}"
 	    do
@@ -90,7 +91,7 @@ then
 				do
 				    for check in "${VAR_CHECK_RATE[@]}"
 				    do
-					./lr_run.sh $topology $TRAFFIC $period 0 $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check
+					./lr_run.sh $topology $TRAFFIC $period 0 $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED
 				    done
 				done
 			    done
@@ -100,7 +101,7 @@ then
 	    done
 	done
     else
-	for arrival in $VAR_ARRIVAL
+	for arrival in "${VAR_ARRIVAL[@]}"
 	do
 	    for topology in "${VAR_TOPOLOGY[@]}"
 	    do
@@ -116,7 +117,7 @@ then
 				do
 				    for check in "${VAR_CHECK_RATE[@]}"
 				    do
-					./lr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check
+					./lr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED
 				    done
 				done
 			    done

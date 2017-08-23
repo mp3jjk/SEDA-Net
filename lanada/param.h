@@ -17,14 +17,14 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 1
+#define LONG_WEIGHT_RATIO 2
 
 /* Weight ratio between rank and parent's degree */
 #define ALPHA	0
 #define ALPHA_DIV	2
 
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
-#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 2
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
@@ -65,6 +65,7 @@ uint8_t data_btb; // Back to back data Tx
 #if DUAL_RADIO
 #define LSA_MAC	1
 #define LSA_R	0
+#define LSA_ENHANCED 1
 #else	/* DUAL_RADIO */
 #define LSA_MAC 0
 #define LSA_R 0
@@ -111,7 +112,7 @@ uint8_t simple_convergence;
 #ifdef RPL_LIFETIME_MAX_MODE
 #undef RPL_LIFETIME_MAX_MODE
 #endif /* RPL_LIFETIME_MAX_MODE */
-#define RPL_LIFETIME_MAX_MODE 1	// Child information is saved in each node
+#define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
 #define RPL_LIFETIME_MAX_MODE2 1 // Is it fine?
 #endif /* LSA_R */
 
@@ -133,7 +134,7 @@ uint8_t my_parent_number;
 uint8_t my_valid_parent_number;
 #endif
 #define MAX_NUM_NODE 100
-#define BUF_SIZE 1000
+#define BUF_SIZE 2000
 extern int id_array[MAX_NUM_NODE];
 extern uint8_t id_count[BUF_SIZE];
 int latest_id;
