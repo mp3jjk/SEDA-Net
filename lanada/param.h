@@ -34,9 +34,9 @@ uint8_t MLS; // The candidates set of the most loaded node
 
 /* Using strobe cnt, reducing idle listening while Tx preamble */
 #ifdef ZOUL_MOTE
-#define STROBE_CNT_MODE 0
+#define STROBE_CNT_MODE 1
 #else
-#define STROBE_CNT_MODE		1
+#define STROBE_CNT_MODE 1
 #endif
 
 /* To determine valid parent set, only valid parents are considered as a parent set */
