@@ -724,12 +724,12 @@ dio_input(void)
 	  dio_broadcast(rpl_get_default_instance());
   }
 #endif
-/*  if(prev_weight != my_weight)
+  if(prev_weight != my_weight)
   {
 	  PRINTF("DIO Reset in DIO\n");
 //		printf("joonki12\n");
 	  rpl_reset_dio_timer(rpl_get_default_instance());
-  }*/
+  }
   PRINTF("DIO INPUT my_weight %d\n",my_weight);
 #endif
 
@@ -941,7 +941,65 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     }
 #endif
 #if RPL_LIFETIME_MAX_MODE2
-	if(MLS == 1)
+#if SINK_INFINITE_ENERGY
+    if(tree_level == 2) { // I'm in the most loaded node set
+        PRINTF("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
+    //		printf("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
+    //		memcpy(&buffer[pos++],uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
+    	buffer[pos++] = uip_ds6_get_link_local(-1)->ipaddr.u8[15];
+    	PRINTF("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
+    //		printf("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
+    //		memcpy(&buffer[pos++],id_count[latest_id]);
+    	buffer[pos++] = id_count[latest_id];
+    //		buffer[pos++] = avg_est_load / 256;
+    	buffer[pos++] = latest_id;
+    }
+    else if(tree_level == 1 || tree_level == -1) { // do nothing (send 0)
+    	buffer[pos++] = 0;
+    	buffer[pos++] = 0;
+    	buffer[pos++] = 0;
+    }
+    else { // relay
+    	if(dag->preferred_parent != NULL) {
+    		buffer[pos++] = dag->preferred_parent->MLS_id; // MLS ID relay
+    	}
+    	else {
+    		buffer[pos++] = 0;
+    	}
+    	buffer[pos++] = id_count[latest_id];
+    	buffer[pos++] = latest_id;
+    }
+#else
+    if(tree_level == 1) { // I'm in the most loaded node set
+        PRINTF("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
+    //		printf("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
+    //		memcpy(&buffer[pos++],uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
+    	buffer[pos++] = uip_ds6_get_link_local(-1)->ipaddr.u8[15];
+    	PRINTF("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
+    //		printf("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
+    //		memcpy(&buffer[pos++],id_count[latest_id]);
+    	buffer[pos++] = id_count[latest_id];
+    //		buffer[pos++] = avg_est_load / 256;
+    	buffer[pos++] = latest_id;
+    }
+    else if(tree_level == -1) { // do nothing (send 0)
+    	buffer[pos++] = 0;
+    	buffer[pos++] = 0;
+    	buffer[pos++] = 0;
+    }
+    else { // relay
+    	if(dag->preferred_parent != NULL) {
+    		buffer[pos++] = dag->preferred_parent->MLS_id; // MLS ID relay
+    	}
+    	else {
+    		buffer[pos++] = 0;
+    	}
+    	buffer[pos++] = id_count[latest_id];
+    	buffer[pos++] = latest_id;
+    }
+#endif
+
+/*	if(MLS == 1)
 	{
 		PRINTF("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
 //		printf("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
@@ -950,8 +1008,8 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 		PRINTF("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
 //		printf("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
 //		memcpy(&buffer[pos++],id_count[latest_id]);
-//		buffer[pos++] = id_count[latest_id];
-		buffer[pos++] = avg_est_load / 256;
+		buffer[pos++] = id_count[latest_id];
+//		buffer[pos++] = avg_est_load / 256;
 		buffer[pos++] = latest_id;
 	}
 	else if(MLS == 2)
@@ -978,7 +1036,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 			set16(buffer,pos,0);
 			pos+=3;
 		}
-	}
+	}*/
 #endif
 #if RPL_LEAF_ONLY
 #if (DEBUG) & DEBUG_PRINT
@@ -1766,12 +1824,12 @@ fwd_dao:
     }
   }
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-/*  if(prev_weight != my_weight)
+  if(prev_weight != my_weight)
   {
 	  PRINTF("DIO Reset in DAO\n");
 //		printf("joonki13\n");
 	  rpl_reset_dio_timer(instance);
-  }*/
+  }
 #endif
 
  discard:

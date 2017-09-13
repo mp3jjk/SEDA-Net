@@ -29,7 +29,7 @@
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
 #if RPL_LIFETIME_MAX_MODE2
-uint8_t MLS; // The candidates set of the most loaded node
+uint8_t tree_level; // The candidates set of the most loaded node
 #endif
 
 /* Using strobe cnt, reducing idle listening while Tx preamble */
@@ -130,6 +130,7 @@ uint8_t alpha;
 uint8_t my_weight;
 uint8_t my_sink_reachability;
 uint8_t my_parent_number;
+uint8_t init_phase; // It is in init_phase while it is 1
 #if PARENT_REDUCTION_MODE
 uint8_t my_valid_parent_number;
 #endif

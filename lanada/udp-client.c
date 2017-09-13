@@ -218,16 +218,17 @@ send_packet(void *ptr)
 	{
 		latest_id = (seq_id-1);
 //		count_index = latest_id % BUF_SIZE;
-//		printf("load %d at %d\n",id_count[count_index],count_index);
+//		printf("load %d at %d\n",id_count[latest_id],latest_id);
 		int temp_load = id_count[latest_id] * 256;
 		if(avg_est_load == -1) {
 			avg_est_load = temp_load;
+			init_phase = 0; // After first load update, move into routing mode
 		}
 		else {
 			avg_est_load = ((uint32_t)avg_est_load * LOAD_ALPHA +
 					(uint32_t)temp_load * (LOAD_SCALE - LOAD_ALPHA)) / LOAD_SCALE;
 		}
-//		printf("load %d avg_est_load %d\n",id_count[count_index],avg_est_load);
+		printf("load %d avg_est_load %d\n",id_count[latest_id],avg_est_load);
 		parent_update = 1;
 	}
   PRINTF("app: DATA id:%04d from:%03d\n",
@@ -350,6 +351,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
 	led_end = 0;
 	dead = 0;
 	avg_est_load = -1; // Initial value -1
+	init_phase = 1; // Init phase start
 
   PROCESS_PAUSE();
 

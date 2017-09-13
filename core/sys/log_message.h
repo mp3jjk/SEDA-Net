@@ -11,7 +11,7 @@ extern FILE *log_fp;
 extern int log_file;
 #endif	/* COOJA */
 
-#define LOG_LEVEL		0
+#define LOG_LEVEL		2
 #define SIMULATION_SETTING	1
 #define PS_COUNT 1
 #define MAX_BLOCKSIZE 200

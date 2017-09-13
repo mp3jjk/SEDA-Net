@@ -1188,10 +1188,21 @@ best_parent(rpl_dag_t *dag)
 #endif
 #endif
 
-
-
-//  printf("return best my_parent_number %d\n",my_parent_number);
-  return best;
+  if(init_phase && prev != NULL) {
+	  if(prev != best) {
+		  if(prev->rank > best->rank) { // best has small metric
+			  return best;
+		  }
+		  else { // they have the same metric
+			  uint8_t random = rand() % 2;
+			  return random == 0 ? best : prev;
+		  }
+	  }
+  }
+  else {
+	  //  printf("return best my_parent_number %d\n",my_parent_number);
+	  return best;
+  }
 
 }
 /*---------------------------------------------------------------------------*/
@@ -1437,35 +1448,20 @@ rpl_join_instance(uip_ipaddr_t *from, rpl_dio_t *dio)
   dag->min_rank = dag->rank;
 
 #if RPL_LIFETIME_MAX_MODE2
-#if SINK_INFINITE_ENERGY // BS_ALWAYS_ON
-  	  if(dag->rank==RPL_MIN_HOPRANKINC * 3) // Level 2 nodes
+  	  if(dag->rank == RPL_MIN_HOPRANKINC * 2)
   	  {
-  		  MLS = 1;
-//  		  printf("MLS node!\n");
+  		  tree_level = 1;
   	  }
-  	  else if(dag->rank < RPL_MIN_HOPRANKINC * 3)
+  	  else if(dag->rank == RPL_MIN_HOPRANKINC * 3)
   	  {
-  		  MLS = 2; // Before MLS
+  		  tree_level = 2;
   	  }
   	  else
   	  {
-  		  MLS = 0;
+  		  tree_level = 3; // After level 2
   	  }
-#else	// BS_duty_cycle
-  	  if(dag->rank == RPL_MIN_HOPRANKINC * 2) // Level 1 nodes
-  	  {
-  		MLS = 1;
-//  		printf("MLS node!\n");
-  	  }
-  	  else if(dag->rank == RPL_MIN_HOPRANKINC)
-  	  {
-  		  MLS = 2; // Before MLS
-  	  }
-  	  else
-  	  {
-  		  MLS = 0;
-  	  }
-#endif
+  	  printf("tree_level %d\n",tree_level);
+
 #endif
 
   if(default_instance == NULL) {
@@ -1959,7 +1955,7 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
     PRINTF("RPL: The candidate parent is rejected\n");
     return;
   }
-#if RPL_LIFETIME_MAX_MODE2
+#if RPL_LIFETIME_MAX_MODE2 && 0
 #if SINK_INFINITE_ENERGY // BS_ALWAYS_ON
   	  if(dag->rank == RPL_MIN_HOPRANKINC * 3) // Level 2 nodes
   	  {

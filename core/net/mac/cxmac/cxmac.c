@@ -216,7 +216,7 @@ struct cxmac_hdr {
 #define DEFAULT_LONG_OFF_TIME (RTIMER_ARCH_SECOND / NETSTACK_RDC_CHANNEL_CHECK_RATE - DEFAULT_LONG_ON_TIME)
 #endif
 
-#define DEFAULT_PERIOD (DEFAULT_LONG_OFF_TIME + DEFAULT_LONG_ON_TIME)
+#define DEFAULT_LONG_PERIOD (DEFAULT_LONG_OFF_TIME + DEFAULT_LONG_ON_TIME)
 
 #define WAIT_TIME_BEFORE_LONG_STROBE_ACK RTIMER_ARCH_SECOND / 1000
 
@@ -279,6 +279,44 @@ struct cxmac_hdr {
 
 // #define DEFAULT_STROBE_WAIT_TIME (7 * DEFAULT_ON_TIME / 16)
 #define DEFAULT_STROBE_WAIT_TIME (2 * DEFAULT_ON_TIME / 3)
+/*------------------ ZOUL_MOTE LONG -------------------------------------------------------------------*/
+#if DUAL_RADIO
+
+#ifdef CXMAC_CONF_LONG_ON_TIME
+#define DEFAULT_LONG_ON_TIME (CXMAC_CONF_LONG_ON_TIME)
+#else
+#define DEFAULT_LONG_ON_TIME (RTIMER_ARCH_SECOND / 56)
+#endif
+
+#ifdef CXMAC_CONF_LONG_OFF_TIME
+#define DEFAULT_LONG_OFF_TIME (CXMAC_CONF_LONG_OFF_TIME)
+#else
+#define DEFAULT_LONG_OFF_TIME (RTIMER_ARCH_SECOND / NETSTACK_RDC_CHANNEL_CHECK_RATE - DEFAULT_LONG_ON_TIME)
+#endif
+
+#define DEFAULT_LONG_PERIOD (DEFAULT_LONG_OFF_TIME + DEFAULT_LONG_ON_TIME)
+
+#define WAIT_TIME_BEFORE_LONG_STROBE_ACK RTIMER_ARCH_SECOND / 1000
+
+/* On some platforms, we may end up with a DEFAULT_PERIOD that is 0
+   which will make compilation fail due to a modulo operation in the
+   code. To ensure that DEFAULT_PERIOD is greater than zero, we use
+   the construct below. */
+#if DEFAULT_LONG_PERIOD == 0
+#undef DEFAULT_LONG_PERIOD
+#define DEFAULT_LONG_PERIOD 1
+#endif
+
+/* The cycle time for announcements. */
+#define LONG_ANNOUNCEMENT_PERIOD 4 * CLOCK_SECOND
+
+/* The time before sending an announcement within one announcement
+   cycle. */
+#define LONG_ANNOUNCEMENT_TIME (random_rand() % (LONG_ANNOUNCEMENT_PERIOD))
+
+#define DEFAULT_LONG_STROBE_WAIT_TIME (2 * DEFAULT_LONG_ON_TIME / 3)
+
+#endif /* DUAL_RADIO */
 #endif /* COOJA */
 
 struct cxmac_config cxmac_config = {
@@ -720,13 +758,13 @@ cpowercycle(void *ptr)
 			powercycle_dual_turn_radio_on(LONG_RADIO);
 		}
 #elif LSA_ENHANCED
-		if(MLS == 2) {
+/*		if(MLS == 2) {
 			powercycle_dual_turn_radio_on(SHORT_RADIO);
 		}
 		else
 		{
 			powercycle_dual_turn_radio_on(LONG_RADIO);
-		}
+		}*/
 #else /* LSA_R */ 
 		powercycle_dual_turn_radio_on(LONG_RADIO);
 #endif /* LSA_R */
@@ -1121,7 +1159,7 @@ send_packet(void)
 		}
 	}
 #else
-	if (sending_in_LR() == SHORT_RADIO && (MLS != 1 || is_broadcast)){
+	if (sending_in_LR() == SHORT_RADIO){
 		was_short = 1;
 		dual_radio_switch(LONG_RADIO);
 		target = LONG_RADIO;
@@ -2074,7 +2112,7 @@ cxmac_init(void)
 
 #endif
 #if RPL_LIFETIME_MAX_MODE2
-	MLS = 0; // Initialize MLS
+	tree_level = -1; // Initialize tree_level
 	data_btb = 0;
 #endif
   radio_is_on = 0;
