@@ -17,7 +17,7 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 2
+#define LONG_WEIGHT_RATIO 1
 
 /* Weight ratio between rank and parent's degree */
 #define ALPHA	0
@@ -36,7 +36,7 @@ uint8_t tree_level; // The candidates set of the most loaded node
 #ifdef ZOUL_MOTE
 #define STROBE_CNT_MODE 0
 #else
-#define STROBE_CNT_MODE		1
+#define STROBE_CNT_MODE		0
 #endif
 
 /* To determine valid parent set, only valid parents are considered as a parent set */
@@ -45,6 +45,7 @@ uint8_t tree_level; // The candidates set of the most loaded node
 
 /* Enabling Data ACK */
 #define DATA_ACK      1
+#define ACK_WEIGHT_INCLUDED		1
 uint8_t data_btb; // Back to back data Tx
 
 /* Energy log */
@@ -135,7 +136,7 @@ uint8_t init_phase; // It is in init_phase while it is 1
 uint8_t my_valid_parent_number;
 #endif
 #define MAX_NUM_NODE 100
-#define BUF_SIZE 2000
+#define BUF_SIZE 10000
 extern int id_array[MAX_NUM_NODE];
 extern uint8_t id_count[BUF_SIZE];
 int latest_id;

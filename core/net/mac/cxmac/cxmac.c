@@ -758,13 +758,13 @@ cpowercycle(void *ptr)
 			powercycle_dual_turn_radio_on(LONG_RADIO);
 		}
 #elif LSA_ENHANCED
-/*		if(MLS == 2) {
-			powercycle_dual_turn_radio_on(SHORT_RADIO);
+		if(tree_level == 1) {
+			powercycle_dual_turn_radio_on(BOTH_RADIO);
 		}
 		else
 		{
 			powercycle_dual_turn_radio_on(LONG_RADIO);
-		}*/
+		}
 #else /* LSA_R */ 
 		powercycle_dual_turn_radio_on(LONG_RADIO);
 #endif /* LSA_R */
@@ -784,8 +784,6 @@ cpowercycle(void *ptr)
 #else	/* DUAL_RADIO */
     powercycle_turn_radio_on();
 #endif /* DUAL_RADIO */
-
-//    if()
 
 #if DUAL_RADIO
 		if (radio_long_is_on == 1 && radio_is_on == 0 ) {
@@ -1158,6 +1156,14 @@ send_packet(void)
 			was_short = 0;
 		}
 	}
+#elif LSA_ENHANCED
+	if (sending_in_LR() == SHORT_RADIO && (tree_level != 2 || is_broadcast)){
+		was_short = 1;
+		dual_radio_switch(LONG_RADIO);
+		target = LONG_RADIO;
+	}	else	{
+		was_short = 0;
+	}
 #else
 	if (sending_in_LR() == SHORT_RADIO){
 		was_short = 1;
@@ -1169,13 +1175,6 @@ send_packet(void)
 #endif /* LSA_R */
 #endif /* LSA_MAC */
 
-/*
-#if LSA_ENHANCED
-	if (MLS == 1) {
-
-	}
-#endif
-*/
 #endif
 
 	  /* Turn on the radio to listen for the strobe ACK. */
@@ -1409,7 +1408,9 @@ send_packet(void)
 #endif
 
 	got_strobe_ack=1;
-
+#if ACK_WEIGHT_INCLUDED
+	uint8_t ack_weight = 0;
+#endif
   /* restore the packet to send */
   queuebuf_to_packetbuf(packet);
   queuebuf_free(packet);
@@ -1460,6 +1461,7 @@ send_packet(void)
 					packetbuf_set_datalen(len);
 					if(NETSTACK_FRAMER.parse() >= 0) {
 						hdr = packetbuf_dataptr();
+						char* temp = packetbuf_dataptr();
 						// printf("after parsing type %x\n",hdr->type);
 						if(hdr->type == TYPE_DATA_ACK) {
 #if DUAL_RADIO
@@ -1473,6 +1475,10 @@ send_packet(void)
 #endif
 								{
 									got_data_ack = 1;
+#if ACK_WEIGHT_INCLUDED
+									ack_weight = temp[2];
+//									printf("check 2 %d\n",ack_weight);
+#endif
 									//PRINTDEBUG("cxmac: got data ack\n");
 								} else {
 									PRINTDEBUG("cxmac: data ack for someone else\n");
@@ -1508,6 +1514,14 @@ send_packet(void)
   PRINTF("cxmac: send (strobes=%u,len=%u,%s), done\n", strobes,
 	 packetbuf_totlen(), got_strobe_ack ? "ack" : "no ack");
 #if DATA_ACK
+#if ACK_WEIGHT_INCLUDED
+  rpl_parent_t *p=rpl_get_parent(&recv_addr);
+  if(p != NULL) {
+	  p->parent_sum_weight = ack_weight;
+
+//	  printf("MLS! %d\n",rpl_get_parent(&recv_addr)->MLS_id);
+  }
+#endif /* ACK_WEIGHT_INCLUDED */
   if(!is_broadcast && got_strobe_ack)
   {
 	  PRINTF("cxmac: recv %s\n",got_data_ack ? "data_ack" : "data_noack");
@@ -1859,12 +1873,18 @@ input_packet(void)
 			PRINTF("cxmac: failed to send data ack\n");
 			return;
 		}
+#if ACK_WEIGHT_INCLUDED
+		ack_len = len + sizeof(struct cxmac_hdr) + 1;
+#else
 		ack_len = len + sizeof(struct cxmac_hdr);
+#endif
 		memcpy(ack,packetbuf_hdrptr(),len);
 		ack[len] = DISPATCH;
 		ack[len + 1] = TYPE_DATA_ACK;
-		
-		// hdr->type = TYPE_DATA_ACK;
+#if ACK_WEIGHT_INCLUDED
+		ack[len + 2] = my_weight;
+//		printf("check 1 %d\n",ack[len + 2]);
+#endif
 
 		
 		/* rtimer_clock_t wait;

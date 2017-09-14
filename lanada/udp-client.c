@@ -214,6 +214,7 @@ send_packet(void *ptr)
 	}
 	lifetime = get_residual_energy();
 #endif /* PS_COUNT */
+#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
 	if(seq_id > (latest_id + 1)) // Update latest id here
 	{
 		latest_id = (seq_id-1);
@@ -231,6 +232,7 @@ send_packet(void *ptr)
 		printf("load %d avg_est_load %d\n",id_count[latest_id],avg_est_load);
 		parent_update = 1;
 	}
+#endif
   PRINTF("app: DATA id:%04d from:%03d\n",
          seq_id,myaddr);
 //  printf("send_packet!\n");
@@ -350,8 +352,10 @@ PROCESS_THREAD(udp_client_process, ev, data)
 	SENSORS_ACTIVATE(button_sensor);
 	led_end = 0;
 	dead = 0;
+#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
 	avg_est_load = -1; // Initial value -1
 	init_phase = 1; // Init phase start
+#endif
 
   PROCESS_PAUSE();
 

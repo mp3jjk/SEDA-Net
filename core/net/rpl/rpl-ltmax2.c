@@ -267,7 +267,7 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
 		p->parent_weight = nbr->link_metric/RPL_DAG_MC_ETX_DIVISOR * (is_longrange ? LONG_WEIGHT_RATIO : 1); // Tx cost using DIO_ACK
 	}
 #else
-	p->parent_weight = 1 * (is_longrange ? LONG_WEIGHT_RATIO : 1);
+	p->parent_weight = 1 * (is_longrange ? 2 : 1);
 
 #endif
 
@@ -487,6 +487,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  }
 		  }
 	  }
+/*
 	  else if(tree_level >= 3) {
 		  if(p1->MLS_id == p2->MLS_id) {
 			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
@@ -494,6 +495,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  }
 		  }
 	  }
+*/
 
 /*	    if(p1 == dag->preferred_parent) {
 	    	if(p1_metric - RPL_DAG_MC_ETX_DIVISOR > 0) {
@@ -506,8 +508,8 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	    	}
 	    }*/
 	    if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-	      if(p1_metric < p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
-	         p1_metric > p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
+	      if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
+	         p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
 	        PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
 	               p2_metric - RPL_DAG_MC_ETX_DIVISOR,
 	               p1_metric,

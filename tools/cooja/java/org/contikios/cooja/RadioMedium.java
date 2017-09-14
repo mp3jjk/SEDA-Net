@@ -38,8 +38,6 @@ import org.contikios.cooja.plugins.Visualizer;
 import org.contikios.cooja.plugins.skins.UDGMLongRangeVisualizerSkin;
 import org.contikios.cooja.plugins.skins.UDGMVisualizerSkin;
 import org.contikios.cooja.radiomediums.UDGM;
-import org.contikios.mrm.MRM;
-
 import org.jdom.Element;
 
 import org.contikios.cooja.interfaces.Radio;
@@ -64,8 +62,6 @@ public abstract class RadioMedium {
     if(this instanceof UDGM){
       ((UDGM)this).setForLongRange_UDGM(forLongRange);
       Visualizer.registerVisualizerSkin(UDGMLongRangeVisualizerSkin.class);
-    } else if (this instanceof MRM) {
-        ((MRM)this).setForLongRange_MRM(forLongRange);
     }
   }
 

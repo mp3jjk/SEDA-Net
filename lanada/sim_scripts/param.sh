@@ -136,7 +136,7 @@ uint8_t init_phase; // It is in init_phase while it is 1
 uint8_t my_valid_parent_number;
 #endif
 #define MAX_NUM_NODE 100
-#define BUF_SIZE 2000
+#define BUF_SIZE 10000
 extern int id_array[MAX_NUM_NODE];
 extern uint8_t id_count[BUF_SIZE];
 int latest_id;
