@@ -136,9 +136,14 @@ calculate_path_metric(rpl_parent_t *p)
 		  {
 			  ret_metric = p->rank + p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR;
 		  }
-		  else {
+		  else //if(tree_level == 1) {
+		  {
 			  ret_metric = p->rank + p->parent_weight * RPL_DAG_MC_ETX_DIVISOR;//(uint16_t)nbr->link_metric;
 		  }
+/*		  else {
+			  ret_metric = p->rank + p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR;
+		  }*/
+
 //	  PRINTF("rank, base_rank %d %d\n",p->rank,rpl_get_any_dag()->base_rank);
 //	  rank_rate = p->rank - rpl_get_any_dag()->base_rank < 0 ? 0 : p->rank - rpl_get_any_dag()->base_rank;
 //	  PRINTF("weight: %d rank_rate: %d\n",p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR, rank_rate);
@@ -431,6 +436,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 
   p1_metric = calculate_path_metric(p1);
   p2_metric = calculate_path_metric(p2);
+//  if(linkaddr_node_addr.u8[15] == 22)
   if(0)
   {
 	  printf("Cmp %d %c p1: %d load: %d weight: %d rank: %d %c\n", nbr1->ipaddr.u8[15], nbr1->ipaddr.u8[8]==0x82 ? 'L' : 'S',
@@ -487,15 +493,26 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  }
 		  }
 	  }
-/*
 	  else if(tree_level >= 3) {
-		  if(p1->MLS_id == p2->MLS_id) {
-			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-				  return dag->preferred_parent;
+//		  if(p1->rank == 768 || p2->rank == 768) {
+//			  if(p1->rank == 768 && p2->rank == 768) {
+				  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+					  if(p1_metric < p2_metric + RPL_DAG_MC_ETX_DIVISOR * 2 &&
+							  p1_metric > p2_metric - RPL_DAG_MC_ETX_DIVISOR * 2) {
+						  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+								  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+								  p1_metric,
+								  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+						  return dag->preferred_parent;
+					  }
+				  }
+				  return p1_metric <= p2_metric ? p1: p2;
 			  }
-		  }
-	  }
-*/
+//			  else {
+//				  return p1->rank == 768 ? p1 : p2;
+//			  }
+//		  }
+//	  }
 
 /*	    if(p1 == dag->preferred_parent) {
 	    	if(p1_metric - RPL_DAG_MC_ETX_DIVISOR > 0) {

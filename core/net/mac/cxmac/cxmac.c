@@ -1514,7 +1514,7 @@ send_packet(void)
   PRINTF("cxmac: send (strobes=%u,len=%u,%s), done\n", strobes,
 	 packetbuf_totlen(), got_strobe_ack ? "ack" : "no ack");
 #if DATA_ACK
-#if ACK_WEIGHT_INCLUDED
+#if ACK_WEIGHT_INCLUDED && DUAL_RADIO
   rpl_parent_t *p=rpl_get_parent(&recv_addr);
   if(p != NULL) {
 	  p->parent_sum_weight = ack_weight;

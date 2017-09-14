@@ -46,6 +46,7 @@ uint8_t tree_level; // The candidates set of the most loaded node
 
 /* Enabling Data ACK */
 #define DATA_ACK      ${10}
+#define ACK_WEIGHT_INCLUDED		1
 uint8_t data_btb; // Back to back data Tx
 
 /* Energy log */
