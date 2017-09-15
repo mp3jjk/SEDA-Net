@@ -724,12 +724,12 @@ dio_input(void)
 	  dio_broadcast(rpl_get_default_instance());
   }
 #endif
-  if(prev_weight != my_weight)
+/*  if(prev_weight != my_weight)
   {
 	  PRINTF("DIO Reset in DIO\n");
 //		printf("joonki12\n");
 	  rpl_reset_dio_timer(rpl_get_default_instance());
-  }
+  }*/
   PRINTF("DIO INPUT my_weight %d\n",my_weight);
 #endif
 
@@ -1824,12 +1824,12 @@ fwd_dao:
     }
   }
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-  if(prev_weight != my_weight)
+/*  if(prev_weight != my_weight)
   {
 	  PRINTF("DIO Reset in DAO\n");
 //		printf("joonki13\n");
 	  rpl_reset_dio_timer(instance);
-  }
+  }*/
 #endif
 
  discard:

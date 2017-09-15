@@ -3,10 +3,6 @@ echo "#define RPL_ENERGY_MODE 0
 #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
 #define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
 
-#if DUAL_RADIO == 0
-#define ONLY_LONG	${13}
-#endif
-
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
 #define MODE_LAST_PARENT	0 // Tx Last parent info. in dio_ack
@@ -25,7 +21,7 @@ echo "#define RPL_ENERGY_MODE 0
 #define ALPHA_DIV	${12}
 
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
-#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE ${14}
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE ${13}
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
@@ -67,7 +63,7 @@ uint8_t data_btb; // Back to back data Tx
 #if DUAL_RADIO
 #define LSA_MAC	${11}
 #define LSA_R	$4
-#define LSA_ENHANCED ${15}
+#define LSA_ENHANCED ${14}
 #else	/* DUAL_RADIO */
 #define LSA_MAC 0
 #define LSA_R 0

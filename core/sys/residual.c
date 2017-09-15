@@ -66,7 +66,7 @@ const energy_t DISSIPATION_RATE[] = {
 #else
 const energy_t DISSIPATION_RATE[] = {
     10,  // radioOn
-    10,  // radioTx~
+    0,  // radioTx~
     0,  // radioRx
     10,  // radioOnLong
     10,  // radioTxLong

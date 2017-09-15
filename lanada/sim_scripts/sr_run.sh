@@ -31,6 +31,13 @@ ALPHA_DIV=$9
 ONLY_LONG=${10}
 CHECK=${12}
 
+if [ $ONLY_LONG -eq 0]
+then
+    sed -i 's/\#define ONLY_LONG 1/\#define ONLY_LONG 0/g' $CONTIKI/platform/cooja/contiki-conf.h
+else
+    sed -i 's/\#define ONLY_LONG 0/\#define ONLY_LONG 1/g' $CONTIKI/platform/cooja/contiki-conf.h
+fi 
+
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
     mkdir $DATE\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK
@@ -40,7 +47,7 @@ else
     cd $DATE\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK
 fi
 
-../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK 1 $ALPHA_DIV $ONLY_LONG $CHECK 0
+../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK 1 $ALPHA_DIV $CHECK 0
 
 if [ ! -e $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range\_$CHECK ]
 then

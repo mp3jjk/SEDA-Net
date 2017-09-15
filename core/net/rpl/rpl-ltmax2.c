@@ -494,8 +494,8 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 		  }
 	  }
 	  else if(tree_level >= 3) {
-//		  if(p1->rank == 768 || p2->rank == 768) {
-//			  if(p1->rank == 768 && p2->rank == 768) {
+		  if(p1->rank == 768 || p2->rank == 768) {
+			  if(p1->rank == 768 && p2->rank == 768) {
 				  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
 					  if(p1_metric < p2_metric + RPL_DAG_MC_ETX_DIVISOR * 2 &&
 							  p1_metric > p2_metric - RPL_DAG_MC_ETX_DIVISOR * 2) {
@@ -508,11 +508,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 				  }
 				  return p1_metric <= p2_metric ? p1: p2;
 			  }
-//			  else {
-//				  return p1->rank == 768 ? p1 : p2;
-//			  }
-//		  }
-//	  }
+			  else {
+				  return p1->rank == 768 ? p1 : p2;
+			  }
+		  }
+	  }
 
 /*	    if(p1 == dag->preferred_parent) {
 	    	if(p1_metric - RPL_DAG_MC_ETX_DIVISOR > 0) {
