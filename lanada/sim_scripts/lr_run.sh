@@ -30,6 +30,7 @@ LSA_MAC=${14}
 ALPHA_DIV=${15}
 CHECK=${16}
 LSA_ENHANCED=${17}
+ROUTING_NO_ENERGY=${18}
 
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
@@ -40,13 +41,13 @@ else
     cd $DATE\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK
 fi
 
-../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK $LSA_MAC $ALPHA_DIV $CHECK $LSA_ENHANCED
+../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK $LSA_MAC $ALPHA_DIV $CHECK $LSA_ENHANCED $ROUTING_NO_ENERGY
 
-if [ ! -e $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED ]
+if [ ! -e $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY ]
 then
-    mkdir $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED
+    mkdir $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY
 fi
-cd $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED
+cd $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY
 echo "#########################  We are in $PWD  ########################"
 
 HERE=$PWD

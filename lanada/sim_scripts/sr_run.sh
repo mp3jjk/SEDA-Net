@@ -30,6 +30,7 @@ DATA_ACK=$8
 ALPHA_DIV=$9
 ONLY_LONG=${10}
 CHECK=${12}
+ROUTING_NO_ENERGY=${13}
 
 if [ $ONLY_LONG -eq 0]
 then
@@ -47,13 +48,13 @@ else
     cd $DATE\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK
 fi
 
-../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK 1 $ALPHA_DIV $CHECK 0
+../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK 1 $ALPHA_DIV $CHECK 0 $ROUTING_NO_ENERGY
 
-if [ ! -e $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range\_$CHECK ]
+if [ ! -e $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range\_$CHECK\_rou$ROUTING_NO_ENERGY ]
 then
-    mkdir $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range\_$CHECK
+    mkdir $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range\_$CHECK\_rou$ROUTING_NO_ENERGY
 fi
-cd $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range\_$CHECK
+cd $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range\_$CHECK\_rou$ROUTING_NO_ENERGY
 echo "#########################  We are in $PWD  ########################"
 
 HERE=$PWD

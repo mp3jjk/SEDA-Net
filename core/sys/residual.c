@@ -80,13 +80,13 @@ static const int DISSIPATION_RATE_DIVISOR = 16;
 energy_t
 get_residual_energy(void){
     int energy = RESIDUAL_ENERGY_MAX;
+    energy += energy_restore;
 #ifdef ZOLERTIA_Z1
     int i;
     for(i = 0; i < ENERGEST_TYPE_MAX; i++){
         energy -= ENERGEST_DISSIPATION_RATE[i] * energest_total_time[i].current;
     }
 #endif
-
 #ifdef ZOUL_MOTE
     int i;
     for(i = 0; i < ENERGEST_TYPE_MAX; i++){

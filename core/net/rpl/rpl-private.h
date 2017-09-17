@@ -397,6 +397,9 @@ void rpl_LSA_convergence_timer(uint8_t);
 void rpl_reset_LSA_convergence_timer(void);
 #endif
 #endif
+#if ROUTING_NO_ENERGY
+void rpl_energy_timer(void);
+#endif
 
 void rpl_reset_dio_timer(rpl_instance_t *);
 void rpl_reset_periodic_timer(void);

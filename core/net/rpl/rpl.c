@@ -380,6 +380,9 @@ rpl_init(void)
 #endif /* LSA_R */
 
 #endif /* DUAL_RADIO */
+#if ROUTING_NO_ENERGY
+	rpl_energy_timer();
+#endif
 #endif /* RPL_LIFETIME_MAX_MODE2 */
 
   /* add rpl multicast address */

@@ -62,6 +62,9 @@
 #include "../platform/zoul/dual_radio.h"
 #endif /* ZOLERTIA_Z1 */
 #endif /* DUAL_RADIO */
+#if ROUTING_NO_ENERGY
+#include "../core/sys/residual.h"
+#endif
 
 /* A configurable function called after update of the RPL DIO interval */
 #ifdef RPL_CALLBACK_NEW_DIO_INTERVAL
@@ -87,7 +90,9 @@ static void simple_convergence_radio_off(void);
 static void LSA_convergence_radio_broadcast(void);
 #endif
 #endif
-
+#endif
+#if ROUTING_NO_ENERGY
+static void rpl_energy_module_on(void);
 #endif
 
 static uint16_t next_dis;
@@ -192,6 +197,19 @@ LSA_convergence_radio_broadcast(void)
 #endif /* LSA_R */
 
 #endif	/* DUAL_RADIO */
+#if ROUTING_NO_ENERGY
+static struct ctimer converge_timer;
+rpl_energy_timer(void)
+{
+	ctimer_set(&converge_timer, ENERGY_CONV_TIME, &rpl_energy_module_on,NULL);
+}
+static void
+rpl_energy_module_on(void)
+{
+	printf("energy module on!\n");
+	energy_restore = RESIDUAL_ENERGY_MAX - get_residual_energy();
+}
+#endif
 #endif	/* RPL_LIFETIME_MAX_MODE */
 /*---------------------------------------------------------------------------*/
 static void

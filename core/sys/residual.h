@@ -28,6 +28,7 @@ energy_t COOJA_radioOnLong;
 energy_t COOJA_radioTxLong;
 energy_t COOJA_radioRxLong;
 energy_t COOJA_duration;
+energy_t energy_restore;
 #endif
 
 #ifdef ZOLERTIA_Z1
