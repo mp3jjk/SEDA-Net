@@ -436,7 +436,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 
   p1_metric = calculate_path_metric(p1);
   p2_metric = calculate_path_metric(p2);
-//  if(linkaddr_node_addr.u8[15] == 22)
+//  if(linkaddr_node_addr.u8[15] == 9)
   if(0)
   {
 	  printf("Cmp %d %c p1: %d load: %d weight: %d rank: %d %c\n", nbr1->ipaddr.u8[15], nbr1->ipaddr.u8[8]==0x82 ? 'L' : 'S',
@@ -470,10 +470,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	  }
   }
   else {
-	  if(tree_level == 1) {
-		  printf("should not be in here\n");
-	  }
-	  else if(tree_level == 2) {
+	  if(tree_level == 2) {
 		  if(p1->rank == 512 || p2->rank == 512) {
 			  if(p1->rank == 512 && p2->rank == 512) {
 				  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {

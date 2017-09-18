@@ -138,6 +138,7 @@ PROCESS_THREAD(dual_dio_broadcast, ev, data)
 	if (long_duty_on_local == 1) {
 		dio_output(temp_instance, NULL);
 	}
+#if ONLY_LONG == 0
 	etimer_set(&et, 1);
 
 	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
@@ -147,6 +148,7 @@ PROCESS_THREAD(dual_dio_broadcast, ev, data)
 	if (short_duty_on_local == 1) {
 		dio_output(temp_instance, NULL);
 	}
+#endif
 	PROCESS_END();
 }
 
@@ -169,6 +171,7 @@ PROCESS_THREAD(dual_dis_broadcast, ev, data)
 	if (long_duty_on_local == 1) {
 		dis_output(NULL);
 	}
+#if ONLY_LONG == 0
 	etimer_set(&et, 1);
 	
 	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
@@ -179,6 +182,7 @@ PROCESS_THREAD(dual_dis_broadcast, ev, data)
 	if (short_duty_on_local == 1) {
 		dis_output(NULL);
 	}
+#endif
 	
 	PROCESS_END();
 }

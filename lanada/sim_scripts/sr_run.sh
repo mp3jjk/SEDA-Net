@@ -32,12 +32,12 @@ ONLY_LONG=${10}
 CHECK=${12}
 ROUTING_NO_ENERGY=${13}
 
-if [ $ONLY_LONG -eq 0]
-then
-    sed -i 's/\#define ONLY_LONG 1/\#define ONLY_LONG 0/g' $CONTIKI/platform/cooja/contiki-conf.h
-else
-    sed -i 's/\#define ONLY_LONG 0/\#define ONLY_LONG 1/g' $CONTIKI/platform/cooja/contiki-conf.h
-fi 
+#if [ $ONLY_LONG -eq 0]
+#then
+#    sed -i 's/\#define ONLY_LONG 1/\#define ONLY_LONG 0/g' $CONTIKI/platform/cooja/contiki-conf.h
+#else
+#    sed -i 's/\#define ONLY_LONG 0/\#define ONLY_LONG 1/g' $CONTIKI/platform/cooja/contiki-conf.h
+#fi 
 
 if [ $TRAFFIC_MODEL -eq 0 ]
 then

@@ -53,17 +53,6 @@ extern energy_t COOJA_radioOnLong;
 extern energy_t COOJA_radioTxLong;
 extern energy_t COOJA_radioRxLong;
 extern energy_t COOJA_duration;
-#if ONLY_LONG == 1
-const energy_t DISSIPATION_RATE[] = {
-    10,  // radioOn
-    10,  // radioTx
-    0,  // radioRx
-    0,  // radioOnLong
-    0,  // radioTxLong
-    0,  // radioRxLong
-    0,  // duration: simulation time
-};
-#else
 const energy_t DISSIPATION_RATE[] = {
     10,  // radioOn
     0,  // radioTx~
@@ -73,7 +62,6 @@ const energy_t DISSIPATION_RATE[] = {
     0,  // radioRxLong
     0,  // duration: simulation time
 };
-#endif
 static const int DISSIPATION_RATE_DIVISOR = 16;
 #endif
 

@@ -2,11 +2,11 @@
 
 SR=1 # Decide whether SR simulation runs or not
 LR=0 # For LR case
-ONLY_LONG=1 # SR = 1 with only Long
+ONLY_LONG=0 # SR = 1 with only Long
 TRAFFIC=0 # 0 = periodic, 1 = poisson
 VAR_PERIOD=(30)
 VAR_ARRIVAL=(30)
-VAR_TOPOLOGY=("30cluster")
+VAR_TOPOLOGY=("36grid")
 VAR_LR_RANGE=("2X")
 VAR_LR_WEIGHT=(1)
 VAR_LSA_R=0
@@ -17,9 +17,9 @@ VAR_PARENT_REDUCTION=0
 VAR_REDUCTION_RATIO=0
 VAR_DATA_ACK=1
 VAR_CHECK_RATE=(8)
-VAR_LSA_ENHANCED=1
+VAR_LSA_ENHANCED=0
 VAR_ROUTING_NO_ENERGY=0
-DATE="0922"
+DATE="0924_2"
 LSA_MAC=1
 
 
@@ -41,7 +41,7 @@ then
 			do
 			    for check in "${VAR_CHECK_RATE[@]}"
 			    do
-			    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div $ONLY_LONG $range $check $VAR_ROUTING_NO_ENERGY
+			    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY
 			    done
 			done
 		    done
@@ -61,7 +61,7 @@ then
 			do
 			    for check in "${VAR_CHECK_RATE[@]}"
 			    do
-				./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div $ONLY_LONG $range $check $VAR_ROUTING_NO_ENERGY
+				./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY
 			    done
 			done
 		    done
@@ -92,7 +92,7 @@ then
 				do
 				    for check in "${VAR_CHECK_RATE[@]}"
 				    do
-					./lr_run.sh $topology $TRAFFIC $period 0 $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY
+					./lr_run.sh $topology $TRAFFIC $period 0 $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG
 				    done
 				done
 			    done
@@ -118,7 +118,7 @@ then
 				do
 				    for check in "${VAR_CHECK_RATE[@]}"
 				    do
-					./lr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY
+					./lr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG
 				    done
 				done
 			    done

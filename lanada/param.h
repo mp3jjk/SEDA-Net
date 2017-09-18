@@ -57,7 +57,7 @@ uint8_t data_btb; // Back to back data Tx
 #define SINGLE_UPDATE_ROUND	0
 
 /* Energy consumption X during routing */
-#define ROUTING_NO_ENERGY 1
+#define ROUTING_NO_ENERGY 0
 #define ENERGY_CONV_TIME (900ul * CLOCK_SECOND)
 
 /* LSA-MAC, implemeted on cxmac
