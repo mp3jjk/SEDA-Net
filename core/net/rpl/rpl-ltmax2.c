@@ -493,6 +493,10 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	  else if(tree_level >= 3) {
 		  if(p1->rank == 768 || p2->rank == 768) {
 			  if(p1->rank == 768 && p2->rank == 768) {
+/*				  if(p1->parent_sum_weight < p2->parent_sum_weight - 512)
+				  {
+
+				  }*/
 				  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
 					  if(p1_metric < p2_metric + RPL_DAG_MC_ETX_DIVISOR * 2 &&
 							  p1_metric > p2_metric - RPL_DAG_MC_ETX_DIVISOR * 2) {
@@ -509,6 +513,19 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 				  return p1->rank == 768 ? p1 : p2;
 			  }
 		  }
+/*		  else {
+			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+				  if(p1_metric < p2_metric + RPL_DAG_MC_ETX_DIVISOR * 2 &&
+						  p1_metric > p2_metric - RPL_DAG_MC_ETX_DIVISOR * 2) {
+					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+							  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+							  p1_metric,
+							  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+					  return dag->preferred_parent;
+				  }
+			  }
+			  return p1_metric <= p2_metric ? p1: p2;
+		  }*/
 	  }
 
 /*	    if(p1 == dag->preferred_parent) {
@@ -531,184 +548,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	        return dag->preferred_parent;
 	      }
 	    }
-/*	    if(p1_metric == p2_metric) {
-	    	if(p1 == dag->preferred_parent) {
-	    		return p1;
-	    	}
-	    	else if(p2 == dag->preferred_parent) {
-	    		return p2;
-	    	}
-	    	else {
-	    		return p1; // or p2? randomly
-	    	}
-	    }
-	    else {
-	    }*/
     	return p1_metric <= p2_metric ? p1 : p2;
-
-
-	    /*	  if(p1 == dag->preferred_parent)
-	  {
-		  //	  is_longrange1 = nbr1->ipaddr.u8[8]==0x82;
-		  //	  p1_metric += (is_longrange1 ? LONG_WEIGHT_RATIO : 1) * RPL_DAG_MC_ETX_DIVISOR;
-#if ALPHA > 0
-		  if(p1->parent_sum_weight != 0 && p1_metric - p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR * ALPHA / ALPHA_DIV > 0)
-		  {
-			  p1_metric -= p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR * ALPHA / ALPHA_DIV;
-		  }
-#endif
-		  if(p1->est_load != 0 && p1_metric - p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR > 0)
-		  {
-			  p1_metric -=  p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
-		  }
-	  }
-	  else if(p2 == dag->preferred_parent)
-	  {
-		  //	  is_longrange2 = nbr2->ipaddr.u8[8]==0x82;
-		  //	  p2_metric += (is_longrange2 ? LONG_WEIGHT_RATIO : 1) * RPL_DAG_MC_ETX_DIVISOR;
-#if ALPHA > 0
-		  if(p2->parent_sum_weight != 0 && p2_metric - p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR * ALPHA / ALPHA_DIV > 0)
-		  {
-			  p2_metric -= p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR * ALPHA / ALPHA_DIV;
-		  }
-#endif
-		  if(p2->est_load != 0 && p2_metric - p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR > 0)
-		  {
-			  p2_metric -=  p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
-		  }
-	  }
-#endif	 RPL_LIFETIME_MAX_MODE2
-
-	  	char *log_buf = (char*) malloc(sizeof(char)*100);
-  sprintf(log_buf,"Comparing %d %c p1: %d\n", nbr1->ipaddr.u8[15], nbr1->ipaddr.u8[8]==0x82 ? 'L' : 'S', p1_metric);
-	LOG_MESSAGE(log_buf);
-  sprintf(log_buf,"Comparing %d %c p2: %d\n", nbr2->ipaddr.u8[15], nbr2->ipaddr.u8[8]==0x82 ? 'L' : 'S', p2_metric);
-	LOG_MESSAGE(log_buf);
-	free(log_buf);
-	  //  if(linkaddr_node_addr.u8[15] == 32 && (nbr1->ipaddr.u8[15] == 26 || nbr2->ipaddr.u8[15] == 26))
-	  //	  if(linkaddr_node_addr.u8[15] == 32)
-	    {
-  printf("Cmp %d %c p1: %d load: %d weight: %d rank: %d %c\n", nbr1->ipaddr.u8[15], nbr1->ipaddr.u8[8]==0x82 ? 'L' : 'S',
-		  p1_metric,p1->est_load,p1->parent_weight, p1->rank,p1 == dag->preferred_parent ? 'P':'X');
-  printf("Cmp %d %c p2: %d load: %d weight: %d rank: %d %c\n", nbr2->ipaddr.u8[15], nbr2->ipaddr.u8[8]==0x82 ? 'L' : 'S',
-		  p2_metric,p2->est_load,p2->parent_weight, p2->rank,p2 == dag->preferred_parent ? 'P':'X');
-  }
-	  if(p1->rank == RPL_DAG_MC_ETX_DIVISOR || p2->rank == RPL_DAG_MC_ETX_DIVISOR)
-	  {
-		  if(p1->parent_weight < p2->parent_weight && p1->rank == RPL_DAG_MC_ETX_DIVISOR) {
-			  return p1;
-		  }
-		  else if(p1->parent_weight > p2->parent_weight && p2->rank == RPL_DAG_MC_ETX_DIVISOR) {
-			  return p2;
-		  }
-		  return p1->rank == RPL_DAG_MC_ETX_DIVISOR ? p1 : p2;
-	  }
-
-#if OF_MWHOF
-	  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent)
-	  {
-		  if(p1_metric < p2_metric + min_diff &&
-				  p1_metric > p2_metric - min_diff)
-		  {
-			  return dag->preferred_parent;
-		  }
-	  }
-	  return p1_metric <= p2_metric ? p1 : p2;
-
-#else
-	  if(p1_metric == p2_metric)
-	  {
-		  	  if(p1->rank < p2->rank) // Smaller rank
-	  {
-		  return p1;
-	  }
-	  else if(p1->rank > p2->rank)
-	  {
-		  return p2;
-	  }
-		  if(MLS == 1 || MLS == 2) {
-			  		  if(linkaddr_node_addr.u8[15] == 21) {
-			  printf("here\n");
-		  }
-			  if(p1 == dag->preferred_parent) {
-				  if(p1->parent_sum_weight == 0)
-					  p1->parent_sum_weight = p1->parent_weight;
-				  if(p1->parent_sum_weight <= p2->parent_sum_weight + p2->parent_weight) {
-					  return p1;
-				  }
-				  else {
-					  return p2;
-				  }
-			  }
-			  else if (p2 == dag->preferred_parent) {
-				  if(p2->parent_sum_weight == 0)
-					  p2->parent_sum_weight = p2->parent_weight;
-				  if(p1->parent_sum_weight + p1->parent_weight >= p2->parent_sum_weight) {
-					  return p2;
-				  }
-				  else {
-					  return p1;
-				  }
-			  }
-			  else {
-				  if(p1->parent_sum_weight < p2->parent_sum_weight) {
-					  return p1;
-				  }
-				  else if(p1->parent_sum_weight > p2->parent_sum_weight) {
-					  return p2;
-				  }
-			  }
-		  }
-		  else {
-			  if(p1 == dag->preferred_parent) {
-				  if(p1->est_load <= p2->est_load + p2->parent_weight) {
-					  return p1;
-				  }
-				  else {
-					  return p2;
-				  }
-			  }
-			  else if (p2 == dag->preferred_parent) {
-				  if(p1->est_load + p1->parent_weight >= p2->est_load) {
-					  return p2;
-				  }
-				  else {
-					  return p1;
-				  }
-			  }
-			  else {
-				  if(p1->est_load < p2->est_load) // Smaller est_load
-				  {
-					  return p1;
-				  }
-				  else if(p1->est_load > p2->est_load)
-				  {
-					  return p2;
-				  }
-			  }
-		  }
-		  if(p1->rank < p2->rank) // Smaller rank
-		  {
-			  return p1;
-		  }
-		  else if(p1->rank > p2->rank)
-		  {
-			  return p2;
-		  }
-		  	  if(p1->parent_weight < p2->parent_weight) // Smaller weight
-	  {
-		  return p1;
-	  }
-	  else if(p1->parent_weight > p2->parent_weight)
-	  {
-		  return p2;
-	  }
-		  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent)
-		  {
-			  return dag->preferred_parent;
-		  }
-	  }
-	  return p1_metric <= p2_metric ? p1 : p2;*/
   }
 #endif
 }
