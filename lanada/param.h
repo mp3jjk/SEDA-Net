@@ -16,11 +16,11 @@
 #define LONG_WEIGHT_RATIO 1
 
 /* Weight ratio between rank and parent's degree */
-#define ALPHA	0
-#define ALPHA_DIV	2
+#define ALPHA	1
+#define ALPHA_DIV	1
 
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
-#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 16
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1

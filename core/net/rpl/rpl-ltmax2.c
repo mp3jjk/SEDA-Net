@@ -134,15 +134,16 @@ calculate_path_metric(rpl_parent_t *p)
 		  if(tree_level == 1)
 #endif
 		  {
-			  ret_metric = p->rank + p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR;
+			  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR;
 		  }
-		  else //if(tree_level == 1) {
-		  {
-			  ret_metric = p->rank + p->parent_weight * RPL_DAG_MC_ETX_DIVISOR;//(uint16_t)nbr->link_metric;
+#if SINK_INFINITE_ENERGY
+		  else if(tree_level == 1) {
+			  ret_metric = p->rank + p->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
 		  }
-/*		  else {
-			  ret_metric = p->rank + p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR;
-		  }*/
+#endif
+		  else {
+			  ret_metric = (p->parent_sum_weight * ALPHA / ALPHA_DIV + p->est_load) * RPL_DAG_MC_ETX_DIVISOR;//(uint16_t)nbr->link_metric;
+		  }
 
 //	  PRINTF("rank, base_rank %d %d\n",p->rank,rpl_get_any_dag()->base_rank);
 //	  rank_rate = p->rank - rpl_get_any_dag()->base_rank < 0 ? 0 : p->rank - rpl_get_any_dag()->base_rank;
@@ -314,7 +315,10 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
 		  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
 	  }
 	  else {
-		  if(tree_level < 3) {
+		  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
+/*		  if(tree_level < 3) {
+//		  if(tree_level < 2) {
+
 			  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
 		  }
 		  else {
@@ -325,52 +329,7 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
 	//			  rank_increase = avg_est_load;
 				  rank_increase = (id_count[latest_id]) * 256;
 			  }
-		  }
-
-//
-//		  rank_increase = id_count[latest_id] * 256;
-
-		  /*	  if(p->parent_weight == 0) {
-		  		  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
-		  	  }
-		  	  else {
-		  		  rank_increase = p->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
-		  	  }*/
-
-		  //	  printf("nbr ip %d MLS id %d\n",nbr->ipaddr.u8[15], p->MLS_id);
-		  /*	  if(nbr->ipaddr.u8[15] == p->MLS_id)
-		  	  {
-		  //		  printf("est_load %d\n",p->est_load);
-		  		  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR * (p->est_load + 1);
-		  //		  printf("MLS's child rank_inc %d\n",rank_increase);
-		  	  }*/
-		  //	  else
-		  //	  {
-		  //		  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
-/*
-		  if(MLS == 1 || MLS == 2) {
-			  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
-		  }
-		  else {
-			  if(p->est_load == 0)
-			  {
-				  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
-			  }
-			  else
-			  {
-				  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR * (p->est_load);
-			  }
-		  }
-		  	  if(p->parent_sum_weight == 0) {
-		  		  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
-		  	  }
-		  	  else {
-		  	  	  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR * (p->parent_sum_weight);
-		  	  }
-		  //	  }
-
-		  //	  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
-*/
+		  }*/
 	  }
     if(base_rank == 0) {
       base_rank = p->rank;
@@ -436,7 +395,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 
   p1_metric = calculate_path_metric(p1);
   p2_metric = calculate_path_metric(p2);
-//  if(linkaddr_node_addr.u8[15] == 9)
+//  if(linkaddr_node_addr.u8[15] == 25)
   if(0)
   {
 	  printf("Cmp %d %c p1: %d load: %d weight: %d rank: %d %c\n", nbr1->ipaddr.u8[15], nbr1->ipaddr.u8[8]==0x82 ? 'L' : 'S',
@@ -470,7 +429,46 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	  }
   }
   else {
-	  if(tree_level == 2) {
+	  if(p1->rank < p2->rank) {
+		  return p1;
+	  }
+	  else if(p1->rank > p2->rank) {
+		  return p2;
+	  }
+	  else { // p1 & p2 have the same rank
+		  if(tree_level == 1) {
+			  return p1_metric <= p2_metric ? p1 : p2;
+		  }
+		  else if(tree_level == 2) { // Locally load balancing
+			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+				  if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
+						  p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
+					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+							  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+							  p1_metric,
+							  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+					  return dag->preferred_parent;
+				  }
+			  }
+			  return p1_metric <= p2_metric ? p1 : p2;
+		  }
+		  else { // Local and Global load balancing
+			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+				  if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
+						  p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
+					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+							  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+							  p1_metric,
+							  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+					  return dag->preferred_parent;
+				  }
+			  }
+			  return p1_metric <= p2_metric ? p1 : p2;
+		  }
+
+
+
+/*	  if(tree_level == 2) {
 		  if(p1->rank == 512 || p2->rank == 512) {
 			  if(p1->rank == 512 && p2->rank == 512) {
 				  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
@@ -493,10 +491,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	  else if(tree_level >= 3) {
 		  if(p1->rank == 768 || p2->rank == 768) {
 			  if(p1->rank == 768 && p2->rank == 768) {
-/*				  if(p1->parent_sum_weight < p2->parent_sum_weight - 512)
-				  {
 
-				  }*/
 				  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
 					  if(p1_metric < p2_metric + RPL_DAG_MC_ETX_DIVISOR * 2 &&
 							  p1_metric > p2_metric - RPL_DAG_MC_ETX_DIVISOR * 2) {
@@ -512,7 +507,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  else {
 				  return p1->rank == 768 ? p1 : p2;
 			  }
-		  }
+		  }*/
 /*		  else {
 			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
 				  if(p1_metric < p2_metric + RPL_DAG_MC_ETX_DIVISOR * 2 &&
@@ -527,17 +522,6 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  return p1_metric <= p2_metric ? p1: p2;
 		  }*/
 	  }
-
-/*	    if(p1 == dag->preferred_parent) {
-	    	if(p1_metric - RPL_DAG_MC_ETX_DIVISOR > 0) {
-	    		p1_metric-=RPL_DAG_MC_ETX_DIVISOR;
-	    	}
-	    }
-	    if(p2 == dag->preferred_parent) {
-	    	if(p2_metric - RPL_DAG_MC_ETX_DIVISOR > 0) {
-	    		p2_metric-=RPL_DAG_MC_ETX_DIVISOR;
-	    	}
-	    }*/
 	    if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
 	      if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
 	         p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {

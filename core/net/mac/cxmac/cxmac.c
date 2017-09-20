@@ -61,7 +61,9 @@
 #include <string.h>
 
 #include "../lanada/param.h"
-
+#if DUAL_RADIO == 0
+#include "../core/net/rpl/rpl.h"
+#endif
 /*
 #if CONTIKI_TARGET_COOJA
 #include "lib/simEnvChange.h"
@@ -1835,7 +1837,7 @@ input_packet(void)
 			return;
 		}
 #if ACK_WEIGHT_INCLUDED
-		ack_len = len + sizeof(struct cxmac_hdr) + 1;
+		ack_len = len + sizeof(struct cxmac_hdr) + 2;
 #else
 		ack_len = len + sizeof(struct cxmac_hdr);
 #endif
@@ -1844,6 +1846,17 @@ input_packet(void)
 		ack[len + 1] = TYPE_DATA_ACK;
 #if ACK_WEIGHT_INCLUDED
 		ack[len + 2] = my_weight;
+		if(tree_level == 2) {
+			ack[len + 3] = id_count[latest_id];
+		}
+		else {
+			if(rpl_get_any_dag()->preferred_parent != NULL) {
+				ack[len + 3] = rpl_get_any_dag()->preferred_parent->est_load;
+			}
+			else {
+				ack[len + 3] = 0;
+			}
+		}
 //		printf("check 1 %d\n",ack[len + 2]);
 #endif
 

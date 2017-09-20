@@ -947,8 +947,8 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     //		printf("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
     //		memcpy(&buffer[pos++],uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
     	buffer[pos++] = uip_ds6_get_link_local(-1)->ipaddr.u8[15];
+//    	PRINTF("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
     	PRINTF("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
-    //		printf("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
     //		memcpy(&buffer[pos++],id_count[latest_id]);
     	buffer[pos++] = id_count[latest_id];
     //		buffer[pos++] = avg_est_load / 256;
@@ -962,12 +962,14 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     else { // relay
     	if(dag->preferred_parent != NULL) {
     		buffer[pos++] = dag->preferred_parent->MLS_id; // MLS ID relay
+        	buffer[pos++] = dag->preferred_parent->est_load;
+        	buffer[pos++] = dag->preferred_parent->latest_id;
     	}
     	else {
     		buffer[pos++] = 0;
+    		buffer[pos++] = 0;
+    		buffer[pos++] = 0;
     	}
-    	buffer[pos++] = id_count[latest_id];
-    	buffer[pos++] = latest_id;
     }
 #else
     if(tree_level == 1) { // I'm in the most loaded node set
@@ -990,53 +992,17 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     else { // relay
     	if(dag->preferred_parent != NULL) {
     		buffer[pos++] = dag->preferred_parent->MLS_id; // MLS ID relay
+        	buffer[pos++] = dag->preferred_parent->est_load;
+        	buffer[pos++] = dag->preferred_parent->latest_id;
     	}
     	else {
     		buffer[pos++] = 0;
+    		buffer[pos++] = 0;
+    		buffer[pos++] = 0;
     	}
-    	buffer[pos++] = id_count[latest_id];
-    	buffer[pos++] = latest_id;
     }
 #endif
 
-/*	if(MLS == 1)
-	{
-		PRINTF("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
-//		printf("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
-//		memcpy(&buffer[pos++],uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
-		buffer[pos++] = uip_ds6_get_link_local(-1)->ipaddr.u8[15];
-		PRINTF("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
-//		printf("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
-//		memcpy(&buffer[pos++],id_count[latest_id]);
-		buffer[pos++] = id_count[latest_id];
-//		buffer[pos++] = avg_est_load / 256;
-		buffer[pos++] = latest_id;
-	}
-	else if(MLS == 2)
-	{
-		set16(buffer,pos,0);
-		pos+=3;
-	}
-	else
-	{
-		if(dag->preferred_parent != NULL)
-		{
-			PRINTF("relay MLS node id: %d\n",dag->preferred_parent->MLS_id);
-//			printf("relay MLS node id: %d\n",dag->preferred_parent->MLS_id);
-			//		memcpy(&buffer[pos++],dag->preferred_parent->MLS_id);
-			buffer[pos++] = dag->preferred_parent->MLS_id;
-			PRINTF("relay Est_load: %d\n",dag->preferred_parent->est_load);
-//			printf("relay Est_load: %d\n",dag->preferred_parent->est_load);
-			//		memcpy(&buffer[pos++],dag->preferred_parent->est_load);
-			buffer[pos++] = dag->preferred_parent->est_load;
-			buffer[pos++] = dag->preferred_parent->latest_id;
-		}
-		else
-		{
-			set16(buffer,pos,0);
-			pos+=3;
-		}
-	}*/
 #endif
 #if RPL_LEAF_ONLY
 #if (DEBUG) & DEBUG_PRINT
