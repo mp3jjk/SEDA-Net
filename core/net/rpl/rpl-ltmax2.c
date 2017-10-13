@@ -274,7 +274,6 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
 	}
 #else
 	p->parent_weight = 1 * (is_longrange ? 2 : 1);
-
 #endif
 
 //	printf("LTMAX_OF id:%d 8th:%d %d parent_weight %d\n",rpl_get_nbr(p)->ipaddr.u8[15],rpl_get_nbr(p)->ipaddr.u8[8],is_longrange,p->parent_weight);
