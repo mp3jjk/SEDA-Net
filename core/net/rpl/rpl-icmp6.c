@@ -604,13 +604,16 @@ dio_input(void)
 //      dio.MLS_id = buffer[i+48];
       dio.MLS_id = buffer[i+34];
       PRINTF("recv dio MLS_id %d\n",dio.MLS_id);
+//      printf("recv dio MLS_id %d\n",dio.MLS_id);
 //      dio.est_load = buffer[i+49];
       dio.est_load = buffer[i+35];
       PRINTF("recv dio Est_load %d\n",dio.est_load);
 //      printf("recv dio Est_load %d\n",dio.est_load);
+//      printf("recv dio Est_load %d\n",dio.est_load);
       dio.latest_id = buffer[i+36];
       PRINTF("recv dio data_id %d\n",dio.latest_id);
 //      printf("recv dio data_id %d\n",dio.latest_id);
+/*//      printf("recv dio data_id %d\n",dio.latest_id);*/
 #endif
       break;
     default:
@@ -943,12 +946,12 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 #if RPL_LIFETIME_MAX_MODE2
 #if SINK_INFINITE_ENERGY
     if(tree_level == 2) { // I'm in the most loaded node set
-        PRINTF("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
-    //		printf("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
+//        PRINTF("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
+//    	printf("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
     //		memcpy(&buffer[pos++],uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
     	buffer[pos++] = uip_ds6_get_link_local(-1)->ipaddr.u8[15];
 //    	PRINTF("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
-    	PRINTF("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
+//    	printf("MLS Est_load: %d id: %d\n",id_count[latest_id],latest_id);
     //		memcpy(&buffer[pos++],id_count[latest_id]);
     	buffer[pos++] = id_count[latest_id];
     //		buffer[pos++] = avg_est_load / 256;
@@ -961,6 +964,9 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     }
     else { // relay
     	if(dag->preferred_parent != NULL) {
+//    		printf("relay MLS id: %d\n",dag->preferred_parent->MLS_id);
+//    		printf("relay load: %d\n",dag->preferred_parent->est_load);
+//    		printf("relay id: %d\n",dag->preferred_parent->latest_id);
     		buffer[pos++] = dag->preferred_parent->MLS_id; // MLS ID relay
         	buffer[pos++] = dag->preferred_parent->est_load;
         	buffer[pos++] = dag->preferred_parent->latest_id;

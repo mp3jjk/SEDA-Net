@@ -134,15 +134,15 @@ calculate_path_metric(rpl_parent_t *p)
 		  if(tree_level == 1)
 #endif
 		  {
-			  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR;
+			  ret_metric = (p->parent_sum_weight + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;
 		  }
 #if SINK_INFINITE_ENERGY
 		  else if(tree_level == 1) {
-			  ret_metric = p->rank + p->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
+			  ret_metric = p->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
 		  }
 #endif
 		  else {
-			  ret_metric = (p->parent_sum_weight * ALPHA / ALPHA_DIV + p->est_load) * RPL_DAG_MC_ETX_DIVISOR;//(uint16_t)nbr->link_metric;
+			  ret_metric = (p->parent_sum_weight * ALPHA / ALPHA_DIV + p->est_load + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;//(uint16_t)nbr->link_metric;
 		  }
 
 //	  PRINTF("rank, base_rank %d %d\n",p->rank,rpl_get_any_dag()->base_rank);
@@ -394,8 +394,8 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 
   p1_metric = calculate_path_metric(p1);
   p2_metric = calculate_path_metric(p2);
-//  if(linkaddr_node_addr.u8[15] == 25)
-  if(0)
+  if(linkaddr_node_addr.u8[15] == 12)
+//  if(0)
   {
 	  printf("Cmp %d %c p1: %d load: %d weight: %d rank: %d %c\n", nbr1->ipaddr.u8[15], nbr1->ipaddr.u8[8]==0x82 ? 'L' : 'S',
 			  p1_metric,p1->est_load,p1->parent_sum_weight, p1->rank,p1 == dag->preferred_parent ? 'P':'X');
@@ -453,8 +453,8 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 		  }
 		  else { // Local and Global load balancing
 			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-				  if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
-						  p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
+				  if((p1_metric <= p2_metric + id_count[latest_id] + 1 &&
+						  p1_metric >= p2_metric - id_count[latest_id] + 1) || (p1->MLS_id == p2->MLS_id)) {
 					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
 							  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
 							  p1_metric,

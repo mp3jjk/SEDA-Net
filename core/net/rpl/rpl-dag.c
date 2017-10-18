@@ -1463,7 +1463,7 @@ rpl_join_instance(uip_ipaddr_t *from, rpl_dio_t *dio)
   	  {
   		  tree_level = 3; // After level 2
   	  }
-  	  printf("tree_level %d\n",tree_level);
+//  	  printf("tree_level %d\n",tree_level);
 
 #endif
 
@@ -1971,7 +1971,7 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
   	  {
   		  tree_level = 3; // After level 2
   	  }
-//  	  printf("tree_level %d\n",tree_level);
+//  	  printf("tree_level_updated %d\n",tree_level);
 #endif
   /* We don't use route control, so we can have only one official parent. */
   if(dag->joined && p == dag->preferred_parent) {
