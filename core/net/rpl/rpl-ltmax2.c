@@ -394,8 +394,8 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 
   p1_metric = calculate_path_metric(p1);
   p2_metric = calculate_path_metric(p2);
-  if(linkaddr_node_addr.u8[15] == 12)
-//  if(0)
+//  if(linkaddr_node_addr.u8[15] == 12)
+  if(0)
   {
 	  printf("Cmp %d %c p1: %d load: %d weight: %d rank: %d %c\n", nbr1->ipaddr.u8[15], nbr1->ipaddr.u8[8]==0x82 ? 'L' : 'S',
 			  p1_metric,p1->est_load,p1->parent_sum_weight, p1->rank,p1 == dag->preferred_parent ? 'P':'X');

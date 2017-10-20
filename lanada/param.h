@@ -16,11 +16,11 @@
 #define LONG_WEIGHT_RATIO 1
 
 /* Weight ratio between rank and parent's degree */
-#define ALPHA	0
+#define ALPHA	1
 #define ALPHA_DIV	1
 
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
-#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 4
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
@@ -66,7 +66,7 @@ uint8_t data_btb; // Back to back data Tx
 #if DUAL_RADIO
 #define LSA_MAC	1
 #define LSA_R	0
-#define LSA_ENHANCED 0
+#define LSA_ENHANCED 1
 #else	/* DUAL_RADIO */
 #define LSA_MAC 0
 #define LSA_R 0
@@ -76,7 +76,7 @@ uint8_t data_btb; // Back to back data Tx
 
 #define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
-#define PERIOD 5
+#define PERIOD 30
 #elif TRAFFIC_MODEL == 1
 #define ARRIVAL_RATE 0 // Mean value, 1/lambda
 #endif

@@ -229,7 +229,7 @@ send_packet(void *ptr)
 			avg_est_load = ((uint32_t)avg_est_load * LOAD_ALPHA +
 					(uint32_t)temp_load * (LOAD_SCALE - LOAD_ALPHA)) / LOAD_SCALE;
 		}
-		printf("load %d avg_est_load %d\n",id_count[latest_id],avg_est_load);
+//		printf("load %d avg_est_load %d\n",id_count[latest_id],avg_est_load);
 		parent_update = 1;
 	}
 #endif
