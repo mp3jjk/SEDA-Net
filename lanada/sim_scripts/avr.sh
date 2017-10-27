@@ -1,6 +1,7 @@
 #!/bin/bash 
 
 MODE=$1
+ARG=$1
 
 if [ $MODE == "lifetime" ]
 then
@@ -29,6 +30,7 @@ do
 		elif [ -z "$line" ]
 		then
 			echo
+			max_count=$count
 			count=-1
 			continue
 		fi
@@ -36,18 +38,37 @@ do
 		if [ $count -ge 0 ]
 		then
 			add=`echo $line | cut -d ' ' -f4`
-			base=`echo $line | cut -d ' ' -f1`
+			if [ $MODE == "lifetime" ]
+			then
+				base=`echo $line | cut -d ' ' -f1`
+			else
+				base=`echo $line | cut -d ' ' -f2`
+			fi
 			y[$count]=$base
-			let " x[$count] = ${x[$count]}+$add " 
+			if [ $MODE == "prr" ]
+			then
+				if [ -z ${x[$count]} ]
+				then
+					x[$count]=0
+				fi
+				x[$count]=`echo "scale=3;${x[$count]}+$add"|bc`
+			else
+				let " x[$count] = ${x[$count]}+$add " 
+			fi
 			# echo "$count-th variable is ${x[$count]}"
 			let "count=$count+1"
 		fi
 	done < temp.txt
 	count=0
 	echo "################ $category ################"
-	while [ ${x[$count]} -gt 0 ]
+	while [ $count -lt $max_count ]
 	do
-		let "x[$count]=${x[$count]}/$cat_count"
+		if [ $MODE == "prr" ]
+		then
+			x[$count]=`echo "scale=3;${x[$count]}/$cat_count"|bc`
+		else
+			let "x[$count]=${x[$count]}/$cat_count"
+		fi
 		echo "${y[$count]} average: ${x[$count]}"
 		let "count=$count+1"
 	done
