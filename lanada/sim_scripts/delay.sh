@@ -5,7 +5,7 @@ do
 	if [ -d $DIR ]
 	then
 		traffic=`echo $DIR | cut -d'_' -f3`
-		echo "############# $traffic ###############"
+		echo "############# $DIR ###############"
 		cd $DIR
 		for dir in *
 		do
