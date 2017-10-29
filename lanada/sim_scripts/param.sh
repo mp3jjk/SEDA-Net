@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "#define RPL_ENERGY_MODE 0
 #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
-#define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
+#define RPL_LIFETIME_MAX_MODE2 0 // Improving LT MAX MODE
 
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
@@ -115,7 +115,7 @@ uint8_t simple_convergence;
 #undef RPL_LIFETIME_MAX_MODE
 #endif /* RPL_LIFETIME_MAX_MODE */
 #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
-#define RPL_LIFETIME_MAX_MODE2 1 // Is it fine?
+#define RPL_LIFETIME_MAX_MODE2 0 // Is it fine?
 #endif /* LSA_R */
 
 #if RPL_ENERGY_MODE

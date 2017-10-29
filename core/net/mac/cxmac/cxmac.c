@@ -1475,7 +1475,7 @@ send_packet(void)
   PRINTF("cxmac: send (strobes=%u,len=%u,%s), done\n", strobes,
 	 packetbuf_totlen(), got_strobe_ack ? "ack" : "no ack");
 #if DATA_ACK
-#if ACK_WEIGHT_INCLUDED && DUAL_RADIO
+#if ACK_WEIGHT_INCLUDED && DUAL_RADIO && RPL_LIFETIME_MAX_MODE2
   rpl_parent_t *p=rpl_get_parent(&recv_addr);
   if(p != NULL) {
 	  p->parent_sum_weight = ack_weight;
@@ -1836,7 +1836,7 @@ input_packet(void)
 			PRINTF("cxmac: failed to send data ack\n");
 			return;
 		}
-#if ACK_WEIGHT_INCLUDED
+#if ACK_WEIGHT_INCLUDED && RPL_LIFETIME_MAX_MODE2
 		ack_len = len + sizeof(struct cxmac_hdr) + 2;
 #else
 		ack_len = len + sizeof(struct cxmac_hdr);
@@ -1844,7 +1844,7 @@ input_packet(void)
 		memcpy(ack,packetbuf_hdrptr(),len);
 		ack[len] = DISPATCH;
 		ack[len + 1] = TYPE_DATA_ACK;
-#if ACK_WEIGHT_INCLUDED
+#if ACK_WEIGHT_INCLUDED && RPL_LIFETIME_MAX_MODE2
 		ack[len + 2] = my_weight;
 		if(tree_level == 2) {
 			ack[len + 3] = id_count[latest_id];
