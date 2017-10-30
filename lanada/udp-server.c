@@ -101,6 +101,11 @@ tcpip_handler(void)
     PRINTF("%d %c count: %d \n",
            UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1],\
 					  UIP_IP_BUF->srcipaddr.u8[8]>128?'L':'S',id_count[recv_id]);
+#else
+    PRINTF("%d %d",
+               UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1],\
+    					 UIP_IP_BUF->srcipaddr.u8[8]);
+    PRINTF("\n");
 #endif
 /*		
 		PRINTF("%d %d",
