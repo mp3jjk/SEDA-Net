@@ -58,10 +58,9 @@ uint8_t remaining_energy = INITIAL_ENERGY;
 uint8_t alpha = ALPHA;
 #elif RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
 uint8_t my_weight = 0;
+#endif
 int id_array[MAX_NUM_NODE]={0,};
 uint8_t id_count[BUF_SIZE]={0,};
-#endif
-
 static struct uip_udp_conn *server_conn;
 
 PROCESS(udp_server_process, "UDP server process");
@@ -86,7 +85,7 @@ tcpip_handler(void)
 //    printf("id_array %d %d %d %d %d %d\n",id_array[1],id_array[2],id_array[3],id_array[4],id_array[5],id_array[6]);
 //    if(id_array[UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1]] >= recv_id)
 //    count_index = recv_id % BUF_SIZE;
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+//#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
     if(id_array[recv_ip] >= recv_id)
     {
     	printf("app: duplicated data %d\n",recv_id);
@@ -95,18 +94,20 @@ tcpip_handler(void)
     id_count[recv_id]++;
 
     id_array[recv_ip] = recv_id;
-#endif
+//#endif
     PRINTF("recv DATA '%s' from ", appdata);
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+//#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
     PRINTF("%d %c count: %d \n",
            UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1],\
 					  UIP_IP_BUF->srcipaddr.u8[8]>128?'L':'S',id_count[recv_id]);
+/*
 #else
-    PRINTF("%d %d",
+    PRINTF("%d %d ",
                UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1],\
     					 UIP_IP_BUF->srcipaddr.u8[8]);
     PRINTF("\n");
 #endif
+*/
 /*		
 		PRINTF("%d %d",
            UIP_IP_BUF->srcipaddr.u8[sizeof(UIP_IP_BUF->srcipaddr.u8) - 1],\

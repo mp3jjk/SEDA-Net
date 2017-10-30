@@ -1,6 +1,6 @@
 #define RPL_ENERGY_MODE 0
 #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
-#define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
+#define RPL_LIFETIME_MAX_MODE2 0 // Improving LT MAX MODE
 
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
@@ -76,7 +76,7 @@ uint8_t data_btb; // Back to back data Tx
 
 #define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
-#define PERIOD 30
+#define PERIOD 5
 #elif TRAFFIC_MODEL == 1
 #define ARRIVAL_RATE 0 // Mean value, 1/lambda
 #endif
@@ -135,6 +135,10 @@ uint8_t init_phase; // It is in init_phase while it is 1
 #if PARENT_REDUCTION_MODE
 uint8_t my_valid_parent_number;
 #endif
+#define LOAD_SCALE 	100
+#define LOAD_ALPHA	90
+uint8_t parent_update; /* Update parent only once for each data_id */
+#endif /* RPL_ENERGY_MODE */
 #define MAX_NUM_NODE 100
 #define BUF_SIZE 10000
 extern int id_array[MAX_NUM_NODE];
@@ -142,10 +146,6 @@ extern uint8_t id_count[BUF_SIZE];
 int latest_id;
 int count_index;
 int avg_est_load; // Exponentially Weighted Moving Average with est_load
-#define LOAD_SCALE 	100
-#define LOAD_ALPHA	90
-uint8_t parent_update; /* Update parent only once for each data_id */
-#endif /* RPL_ENERGY_MODE */
 
 
 //#if LSA_MAC
