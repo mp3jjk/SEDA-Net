@@ -53,11 +53,11 @@ fi
 
 ../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK 1 $ALPHA_DIV $CHECK 0 $ROUTING_NO_ENERGY
 
-if [ ! -e $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range\_$CHECK\_rou$ROUTING_NO_ENERGY ]
+if [ ! -e $topology\_sr\_strobe$STROBE_CNT\_$LR_range\_$CHECK\_rou$ROUTING_NO_ENERGY ]
 then
-    mkdir $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range\_$CHECK\_rou$ROUTING_NO_ENERGY
+    mkdir $topology\_sr\_strobe$STROBE_CNT\_$LR_range\_$CHECK\_rou$ROUTING_NO_ENERGY
 fi
-cd $topology\_sr\_strobe$STROBE_CNT\_L$ONLY_LONG\_$LR_range\_$CHECK\_rou$ROUTING_NO_ENERGY
+cd $topology\_sr\_strobe$STROBE_CNT\_$LR_range\_$CHECK\_rou$ROUTING_NO_ENERGY
 echo "#########################  We are in $PWD  ########################"
 
 HERE=$PWD

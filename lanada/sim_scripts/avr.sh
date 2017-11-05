@@ -1,17 +1,17 @@
 #!/bin/bash 
 
 MODE=$1
-ARG=$1
+ARG=$2
 
 if [ $MODE == "lifetime" ]
 then
-	./lifetime.sh > temp.txt
+	./lifetime.sh $ARG > temp.txt
 elif [ $MODE == "delay" ]
 then
-	./delay.sh > temp.txt
+	./delay.sh $ARG > temp.txt
 elif [ $MODE == "prr" ]
 then
-	./prr.sh > temp.txt
+	./prr.sh $ARG > temp.txt
 fi
 
 grep "#" temp.txt | awk '{print $2}' > temp2.txt

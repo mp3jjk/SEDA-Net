@@ -56,11 +56,11 @@ fi
 
 ../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK $LSA_MAC $ALPHA_DIV $CHECK $LSA_ENHANCED $ROUTING_NO_ENERGY
 
-if [ ! -e $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY\_L$ONLY_LONG ]
+if [ ! -e $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY ]
 then
-    mkdir $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY\_L$ONLY_LONG
+    mkdir $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY
 fi
-cd $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY\_L$ONLY_LONG
+cd $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY
 echo "#########################  We are in $PWD  ########################"
 
 HERE=$PWD

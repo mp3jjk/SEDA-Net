@@ -28,18 +28,11 @@ obj_zoul/uip6.o: ..//core/net/ipv6/uip6.c ..//core/./sys/cc.h \
  ..//core/./net/ipv6/multicast/smrf.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h \
- ../platform/zoul/dual_radio.h ../platform/zoul/contiki-conf.h \
- ..//dev/cc1200/cc1200.h ..//core/./net/packetbuf.h \
- ..//core/./net/mac/tsch/tsch-conf.h ..//core/./net/rime/rimestats.h \
- ../cpu/cc2538/dev/cc2538-rf.h ..//cpu/cc2538/./dev/rfcore.h \
- ..//cpu/cc2538/./dev/rfcore-ffsm.h ..//cpu/cc2538/./dev/rfcore-xreg.h \
- ..//cpu/cc2538/./dev/rfcore-sfr.h ..//cpu/cc2538/./dev/ana-regs.h \
- ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h \
- ..//core/./net/rpl/rpl-conf.h ..//core/./sys/ctimer.h ../lanada/param.h \
  ..//core/./sys/log_message.h ..//core/./cfs/cfs.h \
  ..//core/./sys/residual.h ..//core/./sys/energest.h \
  ..//core/net/ipv6/ipv6_debug.h ..//core/./net/ip/uip-debug.h \
- ..//core/net/rpl/rpl.h
+ ..//core/net/rpl/rpl.h ..//core/net/rpl/rpl-conf.h \
+ ..//core/./sys/ctimer.h ../lanada/param.h
 ..//core/net/ipv6/uip6.c ..//core/./sys/cc.h :
  ..//platform/zoul/./contiki-conf.h ..//core/./dev/radio.h project-conf.h :
  ..//platform/zoul/firefly/board.h ..//cpu/cc2538/./dev/gpio.h :
@@ -70,15 +63,8 @@ obj_zoul/uip6.o: ..//core/net/ipv6/uip6.c ..//core/./sys/cc.h \
  ..//core/./net/ipv6/multicast/smrf.h :
  ..//core/./net/ipv6/multicast/roll-tm.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :
- ../platform/zoul/dual_radio.h ../platform/zoul/contiki-conf.h :
- ..//dev/cc1200/cc1200.h ..//core/./net/packetbuf.h :
- ..//core/./net/mac/tsch/tsch-conf.h ..//core/./net/rime/rimestats.h :
- ../cpu/cc2538/dev/cc2538-rf.h ..//cpu/cc2538/./dev/rfcore.h :
- ..//cpu/cc2538/./dev/rfcore-ffsm.h ..//cpu/cc2538/./dev/rfcore-xreg.h :
- ..//cpu/cc2538/./dev/rfcore-sfr.h ..//cpu/cc2538/./dev/ana-regs.h :
- ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h :
- ..//core/./net/rpl/rpl-conf.h ..//core/./sys/ctimer.h ../lanada/param.h :
  ..//core/./sys/log_message.h ..//core/./cfs/cfs.h :
  ..//core/./sys/residual.h ..//core/./sys/energest.h :
  ..//core/net/ipv6/ipv6_debug.h ..//core/./net/ip/uip-debug.h :
- ..//core/net/rpl/rpl.h :
+ ..//core/net/rpl/rpl.h ..//core/net/rpl/rpl-conf.h :
+ ..//core/./sys/ctimer.h ../lanada/param.h :

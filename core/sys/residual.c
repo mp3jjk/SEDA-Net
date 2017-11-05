@@ -68,7 +68,9 @@ static const int DISSIPATION_RATE_DIVISOR = 16;
 energy_t
 get_residual_energy(void){
     int energy = RESIDUAL_ENERGY_MAX;
+#ifdef COOJA
     energy += energy_restore;
+#endif
 #ifdef ZOLERTIA_Z1
     int i;
     for(i = 0; i < ENERGEST_TYPE_MAX; i++){

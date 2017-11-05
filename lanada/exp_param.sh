@@ -1,4 +1,14 @@
-#define RPL_ENERGY_MODE 0
+#!/bin/bash
+
+if [ $1 == "h" ]
+then
+    echo "USAGE: weight periodic0/poisson1 period rate ENHANCED CHECK_RATE"
+    exit 1
+fi
+
+sed -i 's/\#define RESIDUAL_ENERGY_MAX 2000000/\#define RESIDUAL_ENERGY_MAX 10000000000/g' $CONTIKI/core/sys/residual.h
+
+echo "#define RPL_ENERGY_MODE 0
 #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
 #define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
 
@@ -13,14 +23,14 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 1
+#define LONG_WEIGHT_RATIO $1
 
 /* Weight ratio between rank and parent's degree */
 #define ALPHA	1
 #define ALPHA_DIV	1
 
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
-#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE $6
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
@@ -66,7 +76,7 @@ uint8_t data_btb; // Back to back data Tx
 #if DUAL_RADIO
 #define LSA_MAC	1
 #define LSA_R	0
-#define LSA_ENHANCED 0
+#define LSA_ENHANCED $5
 #else	/* DUAL_RADIO */
 #define LSA_MAC 0
 #define LSA_R 0
@@ -74,11 +84,11 @@ uint8_t data_btb; // Back to back data Tx
 
 #define SERVER_NODE 1
 
-#define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
+#define TRAFFIC_MODEL $2 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
-#define PERIOD 10
+#define PERIOD $3
 #elif TRAFFIC_MODEL == 1
-#define ARRIVAL_RATE 0 // Mean value, 1/lambda
+#define ARRIVAL_RATE $4 // Mean value, 1/lambda
 #endif
 
 uint8_t dead;
@@ -163,4 +173,4 @@ int avg_est_load; // Exponentially Weighted Moving Average with est_load
 #if DETERMINED_ROUTING_TREE
 #define MAX_NODE_NUMBER 30
 
-#endif /* ROUTING_TREE */
+#endif /* ROUTING_TREE */" > ./param.h
