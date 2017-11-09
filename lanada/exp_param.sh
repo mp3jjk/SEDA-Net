@@ -2,15 +2,15 @@
 
 if [ $1 == "h" ]
 then
-    echo "USAGE: weight periodic0/poisson1 period rate ENHANCED CHECK_RATE"
+    echo "USAGE: weight periodic0/poisson1 period rate ENHANCED CHECK_RATE OF0/LTMAX"
     exit 1
 fi
 
-sed -i 's/\#define RESIDUAL_ENERGY_MAX 2000000/\#define RESIDUAL_ENERGY_MAX 10000000000/g' $CONTIKI/core/sys/residual.h
+# sed -i 's/\#define RESIDUAL_ENERGY_MAX 2000000/\#define RESIDUAL_ENERGY_MAX 10000000000/g' $CONTIKI/core/sys/residual.h
 
 echo "#define RPL_ENERGY_MODE 0
 #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
-#define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
+#define RPL_LIFETIME_MAX_MODE2 $7 // Improving LT MAX MODE
 
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0

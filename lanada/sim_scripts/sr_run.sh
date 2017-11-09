@@ -79,7 +79,11 @@ then
     fi
 	# cd $HERE
 fi
-../../pp.sh
+
+if [ ! -e report_summary.txt ]
+then
+    ../../pp.sh
+fi
 cd ../..
 
 echo "Simulation finished"

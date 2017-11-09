@@ -75,7 +75,11 @@ then
 #		ant run_nogui -Dargs=/home/user/Desktop/Double-MAC/lanada/sim_scripts/scripts/0729_36grid_2X.csc
 #	cd $HERE
 fi
-../../pp.sh
+
+if [ ! -e report_summary.txt ]
+then
+    ../../pp.sh
+fi
 cd ../..
 
 echo "Simulation finished"
