@@ -1,0 +1,8 @@
+[13:29:04 - AWT-EventQueue-0] [Cooja.java:2865] [INFO] - External tools default settings: /external_tools_linux.config
+[13:29:04 - AWT-EventQueue-0] [Cooja.java:2895] [INFO] - External tools user settings: /home/user/.cooja.user.properties
+[13:29:10 - AWT-EventQueue-0] [Simulation.java:1126] [WARN] - Changed RadioMedium
+[13:29:10 - AWT-EventQueue-0] [Simulation.java:1128] [WARN] - Trying to Load currentRadioMedium : Class = org.contikios.mrm.MRM
+[13:29:10 - AWT-EventQueue-0] [Simulation.java:1131] [WARN] - Trying to Load currentRadioMedium_LR
+[13:29:10 - AWT-EventQueue-0] [Simulation.java:1137] [WARN] - Successfully Loaded Two Radio Medium, one for SR and one for LR
+[13:29:10 - AWT-EventQueue-0] [Simulation.java:419] [INFO] - Simulation random seed: 123456
+[13:29:10 - AWT-EventQueue-0] [Visualizer.java:256] [INFO] - Registered external visualizer: org.contikios.cooja.plugins.skins.DGRMVisualizerSkin
