@@ -18,7 +18,7 @@ topology=$1
 TRAFFIC_MODEL=$2
 PERIOD=$3
 ARRIVAL_RATE=$4
-ALPHA=$5
+ALPH=$5
 STROBE_CNT=$6
 LONG_WEIGHT=1
 LSA_R=0
@@ -32,6 +32,7 @@ ONLY_LONG=${10}
 CHECK=${12}
 ROUTING_NO_ENERGY=${13}
 SEED_NUMBER=${14}
+MRM=${15}
 
 #if [ $ONLY_LONG -eq 0]
 #then
@@ -42,6 +43,7 @@ SEED_NUMBER=${14}
 
 sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
 
+#DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_mrm$MRM\_seed$SEED_NUMBER
 DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
@@ -73,20 +75,35 @@ cd $CONTIKI/lanada
 make clean TARGET=cooja
 cd $HERE
 
-if [ ! -e COOJA.testlog ]
-then
-	# cd $CONTIKI/tools/cooja
-    if [ $ONLY_LONG -eq 0 ]
-    then
-	 java -mx512m -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc -contiki="$CONTIKI"
-#	java -mx512m -classpath $CONTIKI/tools/cooja/apps/mrm/lib/mrm.jar: -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/0729_$topology\_$LR_range\.csc -contiki="$CONTIKI"
-	# ant run_nogui -Dargs=/home/user/Desktop/Double-MAC/lanada/sim_scripts/scripts/0729_36grid_2X.csc -Ddir=$PWD
-    else
-	 java -mx512m -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_L\.csc -contiki="$CONTIKI"
-#	ant run_nogui -Dargs=/home/user/Desktop/Double-MAC/lanada/sim_scripts/scripts/0729_36grid_2X.csc
-    fi
-	# cd $HERE
+if [ $MRM -eq 0 ]
+then 
+	if [ ! -e COOJA.testlog ]
+	then
+			if [ $ONLY_LONG -eq 0 ]
+			then
+		 java -mx512m -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc -contiki="$CONTIKI"
+	#	java -mx512m -classpath $CONTIKI/tools/cooja/apps/mrm/lib/mrm.jar: -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/0729_$topology\_$LR_range\.csc -contiki="$CONTIKI"
+		# ant run_nogui -Dargs=/home/user/Desktop/Double-MAC/lanada/sim_scripts/scripts/0729_36grid_2X.csc -Ddir=$PWD
+			else
+		 java -mx512m -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_L\.csc -contiki="$CONTIKI"
+	#	ant run_nogui -Dargs=/home/user/Desktop/Double-MAC/lanada/sim_scripts/scripts/0729_36grid_2X.csc
+			fi
+	fi
+else # If MRM mode
+	if [ ! -e COOJA.testlog ]
+	then
+		cd $CONTIKI/tools/cooja_mrm$MRM 
+		if [ $ONLY_LONG -eq 0 ]
+		then
+			ant run_nogui -Dargs=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc
+		else
+			ant run_nogui -Dargs=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_L\.csc
+		fi
+		mv build/COOJA.testlog $HERE
+		cd $HERE
+	fi
 fi
+
 
 if [ ! -e report_summary.txt ]
 then

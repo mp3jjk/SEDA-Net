@@ -1,0 +1,138 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x871d38eb, pid=4125, tid=2268617536
+#
+# JRE version: OpenJDK Runtime Environment (7.0_79-b14) (build 1.7.0_79-b14)
+# Java VM: OpenJDK Server VM (24.79-b02 mixed mode linux-x86 )
+# Derivative: IcedTea 2.5.6
+# Distribution: Ubuntu 14.04 LTS, package 7u79-2.5.6-0ubuntu1.14.04.1
+# Problematic frame:
+# C  [mtype295.cooja+0x1e8eb]  best_parent+0xd6
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please include
+# instructions on how to reproduce the bug and visit:
+#   http://icedtea.classpath.org/bugzilla
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x8808cc00):  JavaThread "Thread-7" [_thread_in_native, id=4247, stack(0x87335000,0x87386000)]
+
+siginfo:si_signo=SIGSEGV: si_errno=0, si_code=1 (SEGV_MAPERR), si_addr=0x00000004
+
+Registers:
+EAX=0x00000000, EBX=0x00000000, ECX=0x871ece20, EDX=0x00000006
+ESP=0x871e886c, EBP=0x871e8894, ESI=0x00000000, EDI=0x00000000
+EIP=0x871d38eb, EFLAGS=0x00010213, CR2=0x00000004
+
+Top of Stack: (sp=0x871e886c)
+0x871e886c:   871e61a4 00000000 871e88a4 871db21a
+0x871e887c:   871ece68 00000000 871ec538 00000000
+0x871e888c:   871e61a4 00000000 871e88c4 871d393b
+0x871e889c:   871efe70 ffffffff 871e88d4 871db754
+0x871e88ac:   871ecd20 871e61a4 00000000 871cce6d
+0x871e88bc:   871e6130 00000000 871e8904 871d3549
+0x871e88cc:   871efe70 871eacb0 871e8904 871d3399
+0x871e88dc:   871e61a4 00000000 00000000 ffffaee1 
+
+Instructions: (pc=0x871d38eb)
+0x871d38cb:   83 7d ec 00 0f 85 7b ff ff ff 0f b6 05 8c dd 1e
+0x871d38db:   87 84 c0 74 43 8b 45 f4 3b 45 f0 74 40 8b 45 f4
+0x871d38eb:   0f b7 50 04 8b 45 f0 0f b7 40 04 66 39 c2 76 05
+0x871d38fb:   8b 45 f0 eb 28 e8 8b a6 38 30 99 c1 ea 1f 01 d0 
+
+Register to memory mapping:
+
+EAX=0x00000000 is an unknown value
+EBX=0x00000000 is an unknown value
+ECX=0x871ece20: <offset 0x37e20> in /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype295.cooja at 0x871b5000
+EDX=0x00000006 is an unknown value
+ESP=0x871e886c: <offset 0x3386c> in /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype295.cooja at 0x871b5000
+EBP=0x871e8894: <offset 0x33894> in /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype295.cooja at 0x871b5000
+ESI=0x00000000 is an unknown value
+EDI=0x00000000 is an unknown value
+
+
+Stack: [0x87335000,0x87386000],  sp=0x871e886c,  free space=4192974k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [mtype295.cooja+0x1e8eb]  best_parent+0xd6
+C  [mtype295.cooja+0x1e93b]  rpl_select_parent+0x11
+C  [mtype295.cooja+0x1e549]  rpl_select_dag+0x50
+C  [mtype295.cooja+0x1f4f7]  rpl_process_parent_event+0x65
+C  [mtype295.cooja+0x1fa4f]  rpl_process_dio+0x50b
+C  [mtype295.cooja+0x211ce]  dio_input+0x6a0
+C  [mtype295.cooja+0x271eb]  uip_icmp6_input+0x4f
+C  [mtype295.cooja+0x1afcc]  uip_process+0x9b6
+C  [mtype295.cooja+0x1c5fd]  packet_input+0x23
+C  [mtype295.cooja+0x1ca22]  eventhandler+0x1db
+C  [mtype295.cooja+0x1d0ac]  process_thread_tcpip_process+0xac
+C  [mtype295.cooja+0x14b7e]  call_process+0x57
+C  [mtype295.cooja+0x14ecc]  process_post_synch+0x2e
+C  [mtype295.cooja+0x1ca4b]  tcpip_input+0x22
+C  [mtype295.cooja+0x17c92]  input+0x43e
+C  [mtype295.cooja+0x26f52]  input+0xd
+C  [mtype295.cooja+0x2454a]  input_packet+0xd
+C  [mtype295.cooja+0x25b98]  input_packet+0x415
+C  [mtype295.cooja+0x13763]  process_thread_cooja_radio_process+0x7d
+C  [mtype295.cooja+0x14b7e]  call_process+0x57
+C  [mtype295.cooja+0x14c51]  do_poll+0x4b
+C  [mtype295.cooja+0x14dba]  process_run+0x16
+C  [mtype295.cooja+0x121a1]  process_run_thread_loop+0x1f
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+J 1099  org.contikios.cooja.corecomm.Lib2.tick()V (0 bytes) @ 0xb34e7660 [0xb34e7620+0x40]
+
+[error occurred during error reporting (printing Java stack), id 0xb]
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+=>0x8808cc00 JavaThread "Thread-7" [_thread_in_native, id=4247, stack(0x87335000,0x87386000)]
+  0x870f6c00 JavaThread "Thread-6" [_thread_blocked, id=4246, stack(0x86baf000,0x86c00000)]
+  0x8ace3c00 JavaThread "Thread-3" [_thread_blocked, id=4233, stack(0x871f1000,0x87242000)]
+  0x87c7dc00 JavaThread "Thread-1" [_thread_blocked, id=4185, stack(0x87293000,0x872e4000)]
+  0x88084000 JavaThread "TimerQueue" daemon [_thread_blocked, id=4145, stack(0x87d5e000,0x87daf000)]
+  0xb6307800 JavaThread "DestroyJavaVM" [_thread_blocked, id=4127, stack(0xb64e0000,0xb6531000)]
+  0x88003800 JavaThread "AWT-EventQueue-0" [_thread_blocked, id=4144, stack(0x87daf000,0x87e00000)]
+  0x88003400 JavaThread "AWT-Shutdown" [_thread_blocked, id=4143, stack(0x87f1f000,0x87f70000)]
+  0x88cf8400 JavaThread "AWT-XAWT" daemon [_thread_in_native, id=4142, stack(0x88112000,0x88163000)]
+  0x88ce8800 JavaThread "Java2D Disposer" daemon [_thread_blocked, id=4141, stack(0x88174000,0x881c5000)]
+  0x8922b400 JavaThread "Service Thread" daemon [_thread_blocked, id=4139, stack(0x88e5c000,0x88ead000)]
+  0x89229800 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=4138, stack(0x88ead000,0x88f2e000)]
+  0x89227800 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=4137, stack(0x88f2e000,0x88faf000)]
+  0x89225c00 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=4136, stack(0x88faf000,0x89000000)]
+  0x89214400 JavaThread "Finalizer" daemon [_thread_blocked, id=4135, stack(0x8932d000,0x8937e000)]
+  0x89212800 JavaThread "Reference Handler" daemon [_thread_blocked, id=4134, stack(0x8937e000,0x893cf000)]
+
+Other Threads:
+  0x89210400 VMThread [stack: 0x8ad24000,0x8ada5000] [id=4133]
+  0x8922d000 WatcherThread [stack: 0x88ddb000,0x88e5c000] [id=4140]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ PSYoungGen      total 98304K, used 27572K [0xa8780000, 0xb1100000, 0xb3240000)
+  eden space 98048K, 28% used [0xa8780000,0xaa259de8,0xae740000)
+  from space 256K, 30% used [0xb10c0000,0xb10d35b0,0xb1100000)
+  to   space 4864K, 0% used [0xb0780000,0xb0780000,0xb0c40000)
+ ParOldGen       total 43008K, used 21084K [0x93240000, 0x95c40000, 0xa8780000)
+  object space 43008K, 49% used [0x93240000,0x946d7068,0x95c40000)
+ PSPermGen       total 27904K, used 18277K [0x8b240000, 0x8cd80000, 0x93240000)
+  object space 27904K, 65% used [0x8b240000,0x8c419738,0x8cd80000)
+
+Card table byte_map: [0x8b0ff000,0x8b240000] byte_map_base: 0x8aca5e00
+
+Polling page: 0xb76de000
+
+Code Cache  [0xb3300000, 0xb3668000, 0xb6300000)
+ total_blobs=1592 nmethods=1312 adapters=232 free_code_cache=45715Kb largest_free_block=46775424
+
+Compilation events (10 events):

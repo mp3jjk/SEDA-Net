@@ -1,0 +1,1017 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0xb76cf7c0, pid=7471, tid=1118116672
+#
+# JRE version: OpenJDK Runtime Environment (7.0_79-b14) (build 1.7.0_79-b14)
+# Java VM: OpenJDK Server VM (24.79-b02 mixed mode linux-x86 )
+# Derivative: IcedTea 2.5.6
+# Distribution: Ubuntu 14.04 LTS, package 7u79-2.5.6-0ubuntu1.14.04.1
+# Problematic frame:
+# C  [libc.so.6+0x1337c0]
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please include
+# instructions on how to reproduce the bug and visit:
+#   http://icedtea.classpath.org/bugzilla
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x4401b400):  JavaThread "Thread-94" [_thread_in_native, id=9960, stack(0x42a01000,0x42a52000)]
+
+siginfo:si_signo=SIGSEGV: si_errno=0, si_code=2 (SEGV_ACCERR), si_addr=0x42bfff20
+
+Registers:
+EAX=0x440245b0, EBX=0xb7746000, ECX=0x00000292, EDX=0x42bfff30
+ESP=0x42a50eb0, EBP=0x42a50ee8, ESI=0x42bfff20, EDI=0x00000000
+EIP=0xb76cf7c0, EFLAGS=0x00010246, CR2=0x42bfff20
+
+Top of Stack: (sp=0x42a50eb0)
+0x42a50eb0:   4c66c794 4401b400 4c66c798 42be1032
+0x42a50ec0:   42bfff20 440245a0 000002a2 b35fc830
+0x42a50ed0:   4c66c798 4c66c794 4401b400 440245a0
+0x42a50ee0:   b33d946b 4401b400 42a50f30 b33d9570
+0x42a50ef0:   4401b528 42a50f4c 00031020 000002a2
+0x42a50f00:   42a50f40 4c083e90 00000000 94e810c8
+0x42a50f10:   42a50f10 4c66c794 42a50f4c 4c66c940
+0x42a50f20:   00000000 4c66c798 00000000 42a50f50 
+
+Instructions: (pc=0xb76cf7c0)
+0xb76cf7a0:   e7 0f 74 1c e8 a2 31 ff ff 81 c3 d7 74 03 00 03
+0xb76cf7b0:   1c bb ff e3 8d b6 00 00 00 00 8d bf 00 00 00 00
+0xb76cf7c0:   f3 0f 7f 06 31 ff 83 f9 7f 0f 87 94 00 00 00 8d
+0xb76cf7d0:   49 e0 66 0f 6f 04 38 66 0f 6f 4c 38 10 83 e9 20 
+
+Register to memory mapping:
+
+EAX=0x440245b0 is an unknown value
+EBX=0xb7746000: <offset 0x1aa000> in /lib/i386-linux-gnu/libc.so.6 at 0xb759c000
+ECX=0x00000292 is an unknown value
+EDX=0x42bfff30: <offset 0x2ff30> in /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype75.cooja at 0x42bd0000
+ESP=0x42a50eb0 is pointing into the stack for thread: 0x4401b400
+EBP=0x42a50ee8 is pointing into the stack for thread: 0x4401b400
+ESI=0x42bfff20: <offset 0x2ff20> in /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype75.cooja at 0x42bd0000
+EDI=0x00000000 is an unknown value
+
+
+Stack: [0x42a01000,0x42a52000],  sp=0x42a50eb0,  free space=319k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libc.so.6+0x1337c0]
+j  org.contikios.cooja.corecomm.Lib28.setMemory(II[B)V+0
+J 1061 C2 org.contikios.cooja.contikimote.ContikiMoteType.setCoreMemory(Lorg/contikios/cooja/mote/memory/SectionMoteMemory;)V (66 bytes) @ 0xb3608df8 [0xb3608b20+0x2d8]
+J 2367 C2 org.contikios.cooja.Simulation.run()V (432 bytes) @ 0xb3610ad0 [0xb36106e0+0x3f0]
+j  java.lang.Thread.run()V+11
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x4b3206]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x386
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  org.contikios.cooja.corecomm.Lib28.setMemory(II[B)V+0
+J 1061 C2 org.contikios.cooja.contikimote.ContikiMoteType.setCoreMemory(Lorg/contikios/cooja/mote/memory/SectionMoteMemory;)V (66 bytes) @ 0xb3608df8 [0xb3608b20+0x2d8]
+J 2367 C2 org.contikios.cooja.Simulation.run()V (432 bytes) @ 0xb3610ad0 [0xb36106e0+0x3f0]
+j  java.lang.Thread.run()V+11
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+=>0x4401b400 JavaThread "Thread-94" [_thread_in_native, id=9960, stack(0x42a01000,0x42a52000)]
+  0x455d0000 JavaThread "Thread-93" [_thread_blocked, id=9950, stack(0x4293a000,0x4298b000)]
+  0x44023c00 JavaThread "Thread-92" [_thread_blocked, id=9949, stack(0x42b7f000,0x42bd0000)]
+  0x4401a800 JavaThread "Thread-91" [_thread_blocked, id=9902, stack(0x431e8000,0x43239000)]
+  0x44025c00 JavaThread "Thread-90" [_thread_blocked, id=9901, stack(0x42c97000,0x42ce8000)]
+  0x455c8c00 JavaThread "process reaper" daemon [_thread_blocked, id=9680, stack(0x45609000,0x45624000)]
+  0x44030800 JavaThread "Thread-87" [_thread_blocked, id=9591, stack(0x42a52000,0x42aa3000)]
+  0x455d0c00 JavaThread "Thread-85" [_thread_blocked, id=9543, stack(0x42add000,0x42b2e000)]
+  0x455c4c00 JavaThread "Thread-84" [_thread_blocked, id=9505, stack(0x42d5e000,0x42daf000)]
+  0x4401b800 JavaThread "Thread-82" [_thread_blocked, id=9494, stack(0x43a2e000,0x43a7f000)]
+  0x455bc400 JavaThread "Thread-77" [_thread_blocked, id=9448, stack(0x42c46000,0x42c97000)]
+  0x4401d400 JavaThread "Thread-75" [_thread_blocked, id=9400, stack(0x4308d000,0x430de000)]
+  0x44017800 JavaThread "Thread-71" [_thread_blocked, id=9343, stack(0x42daf000,0x42e00000)]
+  0x44013000 JavaThread "Thread-69" [_thread_blocked, id=9295, stack(0x43c5e000,0x43caf000)]
+  0x44010c00 JavaThread "Thread-65" [_thread_blocked, id=8987, stack(0x430de000,0x4312f000)]
+  0x44010000 JavaThread "Thread-63" [_thread_blocked, id=8939, stack(0x43b97000,0x43be8000)]
+  0x455b7000 JavaThread "Thread-59" [_thread_blocked, id=8731, stack(0x43239000,0x4328a000)]
+  0x4401f800 JavaThread "Thread-57" [_thread_blocked, id=8683, stack(0x44e35000,0x44e86000)]
+  0x455f3800 JavaThread "Thread-53" [_thread_blocked, id=8608, stack(0x43a7f000,0x43ad0000)]
+  0x455f2800 JavaThread "Thread-51" [_thread_blocked, id=8560, stack(0x44c6c000,0x44cbd000)]
+  0x455f1400 JavaThread "Thread-47" [_thread_blocked, id=8481, stack(0x43b46000,0x43b97000)]
+  0x455e1400 JavaThread "Thread-45" [_thread_blocked, id=8433, stack(0x43caf000,0x43d00000)]
+  0x455e1c00 JavaThread "Thread-41" [_thread_blocked, id=8369, stack(0x44534000,0x44585000)]
+  0x455df000 JavaThread "Thread-39" [_thread_blocked, id=8321, stack(0x446d0000,0x44721000)]
+  0x455fcc00 JavaThread "Thread-34" [_thread_blocked, id=8220, stack(0x441af000,0x44200000)]
+  0x455d9400 JavaThread "Thread-32" [_thread_blocked, id=8172, stack(0x4465a000,0x446ab000)]
+  0x455dc800 JavaThread "Thread-25" [_thread_blocked, id=8032, stack(0x44721000,0x44772000)]
+  0x455d8800 JavaThread "Thread-23" [_thread_blocked, id=7984, stack(0x44839000,0x4488a000)]
+  0x45921400 JavaThread "Thread-18" [_thread_blocked, id=7900, stack(0x447e8000,0x44839000)]
+  0x459b0c00 JavaThread "Thread-16" [_thread_blocked, id=7852, stack(0x44aee000,0x44b3f000)]
+  0x4ab22400 JavaThread "Thread-12" [_thread_blocked, id=7785, stack(0x44bca000,0x44c1b000)]
+  0x4ab20400 JavaThread "Thread-10" [_thread_blocked, id=7737, stack(0x445fb000,0x4464c000)]
+  0x457dc400 JavaThread "Thread-3" [_thread_blocked, id=7580, stack(0x44b3f000,0x44b90000)]
+  0x457f2c00 JavaThread "Thread-1" [_thread_blocked, id=7532, stack(0x44c1b000,0x44c6c000)]
+  0x45988c00 JavaThread "TimerQueue" daemon [_thread_blocked, id=7491, stack(0x4565e000,0x456af000)]
+  0xb6407800 JavaThread "DestroyJavaVM" [_thread_blocked, id=7473, stack(0xb6552000,0xb65a3000)]
+  0x45946800 JavaThread "AWT-EventQueue-0" [_thread_blocked, id=7490, stack(0x456af000,0x45700000)]
+  0x4593c400 JavaThread "AWT-Shutdown" [_thread_blocked, id=7489, stack(0x45824000,0x45875000)]
+  0x45905400 JavaThread "AWT-XAWT" daemon [_thread_in_native, id=7488, stack(0x45a1a000,0x45a6b000)]
+  0x465f4800 JavaThread "Java2D Disposer" daemon [_thread_blocked, id=7487, stack(0x45a7c000,0x45acd000)]
+  0x46b2c400 JavaThread "Service Thread" daemon [_thread_blocked, id=7485, stack(0x4675c000,0x467ad000)]
+  0x46b2a800 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=7484, stack(0x467ad000,0x4682e000)]
+  0x46b28800 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=7483, stack(0x4682e000,0x468af000)]
+  0x46b26c00 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=7482, stack(0x468af000,0x46900000)]
+  0x46b14000 JavaThread "Finalizer" daemon [_thread_blocked, id=7481, stack(0x46c2d000,0x46c7e000)]
+  0x46b12800 JavaThread "Reference Handler" daemon [_thread_blocked, id=7480, stack(0x46c7e000,0x46ccf000)]
+
+Other Threads:
+  0x46b10400 VMThread [stack: 0x4aa24000,0x4aaa5000] [id=7479]
+  0x46b2e000 WatcherThread [stack: 0x466db000,0x4675c000] [id=7486]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap
+ PSYoungGen      total 417280K, used 31343K [0x93300000, 0xb1000000, 0xb3300000)
+  eden space 353280K, 8% used [0x93300000,0x94fdd9e8,0xa8c00000)
+  from space 64000K, 2% used [0xad180000,0xad33e520,0xb1000000)
+  to   space 67584K, 0% used [0xa8c00000,0xa8c00000,0xace00000)
+ ParOldGen       total 470784K, used 403696K [0x53300000, 0x6fec0000, 0x93300000)
+  object space 470784K, 85% used [0x53300000,0x6bd3c020,0x6fec0000)
+ PSPermGen       total 20736K, used 19894K [0x4b300000, 0x4c740000, 0x53300000)
+  object space 20736K, 95% used [0x4b300000,0x4c66d970,0x4c740000)
+
+Card table byte_map: [0x4afbf000,0x4b300000] byte_map_base: 0x4ad65800
+
+Polling page: 0xb7750000
+
+Code Cache  [0xb33ce000, 0xb39a6000, 0xb63ce000)
+ total_blobs=2661 nmethods=2362 adapters=249 free_code_cache=43271Kb largest_free_block=44225216
+
+Compilation events (10 events):
+Event: 26832.403 Thread 0x46b28800 2653             javax.swing.AbstractButton::getText (5 bytes)
+Event: 26832.404 Thread 0x46b28800 nmethod 2653 0xb3979208 code [0xb39792e0, 0xb3979330]
+Event: 26832.452 Thread 0x46b28800 2654             javax.swing.text.html.parser.TagElement::getElement (5 bytes)
+Event: 26832.452 Thread 0x46b28800 nmethod 2654 0xb398f308 code [0xb398f3e0, 0xb398f430]
+Event: 26832.453 Thread 0x46b28800 2655             javax.swing.text.html.StyleSheet$BoxPainter::getLength (14 bytes)
+Event: 26832.454 Thread 0x46b28800 nmethod 2655 0xb3976708 code [0xb3976840, 0xb39769a4]
+Event: 26832.520 Thread 0x46b28800 2656             javax.swing.AbstractAction::setEnabled (30 bytes)
+Event: 26832.522 Thread 0x46b28800 nmethod 2656 0xb3977448 code [0xb3977560, 0xb39776e4]
+Event: 26832.602 Thread 0x46b2a800 2657   !         sun.reflect.GeneratedConstructorAccessor23::newInstance (49 bytes)
+Event: 26832.603 Thread 0x46b2a800 nmethod 2657 0xb3999908 code [0xb3999a20, 0xb3999b1c]
+
+GC Heap History (10 events):
+Event: 23708.258 GC heap before
+{Heap before GC invocations=4265 (full 25):
+ PSYoungGen      total 415488K, used 339200K [0x93300000, 0xb1340000, 0xb3300000)
+  eden space 339200K, 100% used [0x93300000,0xa7e40000,0xa7e40000)
+  from space 76288K, 0% used [0xa7e40000,0xa7e40000,0xac8c0000)
+  to   space 76288K, 0% used [0xac8c0000,0xac8c0000,0xb1340000)
+ ParOldGen       total 470784K, used 403692K [0x53300000, 0x6fec0000, 0x93300000)
+  object space 470784K, 85% used [0x53300000,0x6bd3b020,0x6fec0000)
+ PSPermGen       total 20736K, used 19877K [0x4b300000, 0x4c740000, 0x53300000)
+  object space 20736K, 95% used [0x4b300000,0x4c669588,0x4c740000)
+Event: 23708.263 GC heap after
+Heap after GC invocations=4265 (full 25):
+ PSYoungGen      total 416000K, used 434K [0x93300000, 0xb1d40000, 0xb3300000)
+  eden space 339712K, 0% used [0x93300000,0x93300000,0xa7ec0000)
+  from space 76288K, 0% used [0xac8c0000,0xac92c8d8,0xb1340000)
+  to   space 75776K, 0% used [0xa7ec0000,0xa7ec0000,0xac8c0000)
+ ParOldGen       total 470784K, used 403692K [0x53300000, 0x6fec0000, 0x93300000)
+  object space 470784K, 85% used [0x53300000,0x6bd3b020,0x6fec0000)
+ PSPermGen       total 20736K, used 19877K [0x4b300000, 0x4c740000, 0x53300000)
+  object space 20736K, 95% used [0x4b300000,0x4c669588,0x4c740000)
+}
+Event: 23709.353 GC heap before
+{Heap before GC invocations=4266 (full 25):
+ PSYoungGen      total 416000K, used 340146K [0x93300000, 0xb1d40000, 0xb3300000)
+  eden space 339712K, 100% used [0x93300000,0xa7ec0000,0xa7ec0000)
+  from space 76288K, 0% used [0xac8c0000,0xac92c8d8,0xb1340000)
+  to   space 75776K, 0% used [0xa7ec0000,0xa7ec0000,0xac8c0000)
+ ParOldGen       total 470784K, used 403692K [0x53300000, 0x6fec0000, 0x93300000)
+  object space 470784K, 85% used [0x53300000,0x6bd3b020,0x6fec0000)
+ PSPermGen       total 20736K, used 19881K [0x4b300000, 0x4c740000, 0x53300000)
+  object space 20736K, 95% used [0x4b300000,0x4c66a678,0x4c740000)
+Event: 23709.358 GC heap after
+Heap after GC invocations=4266 (full 25):
+ PSYoungGen      total 415488K, used 1456K [0x93300000, 0xb19c0000, 0xb3300000)
+  eden space 339712K, 0% used [0x93300000,0x93300000,0xa7ec0000)
+  from space 75776K, 1% used [0xa7ec0000,0xa802c270,0xac8c0000)
+  to   space 74240K, 0% used [0xad140000,0xad140000,0xb19c0000)
+ ParOldGen       total 470784K, used 403696K [0x53300000, 0x6fec0000, 0x93300000)
+  object space 470784K, 85% used [0x53300000,0x6bd3c020,0x6fec0000)
+ PSPermGen       total 20736K, used 19881K [0x4b300000, 0x4c740000, 0x53300000)
+  object space 20736K, 95% used [0x4b300000,0x4c66a678,0x4c740000)
+}
+Event: 26828.920 GC heap before
+{Heap before GC invocations=4267 (full 25):
+ PSYoungGen      total 415488K, used 44900K [0x93300000, 0xb19c0000, 0xb3300000)
+  eden space 339712K, 12% used [0x93300000,0x95d6ce70,0xa7ec0000)
+  from space 75776K, 1% used [0xa7ec0000,0xa802c270,0xac8c0000)
+  to   space 74240K, 0% used [0xad140000,0xad140000,0xb19c0000)
+ ParOldGen       total 470784K, used 403696K [0x53300000, 0x6fec0000, 0x93300000)
+  object space 470784K, 85% used [0x53300000,0x6bd3c020,0x6fec0000)
+ PSPermGen       total 20736K, used 19882K [0x4b300000, 0x4c740000, 0x53300000)
+  object space 20736K, 95% used [0x4b300000,0x4c66ab28,0x4c740000)
+Event: 26828.925 GC heap after
+Heap after GC invocations=4267 (full 25):
+ PSYoungGen      total 416000K, used 1507K [0x93300000, 0xb1400000, 0xb3300000)
+  eden space 347648K, 0% used [0x93300000,0x93300000,0xa8680000)
+  from space 68352K, 2% used [0xad140000,0xad2b8dc0,0xb1400000)
+  to   space 72448K, 0% used [0xa8680000,0xa8680000,0xacd40000)
+ ParOldGen       total 470784K, used 403696K [0x53300000, 0x6fec0000, 0x93300000)
+  object space 470784K, 85% used [0x53300000,0x6bd3c020,0x6fec0000)
+ PSPermGen       total 20736K, used 19882K [0x4b300000, 0x4c740000, 0x53300000)
+  object space 20736K, 95% used [0x4b300000,0x4c66ab28,0x4c740000)
+}
+Event: 26831.254 GC heap before
+{Heap before GC invocations=4268 (full 25):
+ PSYoungGen      total 416000K, used 349155K [0x93300000, 0xb1400000, 0xb3300000)
+  eden space 347648K, 100% used [0x93300000,0xa8680000,0xa8680000)
+  from space 68352K, 2% used [0xad140000,0xad2b8dc0,0xb1400000)
+  to   space 72448K, 0% used [0xa8680000,0xa8680000,0xacd40000)
+ ParOldGen       total 470784K, used 403696K [0x53300000, 0x6fec0000, 0x93300000)
+  object space 470784K, 85% used [0x53300000,0x6bd3c020,0x6fec0000)
+ PSPermGen       total 20736K, used 19888K [0x4b300000, 0x4c740000, 0x53300000)
+  object space 20736K, 95% used [0x4b300000,0x4c66c368,0x4c740000)
+Event: 26831.257 GC heap after
+Heap after GC invocations=4268 (full 25):
+ PSYoungGen      total 420096K, used 1760K [0x93300000, 0xb1600000, 0xb3300000)
+  eden space 347648K, 0% used [0x93300000,0x93300000,0xa8680000)
+  from space 72448K, 2% used [0xa8680000,0xa8838060,0xacd40000)
+  to   space 70144K, 0% used [0xad180000,0xad180000,0xb1600000)
+ ParOldGen       total 470784K, used 403696K [0x53300000, 0x6fec0000, 0x93300000)
+  object space 470784K, 85% used [0x53300000,0x6bd3c020,0x6fec0000)
+ PSPermGen       total 20736K, used 19888K [0x4b300000, 0x4c740000, 0x53300000)
+  object space 20736K, 95% used [0x4b300000,0x4c66c368,0x4c740000)
+}
+Event: 26832.296 GC heap before
+{Heap before GC invocations=4269 (full 25):
+ PSYoungGen      total 420096K, used 349408K [0x93300000, 0xb1600000, 0xb3300000)
+  eden space 347648K, 100% used [0x93300000,0xa8680000,0xa8680000)
+  from space 72448K, 2% used [0xa8680000,0xa8838060,0xacd40000)
+  to   space 70144K, 0% used [0xad180000,0xad180000,0xb1600000)
+ ParOldGen       total 470784K, used 403696K [0x53300000, 0x6fec0000, 0x93300000)
+  object space 470784K, 85% used [0x53300000,0x6bd3c020,0x6fec0000)
+ PSPermGen       total 20736K, used 19890K [0x4b300000, 0x4c740000, 0x53300000)
+  object space 20736K, 95% used [0x4b300000,0x4c66ca08,0x4c740000)
+Event: 26832.298 GC heap after
+Heap after GC invocations=4269 (full 25):
+ PSYoungGen      total 417280K, used 1785K [0x93300000, 0xb1000000, 0xb3300000)
+  eden space 353280K, 0% used [0x93300000,0x93300000,0xa8c00000)
+  from space 64000K, 2% used [0xad180000,0xad33e520,0xb1000000)
+  to   space 67584K, 0% used [0xa8c00000,0xa8c00000,0xace00000)
+ ParOldGen       total 470784K, used 403696K [0x53300000, 0x6fec0000, 0x93300000)
+  object space 470784K, 85% used [0x53300000,0x6bd3c020,0x6fec0000)
+ PSPermGen       total 20736K, used 19890K [0x4b300000, 0x4c740000, 0x53300000)
+  object space 20736K, 95% used [0x4b300000,0x4c66ca08,0x4c740000)
+}
+
+Deoptimization events (10 events):
+Event: 23696.761 Thread 0x45946800 Uncommon trap: reason=array_check action=maybe_recompile pc=0xb398988c method=java.util.TimSort.reverseRange([Ljava/lang/Object;II)V @ 27
+Event: 23704.613 Thread 0x45946800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0xb398b3dc method=java.util.TimSort.countRunAndMakeAscending([Ljava/lang/Object;IILjava/util/Comparator;)I @ 43
+Event: 23704.614 Thread 0x45946800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0xb398b3dc method=java.util.TimSort.countRunAndMakeAscending([Ljava/lang/Object;IILjava/util/Comparator;)I @ 43
+Event: 23704.632 Thread 0x45946800 Uncommon trap: reason=unreached action=reinterpret pc=0xb38d3184 method=java.lang.Throwable.printStackTrace(Ljava/lang/Throwable$PrintStreamOrWriter;)V @ 148
+Event: 23704.688 Thread 0x45946800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0xb37d0f70 method=javax.swing.plaf.nimbus.NimbusStyle.isOpaque(Ljavax/swing/plaf/synth/SynthContext;)Z @ 6
+Event: 23704.690 Thread 0x45946800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0xb37d0f70 method=javax.swing.plaf.nimbus.NimbusStyle.isOpaque(Ljavax/swing/plaf/synth/SynthContext;)Z @ 6
+Event: 23704.692 Thread 0x45946800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0xb37d0f70 method=javax.swing.plaf.nimbus.NimbusStyle.isOpaque(Ljavax/swing/plaf/synth/SynthContext;)Z @ 6
+Event: 23704.764 Thread 0x45946800 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0xb37d0f70 method=javax.swing.plaf.nimbus.NimbusStyle.isOpaque(Ljavax/swing/plaf/synth/SynthContext;)Z @ 6
+Event: 23706.933 Thread 0x465f4800 Uncommon trap: reason=class_check action=maybe_recompile pc=0xb384f1a8 method=sun.java2d.Disposer.run()V @ 21
+Event: 26832.391 Thread 0x45946800 Uncommon trap: reason=null_check action=make_not_entrant pc=0xb3979bd8 method=javax.swing.text.html.HTML.getTagForStyleConstantsKey(Ljavax/swing/text/StyleConstants;)Ljavax/swing/text/html/HTML$Tag; @ 7
+
+Internal exceptions (10 events):
+Event: 23704.633 Thread 0x45946800 Threw 0x94b16800 at /build/openjdk-7-OXg_HK/openjdk-7-7u79-2.5.6/build/openjdk/hotspot/src/share/vm/prims/jvm.cpp:1284
+Event: 23704.633 Thread 0x45946800 Threw 0x94b1a2e0 at /build/openjdk-7-OXg_HK/openjdk-7-7u79-2.5.6/build/openjdk/hotspot/src/share/vm/prims/jvm.cpp:1284
+Event: 23704.634 Thread 0x45946800 Threw 0x94b1df70 at /build/openjdk-7-OXg_HK/openjdk-7-7u79-2.5.6/build/openjdk/hotspot/src/share/vm/prims/jvm.cpp:1284
+Event: 23704.657 Thread 0x45946800 Threw 0x94b26ab8 at /build/openjdk-7-OXg_HK/openjdk-7-7u79-2.5.6/build/openjdk/hotspot/src/share/vm/prims/jvm.cpp:1284
+Event: 23704.764 Thread 0x45946800 Threw 0x94cfc630 at /build/openjdk-7-OXg_HK/openjdk-7-7u79-2.5.6/build/openjdk/hotspot/src/share/vm/prims/jni.cpp:747
+Event: 23708.663 Thread 0x4401a800 Threw 0x93875880 at /build/openjdk-7-OXg_HK/openjdk-7-7u79-2.5.6/build/openjdk/hotspot/src/share/vm/prims/jvm.cpp:1284
+Event: 26828.876 Thread 0x45946800 Threw 0x9565b838 at /build/openjdk-7-OXg_HK/openjdk-7-7u79-2.5.6/build/openjdk/hotspot/src/share/vm/prims/jni.cpp:747
+Event: 26830.930 Thread 0x4401b400 Threw 0x9368c090 at /build/openjdk-7-OXg_HK/openjdk-7-7u79-2.5.6/build/openjdk/hotspot/src/share/vm/prims/jvm.cpp:1284
+Event: 26831.911 Thread 0x4401b400 Threw 0x94308a70 at /build/openjdk-7-OXg_HK/openjdk-7-7u79-2.5.6/build/openjdk/hotspot/src/share/vm/prims/jvm.cpp:1284
+Event: 26832.391 Thread 0x45946800 Implicit null exception at 0xb397973c to 0xb3979bcd
+
+Events (10 events):
+Event: 26832.682 Executing VM operation: RevokeBias
+Event: 26832.688 Executing VM operation: RevokeBias done
+Event: 26832.688 Thread 0x4401b400 Thread exited: 0x4401b400
+Event: 26832.688 Executing VM operation: RevokeBias
+Event: 26832.688 Executing VM operation: RevokeBias done
+Event: 26832.771 Executing VM operation: RevokeBias
+Event: 26832.772 Executing VM operation: RevokeBias done
+Event: 26832.772 Executing VM operation: BulkRevokeBias
+Event: 26832.773 Executing VM operation: BulkRevokeBias done
+Event: 26833.138 Thread 0x4401b400 Thread added: 0x4401b400
+
+
+Dynamic libraries:
+08048000-08049000 r-xp 00000000 08:01 282989     /usr/lib/jvm/java-7-openjdk-i386/jre/bin/java
+08049000-0804a000 r--p 00000000 08:01 282989     /usr/lib/jvm/java-7-openjdk-i386/jre/bin/java
+0804a000-0804b000 rw-p 00001000 08:01 282989     /usr/lib/jvm/java-7-openjdk-i386/jre/bin/java
+09463000-0a610000 rw-p 00000000 00:00 0          [heap]
+426ed000-428fe000 rw-p 00000000 00:00 0 
+428fe000-4292e000 r-xp 00000000 08:10 143155     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype135.cooja
+4292e000-4292f000 r--p 0002f000 08:10 143155     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype135.cooja
+4292f000-42930000 rw-p 00030000 08:10 143155     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype135.cooja
+42930000-4293a000 rw-p 00000000 00:00 0 
+4293a000-4293d000 ---p 00000000 00:00 0 
+4293d000-4298b000 rw-p 00000000 00:00 0          [stack:9950]
+4298b000-429ba000 r-xp 00000000 08:10 143151     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype718.cooja
+429ba000-429bb000 r--p 0002e000 08:10 143151     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype718.cooja
+429bb000-429bc000 rw-p 0002f000 08:10 143151     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype718.cooja
+429bc000-429c5000 rw-p 00000000 00:00 0 
+429c5000-429f5000 r-xp 00000000 08:10 143147     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype53.cooja
+429f5000-429f6000 r--p 0002f000 08:10 143147     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype53.cooja
+429f6000-429f7000 rw-p 00030000 08:10 143147     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype53.cooja
+429f7000-42a01000 rw-p 00000000 00:00 0 
+42a01000-42a04000 ---p 00000000 00:00 0 
+42a04000-42a52000 rw-p 00000000 00:00 0          [stack:9960]
+42a52000-42a55000 ---p 00000000 00:00 0 
+42a55000-42aa3000 rw-p 00000000 00:00 0          [stack:9591]
+42aa3000-42ad2000 r-xp 00000000 08:10 143143     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype779.cooja
+42ad2000-42ad3000 r--p 0002e000 08:10 143143     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype779.cooja
+42ad3000-42ad4000 rw-p 0002f000 08:10 143143     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype779.cooja
+42ad4000-42add000 rw-p 00000000 00:00 0 
+42add000-42ae0000 ---p 00000000 00:00 0 
+42ae0000-42b2e000 rw-p 00000000 00:00 0          [stack:9543]
+42b2e000-42b31000 ---p 00000000 00:00 0 
+42b31000-42b7f000 rw-p 00000000 00:00 0 
+42b7f000-42b82000 ---p 00000000 00:00 0 
+42b82000-42bd0000 rw-p 00000000 00:00 0          [stack:9949]
+42bd0000-42bff000 r-xp 00000000 08:10 143136     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype75.cooja
+42bff000-42c00000 r--p 0002e000 08:10 143136     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype75.cooja
+42c00000-42c01000 rw-p 0002f000 08:10 143136     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype75.cooja
+42c01000-42c0a000 rw-p 00000000 00:00 0 
+42c0a000-42c3a000 r-xp 00000000 08:10 143139     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype350.cooja
+42c3a000-42c3b000 r--p 0002f000 08:10 143139     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype350.cooja
+42c3b000-42c3c000 rw-p 00030000 08:10 143139     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype350.cooja
+42c3c000-42c46000 rw-p 00000000 00:00 0 
+42c46000-42c49000 ---p 00000000 00:00 0 
+42c49000-42c97000 rw-p 00000000 00:00 0          [stack:9448]
+42c97000-42c9a000 ---p 00000000 00:00 0 
+42c9a000-42ce8000 rw-p 00000000 00:00 0          [stack:9901]
+42ce8000-42d17000 r-xp 00000000 08:10 143135     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype740.cooja
+42d17000-42d18000 r--p 0002e000 08:10 143135     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype740.cooja
+42d18000-42d19000 rw-p 0002f000 08:10 143135     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype740.cooja
+42d19000-42d22000 rw-p 00000000 00:00 0 
+42d22000-42d52000 r-xp 00000000 08:10 143131     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype376.cooja
+42d52000-42d53000 r--p 0002f000 08:10 143131     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype376.cooja
+42d53000-42d54000 rw-p 00030000 08:10 143131     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype376.cooja
+42d54000-42d5e000 rw-p 00000000 00:00 0 
+42d5e000-42d61000 ---p 00000000 00:00 0 
+42d61000-42daf000 rw-p 00000000 00:00 0          [stack:9505]
+42daf000-42db2000 ---p 00000000 00:00 0 
+42db2000-42e00000 rw-p 00000000 00:00 0          [stack:9343]
+42e00000-42edf000 rw-p 00000000 00:00 0 
+42edf000-42f00000 ---p 00000000 00:00 0 
+42f00000-42f61000 rw-p 00000000 00:00 0 
+42f61000-43000000 ---p 00000000 00:00 0 
+43017000-43046000 r-xp 00000000 08:10 143127     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype507.cooja
+43046000-43047000 r--p 0002e000 08:10 143127     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype507.cooja
+43047000-43048000 rw-p 0002f000 08:10 143127     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype507.cooja
+43048000-43051000 rw-p 00000000 00:00 0 
+43051000-43081000 r-xp 00000000 08:10 143123     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype568.cooja
+43081000-43082000 r--p 0002f000 08:10 143123     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype568.cooja
+43082000-43083000 rw-p 00030000 08:10 143123     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype568.cooja
+43083000-4308d000 rw-p 00000000 00:00 0 
+4308d000-43090000 ---p 00000000 00:00 0 
+43090000-430de000 rw-p 00000000 00:00 0          [stack:9400]
+430de000-430e1000 ---p 00000000 00:00 0 
+430e1000-4312f000 rw-p 00000000 00:00 0          [stack:8987]
+4312f000-4315e000 r-xp 00000000 08:10 143119     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype491.cooja
+4315e000-4315f000 r--p 0002e000 08:10 143119     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype491.cooja
+4315f000-43160000 rw-p 0002f000 08:10 143119     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype491.cooja
+43160000-43169000 rw-p 00000000 00:00 0 
+431ac000-431dc000 r-xp 00000000 08:10 143115     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype749.cooja
+431dc000-431dd000 r--p 0002f000 08:10 143115     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype749.cooja
+431dd000-431de000 rw-p 00030000 08:10 143115     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype749.cooja
+431de000-431e8000 rw-p 00000000 00:00 0 
+431e8000-431eb000 ---p 00000000 00:00 0 
+431eb000-43239000 rw-p 00000000 00:00 0          [stack:9902]
+43239000-4323c000 ---p 00000000 00:00 0 
+4323c000-4328a000 rw-p 00000000 00:00 0          [stack:8731]
+4328a000-432b9000 r-xp 00000000 08:10 143111     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype444.cooja
+432b9000-432ba000 r--p 0002e000 08:10 143111     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype444.cooja
+432ba000-432bb000 rw-p 0002f000 08:10 143111     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype444.cooja
+432bb000-432c4000 rw-p 00000000 00:00 0 
+432c4000-432f4000 r-xp 00000000 08:10 143107     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype938.cooja
+432f4000-432f5000 r--p 0002f000 08:10 143107     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype938.cooja
+432f5000-432f6000 rw-p 00030000 08:10 143107     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype938.cooja
+432f6000-43300000 rw-p 00000000 00:00 0 
+43300000-433fc000 rw-p 00000000 00:00 0 
+433fc000-43400000 ---p 00000000 00:00 0 
+43400000-43500000 rw-p 00000000 00:00 0 
+43500000-43700000 rw-p 00000000 00:00 0 
+43700000-438fe000 rw-p 00000000 00:00 0 
+438fe000-43900000 ---p 00000000 00:00 0 
+43900000-439f9000 rw-p 00000000 00:00 0 
+439f9000-43a00000 ---p 00000000 00:00 0 
+43a2e000-43a31000 ---p 00000000 00:00 0 
+43a31000-43a7f000 rw-p 00000000 00:00 0          [stack:9494]
+43a7f000-43a82000 ---p 00000000 00:00 0 
+43a82000-43ad0000 rw-p 00000000 00:00 0          [stack:8608]
+43ad0000-43aff000 r-xp 00000000 08:10 143103     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype423.cooja
+43aff000-43b00000 r--p 0002e000 08:10 143103     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype423.cooja
+43b00000-43b01000 rw-p 0002f000 08:10 143103     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype423.cooja
+43b01000-43b0a000 rw-p 00000000 00:00 0 
+43b0a000-43b3a000 r-xp 00000000 08:10 143099     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype216.cooja
+43b3a000-43b3b000 r--p 0002f000 08:10 143099     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype216.cooja
+43b3b000-43b3c000 rw-p 00030000 08:10 143099     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype216.cooja
+43b3c000-43b46000 rw-p 00000000 00:00 0 
+43b46000-43b49000 ---p 00000000 00:00 0 
+43b49000-43b97000 rw-p 00000000 00:00 0          [stack:8481]
+43b97000-43b9a000 ---p 00000000 00:00 0 
+43b9a000-43be8000 rw-p 00000000 00:00 0          [stack:8939]
+43be8000-43c17000 r-xp 00000000 08:10 143095     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype167.cooja
+43c17000-43c18000 r--p 0002e000 08:10 143095     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype167.cooja
+43c18000-43c19000 rw-p 0002f000 08:10 143095     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype167.cooja
+43c19000-43c22000 rw-p 00000000 00:00 0 
+43c22000-43c52000 r-xp 00000000 08:10 143091     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype276.cooja
+43c52000-43c53000 r--p 0002f000 08:10 143091     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype276.cooja
+43c53000-43c54000 rw-p 00030000 08:10 143091     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype276.cooja
+43c54000-43c5e000 rw-p 00000000 00:00 0 
+43c5e000-43c61000 ---p 00000000 00:00 0 
+43c61000-43caf000 rw-p 00000000 00:00 0          [stack:9295]
+43caf000-43cb2000 ---p 00000000 00:00 0 
+43cb2000-43d00000 rw-p 00000000 00:00 0          [stack:8433]
+43d00000-43dfe000 rw-p 00000000 00:00 0 
+43dfe000-43e00000 ---p 00000000 00:00 0 
+43e00000-43ee2000 rw-p 00000000 00:00 0 
+43ee2000-43f00000 ---p 00000000 00:00 0 
+43f00000-43ff9000 rw-p 00000000 00:00 0 
+43ff9000-44000000 ---p 00000000 00:00 0 
+44000000-440fe000 rw-p 00000000 00:00 0 
+440fe000-44100000 ---p 00000000 00:00 0 
+44139000-44168000 r-xp 00000000 08:10 143087     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype343.cooja
+44168000-44169000 r--p 0002e000 08:10 143087     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype343.cooja
+44169000-4416a000 rw-p 0002f000 08:10 143087     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype343.cooja
+4416a000-44173000 rw-p 00000000 00:00 0 
+44173000-441a3000 r-xp 00000000 08:10 143083     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype1.cooja
+441a3000-441a4000 r--p 0002f000 08:10 143083     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype1.cooja
+441a4000-441a5000 rw-p 00030000 08:10 143083     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype1.cooja
+441a5000-441af000 rw-p 00000000 00:00 0 
+441af000-441b2000 ---p 00000000 00:00 0 
+441b2000-44200000 rw-p 00000000 00:00 0          [stack:8220]
+44200000-442ed000 rw-p 00000000 00:00 0 
+442ed000-44300000 ---p 00000000 00:00 0 
+44300000-443f8000 rw-p 00000000 00:00 0 
+443f8000-44400000 ---p 00000000 00:00 0 
+44400000-444eb000 rw-p 00000000 00:00 0 
+444eb000-44500000 ---p 00000000 00:00 0 
+44534000-44537000 ---p 00000000 00:00 0 
+44537000-44585000 rw-p 00000000 00:00 0          [stack:8369]
+44585000-445b4000 r-xp 00000000 08:10 143079     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype373.cooja
+445b4000-445b5000 r--p 0002e000 08:10 143079     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype373.cooja
+445b5000-445b6000 rw-p 0002f000 08:10 143079     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype373.cooja
+445b6000-445bf000 rw-p 00000000 00:00 0 
+445bf000-445ef000 r-xp 00000000 08:10 143075     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype800.cooja
+445ef000-445f0000 r--p 0002f000 08:10 143075     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype800.cooja
+445f0000-445f1000 rw-p 00030000 08:10 143075     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype800.cooja
+445f1000-445fb000 rw-p 00000000 00:00 0 
+445fb000-445fe000 ---p 00000000 00:00 0 
+445fe000-4464c000 rw-p 00000000 00:00 0          [stack:7737]
+4464c000-4465a000 r--s 0010f000 08:01 138889     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/rhino.jar
+4465a000-4465d000 ---p 00000000 00:00 0 
+4465d000-446ab000 rw-p 00000000 00:00 0          [stack:8172]
+446d0000-446d3000 ---p 00000000 00:00 0 
+446d3000-44721000 rw-p 00000000 00:00 0          [stack:8321]
+44721000-44724000 ---p 00000000 00:00 0 
+44724000-44772000 rw-p 00000000 00:00 0          [stack:8032]
+44772000-447a1000 r-xp 00000000 08:10 143071     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype13.cooja
+447a1000-447a2000 r--p 0002e000 08:10 143071     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype13.cooja
+447a2000-447a3000 rw-p 0002f000 08:10 143071     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype13.cooja
+447a3000-447ac000 rw-p 00000000 00:00 0 
+447ac000-447dc000 r-xp 00000000 08:10 143067     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype455.cooja
+447dc000-447dd000 r--p 0002f000 08:10 143067     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype455.cooja
+447dd000-447de000 rw-p 00030000 08:10 143067     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype455.cooja
+447de000-447e8000 rw-p 00000000 00:00 0 
+447e8000-447eb000 ---p 00000000 00:00 0 
+447eb000-44839000 rw-p 00000000 00:00 0          [stack:7900]
+44839000-4483c000 ---p 00000000 00:00 0 
+4483c000-4488a000 rw-p 00000000 00:00 0          [stack:7984]
+4488a000-448b9000 r-xp 00000000 08:10 143063     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype113.cooja
+448b9000-448ba000 r--p 0002e000 08:10 143063     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype113.cooja
+448ba000-448bb000 rw-p 0002f000 08:10 143063     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype113.cooja
+448bb000-448c4000 rw-p 00000000 00:00 0 
+448c4000-448f4000 r-xp 00000000 08:10 143059     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype666.cooja
+448f4000-448f5000 r--p 0002f000 08:10 143059     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype666.cooja
+448f5000-448f6000 rw-p 00030000 08:10 143059     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype666.cooja
+448f6000-44900000 rw-p 00000000 00:00 0 
+44900000-449ff000 rw-p 00000000 00:00 0 
+449ff000-44a00000 ---p 00000000 00:00 0 
+44a35000-44a64000 r-xp 00000000 08:10 143055     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype920.cooja
+44a64000-44a65000 r--p 0002e000 08:10 143055     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype920.cooja
+44a65000-44a66000 rw-p 0002f000 08:10 143055     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype920.cooja
+44a66000-44a6f000 rw-p 00000000 00:00 0 
+44a7e000-44aa3000 rw-s 00000000 00:04 113508381  /SYSV00000000 (deleted)
+44aa3000-44ab2000 rw-s 00000000 00:04 112787482  /SYSV00000000 (deleted)
+44ab2000-44ae2000 r-xp 00000000 08:10 143051     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype650.cooja
+44ae2000-44ae3000 r--p 0002f000 08:10 143051     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype650.cooja
+44ae3000-44ae4000 rw-p 00030000 08:10 143051     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype650.cooja
+44ae4000-44aee000 rw-p 00000000 00:00 0 
+44aee000-44af1000 ---p 00000000 00:00 0 
+44af1000-44b3f000 rw-p 00000000 00:00 0          [stack:7852]
+44b3f000-44b42000 ---p 00000000 00:00 0 
+44b42000-44b90000 rw-p 00000000 00:00 0          [stack:7580]
+44b90000-44bbf000 r-xp 00000000 08:10 143047     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype381.cooja
+44bbf000-44bc0000 r--p 0002e000 08:10 143047     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype381.cooja
+44bc0000-44bc1000 rw-p 0002f000 08:10 143047     /media/user/Harddisk/Double-MAC/lanada/obj_cooja/mtype381.cooja
+44bc1000-44bca000 rw-p 00000000 00:00 0 
+44bca000-44bcd000 ---p 00000000 00:00 0 
+44bcd000-44c1b000 rw-p 00000000 00:00 0          [stack:7785]
+44c1b000-44c1e000 ---p 00000000 00:00 0 
+44c1e000-44c6c000 rw-p 00000000 00:00 0          [stack:7532]
+44c6c000-44c6f000 ---p 00000000 00:00 0 
+44c6f000-44cbd000 rw-p 00000000 00:00 0          [stack:8560]
+44cc1000-44d00000 rw-p 00000000 00:00 0 
+44d00000-44e00000 rw-p 00000000 00:00 0 
+44e00000-44e07000 rw-p 00000000 00:00 0 
+44e07000-44e10000 rw-p 00000000 00:00 0 
+44e1b000-44e35000 rw-p 00000000 00:00 0 
+44e35000-44e38000 ---p 00000000 00:00 0 
+44e38000-44e86000 rw-p 00000000 00:00 0          [stack:8683]
+44e86000-45500000 rw-s 00000000 00:04 110559257  /SYSV00000000 (deleted)
+45500000-45600000 rw-p 00000000 00:00 0 
+45600000-45609000 rw-p 00000000 00:00 0 
+45609000-4560c000 ---p 00000000 00:00 0 
+4560c000-45624000 rw-p 00000000 00:00 0          [stack:9680]
+45624000-4565e000 r--s 001e1000 08:10 279313     /media/user/Harddisk/Double-MAC/tools/cooja/apps/avrora/lib/avrora-small.jar
+4565e000-45661000 ---p 00000000 00:00 0 
+45661000-456af000 rw-p 00000000 00:00 0          [stack:7491]
+456af000-456b2000 ---p 00000000 00:00 0 
+456b2000-45700000 rw-p 00000000 00:00 0          [stack:7490]
+45700000-457fe000 rw-p 00000000 00:00 0 
+457fe000-45800000 ---p 00000000 00:00 0 
+45800000-45804000 rw-p 00000000 00:00 0 
+45804000-45809000 rw-p 00000000 00:00 0 
+45809000-4580b000 r--s 00003000 08:10 276594     /media/user/Harddisk/Double-MAC/tools/cooja/apps/powertracker/lib/powertracker.jar
+4580b000-4580c000 r--s 00002000 08:10 262276     /media/user/Harddisk/Double-MAC/tools/cooja/apps/collect-view/cooja-collect-view.jar
+4580c000-4580e000 r--s 00008000 08:10 276593     /media/user/Harddisk/Double-MAC/tools/cooja/apps/serial_socket/lib/serial_socket.jar
+4580e000-4580f000 r--s 00008000 08:10 262269     /media/user/Harddisk/Double-MAC/tools/cooja/apps/avrora/lib/cooja_avrora.jar
+4580f000-45811000 r--s 00010000 08:10 279672     /media/user/Harddisk/Double-MAC/tools/cooja/apps/mspsim/lib/jipv6.jar
+45811000-45812000 r--s 00004000 08:10 276595     /media/user/Harddisk/Double-MAC/tools/cooja/apps/mspsim/lib/coffee.jar
+45812000-4581e000 r--s 000eb000 08:10 276575     /media/user/Harddisk/Double-MAC/tools/cooja/apps/mspsim/lib/mspsim.jar
+4581e000-45824000 r--s 00062000 08:10 276574     /media/user/Harddisk/Double-MAC/tools/cooja/apps/mspsim/lib/cooja_mspsim.jar
+45824000-45827000 ---p 00000000 00:00 0 
+45827000-45875000 rw-p 00000000 00:00 0          [stack:7489]
+45875000-45876000 r--s 00000000 08:01 395215     /var/cache/fontconfig/c05880de57d1f5e948fdfacc138775d9-le32d4.cache-4
+45876000-4587e000 r--s 00000000 08:01 395167     /var/cache/fontconfig/945677eb7aeaf62f1d50efc3fb3ec7d8-le32d4.cache-4
+4587e000-45880000 r--s 00000000 08:01 395164     /var/cache/fontconfig/99e8ed0e538f840c565b6ed5dad60d56-le32d4.cache-4
+45880000-45884000 r--s 00000000 08:01 395159     /var/cache/fontconfig/2cd17615ca594fa2959ae173292e504c-le32d4.cache-4
+45884000-45885000 r--s 00000000 08:01 395064     /var/cache/fontconfig/e7071f4a29fa870f4323321c154eba04-le32d4.cache-4
+45885000-45886000 r--s 00000000 08:01 394991     /var/cache/fontconfig/0d8c3b2ac0904cb8a57a757ad11a4a08-le32d4.cache-4
+45886000-4588b000 r--s 00000000 08:01 394968     /var/cache/fontconfig/a755afe4a08bf5b97852ceb7400b47bc-le32d4.cache-4
+4588b000-45894000 r--s 00000000 08:01 394962     /var/cache/fontconfig/6d41288fd70b0be22e8c3a91e032eec0-le32d4.cache-4
+45894000-458a3000 r--s 00000000 08:01 394955     /var/cache/fontconfig/04aabc0a78ac019cf9454389977116d2-le32d4.cache-4
+458a3000-458a4000 r--s 00000000 08:01 394954     /var/cache/fontconfig/1ac9eb803944fde146138c791f5cc56a-le32d4.cache-4
+458a4000-458a7000 r--s 00000000 08:01 394928     /var/cache/fontconfig/385c0604a188198f04d133e54aba7fe7-le32d4.cache-4
+458a7000-458a9000 r--s 00000000 08:01 394921     /var/cache/fontconfig/767a8244fc0220cfb567a839d0392e0b-le32d4.cache-4
+458a9000-458ad000 r--s 00000000 08:01 394858     /var/cache/fontconfig/8801497958630a81b71ace7c5f9b32a8-le32d4.cache-4
+458ad000-458fd000 r-xp 00000000 08:01 138960     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libfontmanager.so
+458fd000-458ff000 r--p 0004f000 08:01 138960     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libfontmanager.so
+458ff000-45900000 rw-p 00051000 08:01 138960     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libfontmanager.so
+45900000-459ff000 rw-p 00000000 00:00 0 
+459ff000-45a00000 ---p 00000000 00:00 0 
+45a00000-45a01000 r--s 00000000 08:01 394926     /var/cache/fontconfig/dc05db6664285cc2f12bf69c139ae4c3-le32d4.cache-4
+45a01000-45a06000 r--s 00000000 08:01 394798     /var/cache/fontconfig/3047814df9a2f067bd2d96a2b9c36e5a-le32d4.cache-4
+45a06000-45a0a000 r--s 00000000 08:01 394795     /var/cache/fontconfig/b47c4e1ecd0709278f4910c18777a504-le32d4.cache-4
+45a0a000-45a1a000 r--s 00000000 08:01 394737     /var/cache/fontconfig/d52a8644073d54c13679302ca1180695-le32d4.cache-4
+45a1a000-45a1d000 ---p 00000000 00:00 0 
+45a1d000-45a6b000 rw-p 00000000 00:00 0          [stack:7488]
+45a6b000-45a6f000 r-xp 00000000 08:01 7640       /usr/lib/i386-linux-gnu/libXfixes.so.3.1.0
+45a6f000-45a70000 r--p 00003000 08:01 7640       /usr/lib/i386-linux-gnu/libXfixes.so.3.1.0
+45a70000-45a71000 rw-p 00004000 08:01 7640       /usr/lib/i386-linux-gnu/libXfixes.so.3.1.0
+45a71000-45a7a000 r-xp 00000000 08:01 9790       /usr/lib/i386-linux-gnu/libXcursor.so.1.0.2
+45a7a000-45a7b000 r--p 00008000 08:01 9790       /usr/lib/i386-linux-gnu/libXcursor.so.1.0.2
+45a7b000-45a7c000 rw-p 00009000 08:01 9790       /usr/lib/i386-linux-gnu/libXcursor.so.1.0.2
+45a7c000-45a7f000 ---p 00000000 00:00 0 
+45a7f000-45acd000 rw-p 00000000 00:00 0          [stack:7487]
+45acd000-45ad0000 r-xp 00000000 08:01 131371     /lib/i386-linux-gnu/libgpg-error.so.0.10.0
+45ad0000-45ad1000 r--p 00002000 08:01 131371     /lib/i386-linux-gnu/libgpg-error.so.0.10.0
+45ad1000-45ad2000 rw-p 00003000 08:01 131371     /lib/i386-linux-gnu/libgpg-error.so.0.10.0
+45ad2000-45ad4000 r-xp 00000000 08:01 132278     /lib/i386-linux-gnu/libkeyutils.so.1.4
+45ad4000-45ad5000 r--p 00002000 08:01 132278     /lib/i386-linux-gnu/libkeyutils.so.1.4
+45ad5000-45ad6000 rw-p 00003000 08:01 132278     /lib/i386-linux-gnu/libkeyutils.so.1.4
+45ad6000-45afc000 r-xp 00000000 08:01 158418     /lib/i386-linux-gnu/libpng12.so.0.50.0
+45afc000-45afd000 r--p 00025000 08:01 158418     /lib/i386-linux-gnu/libpng12.so.0.50.0
+45afd000-45afe000 rw-p 00026000 08:01 158418     /lib/i386-linux-gnu/libpng12.so.0.50.0
+45afe000-45b47000 r-xp 00000000 08:01 131443     /lib/i386-linux-gnu/libdbus-1.so.3.7.6
+45b47000-45b48000 r--p 00048000 08:01 131443     /lib/i386-linux-gnu/libdbus-1.so.3.7.6
+45b48000-45b49000 rw-p 00049000 08:01 131443     /lib/i386-linux-gnu/libdbus-1.so.3.7.6
+45b49000-45b80000 r-xp 00000000 08:01 712        /usr/lib/i386-linux-gnu/libp11-kit.so.0.0.0
+45b80000-45b81000 ---p 00037000 08:01 712        /usr/lib/i386-linux-gnu/libp11-kit.so.0.0.0
+45b81000-45b84000 r--p 00037000 08:01 712        /usr/lib/i386-linux-gnu/libp11-kit.so.0.0.0
+45b84000-45b85000 rw-p 0003a000 08:01 712        /usr/lib/i386-linux-gnu/libp11-kit.so.0.0.0
+45b85000-45b97000 r-xp 00000000 08:01 38286      /usr/lib/i386-linux-gnu/libtasn1.so.6.2.0
+45b97000-45b98000 r--p 00011000 08:01 38286      /usr/lib/i386-linux-gnu/libtasn1.so.6.2.0
+45b98000-45b99000 rw-p 00012000 08:01 38286      /usr/lib/i386-linux-gnu/libtasn1.so.6.2.0
+45b99000-45c1b000 r-xp 00000000 08:01 131206     /lib/i386-linux-gnu/libgcrypt.so.11.8.2
+45c1b000-45c1c000 r--p 00082000 08:01 131206     /lib/i386-linux-gnu/libgcrypt.so.11.8.2
+45c1c000-45c1e000 rw-p 00083000 08:01 131206     /lib/i386-linux-gnu/libgcrypt.so.11.8.2
+45c1e000-45c1f000 rw-p 00000000 00:00 0 
+45c1f000-45c29000 r-xp 00000000 08:01 56557      /usr/lib/i386-linux-gnu/libkrb5support.so.0.1
+45c29000-45c2a000 r--p 00009000 08:01 56557      /usr/lib/i386-linux-gnu/libkrb5support.so.0.1
+45c2a000-45c2b000 rw-p 0000a000 08:01 56557      /usr/lib/i386-linux-gnu/libkrb5support.so.0.1
+45c2b000-45c2e000 r-xp 00000000 08:01 138844     /lib/i386-linux-gnu/libcom_err.so.2.1
+45c2e000-45c2f000 r--p 00002000 08:01 138844     /lib/i386-linux-gnu/libcom_err.so.2.1
+45c2f000-45c30000 rw-p 00003000 08:01 138844     /lib/i386-linux-gnu/libcom_err.so.2.1
+45c30000-45c5e000 r-xp 00000000 08:01 56585      /usr/lib/i386-linux-gnu/libk5crypto.so.3.1
+45c5e000-45c5f000 r--p 0002d000 08:01 56585      /usr/lib/i386-linux-gnu/libk5crypto.so.3.1
+45c5f000-45c60000 rw-p 0002e000 08:01 56585      /usr/lib/i386-linux-gnu/libk5crypto.so.3.1
+45c60000-45d17000 r-xp 00000000 08:01 56629      /usr/lib/i386-linux-gnu/libkrb5.so.3.3
+45d17000-45d1d000 r--p 000b7000 08:01 56629      /usr/lib/i386-linux-gnu/libkrb5.so.3.3
+45d1d000-45d1e000 rw-p 000bd000 08:01 56629      /usr/lib/i386-linux-gnu/libkrb5.so.3.3
+45d1e000-45d23000 r-xp 00000000 08:01 5406       /usr/lib/i386-linux-gnu/libXdmcp.so.6.0.0
+45d23000-45d24000 r--p 00004000 08:01 5406       /usr/lib/i386-linux-gnu/libXdmcp.so.6.0.0
+45d24000-45d25000 rw-p 00005000 08:01 5406       /usr/lib/i386-linux-gnu/libXdmcp.so.6.0.0
+45d25000-45d4a000 r-xp 00000000 08:01 131422     /lib/i386-linux-gnu/libexpat.so.1.6.0
+45d4a000-45d4b000 ---p 00025000 08:01 131422     /lib/i386-linux-gnu/libexpat.so.1.6.0
+45d4b000-45d4d000 r--p 00025000 08:01 131422     /lib/i386-linux-gnu/libexpat.so.1.6.0
+45d4d000-45d4e000 rw-p 00027000 08:01 131422     /lib/i386-linux-gnu/libexpat.so.1.6.0
+45d4e000-45de9000 r-xp 00000000 08:01 5308       /usr/lib/i386-linux-gnu/libfreetype.so.6.11.1
+45de9000-45ded000 r--p 0009a000 08:01 5308       /usr/lib/i386-linux-gnu/libfreetype.so.6.11.1
+45ded000-45dee000 rw-p 0009e000 08:01 5308       /usr/lib/i386-linux-gnu/libfreetype.so.6.11.1
+45dee000-45dfe000 r-xp 00000000 08:01 10788      /usr/lib/i386-linux-gnu/libavahi-client.so.3.2.9
+45dfe000-45dff000 r--p 0000f000 08:01 10788      /usr/lib/i386-linux-gnu/libavahi-client.so.3.2.9
+45dff000-45e00000 rw-p 00010000 08:01 10788      /usr/lib/i386-linux-gnu/libavahi-client.so.3.2.9
+45e00000-45e0c000 r-xp 00000000 08:01 8766       /usr/lib/i386-linux-gnu/libavahi-common.so.3.5.3
+45e0c000-45e0d000 r--p 0000b000 08:01 8766       /usr/lib/i386-linux-gnu/libavahi-common.so.3.5.3
+45e0d000-45e0e000 rw-p 0000c000 08:01 8766       /usr/lib/i386-linux-gnu/libavahi-common.so.3.5.3
+45e0e000-45ecf000 r-xp 00000000 08:01 43756      /usr/lib/i386-linux-gnu/libgnutls.so.26.22.6
+45ecf000-45ed3000 r--p 000c0000 08:01 43756      /usr/lib/i386-linux-gnu/libgnutls.so.26.22.6
+45ed3000-45ed4000 rw-p 000c4000 08:01 43756      /usr/lib/i386-linux-gnu/libgnutls.so.26.22.6
+45ed4000-45f17000 r-xp 00000000 08:01 56613      /usr/lib/i386-linux-gnu/libgssapi_krb5.so.2.2
+45f17000-45f18000 r--p 00042000 08:01 56613      /usr/lib/i386-linux-gnu/libgssapi_krb5.so.2.2
+45f18000-45f19000 rw-p 00043000 08:01 56613      /usr/lib/i386-linux-gnu/libgssapi_krb5.so.2.2
+45f19000-45f39000 r-xp 00000000 08:01 66655      /usr/lib/i386-linux-gnu/libxcb.so.1.1.0
+45f39000-45f3a000 r--p 0001f000 08:01 66655      /usr/lib/i386-linux-gnu/libxcb.so.1.1.0
+45f3a000-45f3b000 rw-p 00020000 08:01 66655      /usr/lib/i386-linux-gnu/libxcb.so.1.1.0
+45f3b000-45f74000 r-xp 00000000 08:01 10898      /usr/lib/i386-linux-gnu/libfontconfig.so.1.8.0
+45f74000-45f75000 r--p 00039000 08:01 10898      /usr/lib/i386-linux-gnu/libfontconfig.so.1.8.0
+45f75000-45f76000 rw-p 0003a000 08:01 10898      /usr/lib/i386-linux-gnu/libfontconfig.so.1.8.0
+45f76000-45fdd000 r-xp 00000000 08:01 6693       /usr/lib/i386-linux-gnu/libcups.so.2
+45fdd000-45fde000 ---p 00067000 08:01 6693       /usr/lib/i386-linux-gnu/libcups.so.2
+45fde000-45fe2000 r--p 00067000 08:01 6693       /usr/lib/i386-linux-gnu/libcups.so.2
+45fe2000-45fe3000 rw-p 0006b000 08:01 6693       /usr/lib/i386-linux-gnu/libcups.so.2
+45fe3000-45ff1000 r-xp 00000000 08:01 7577       /usr/lib/i386-linux-gnu/libXi.so.6.1.0
+45ff1000-45ff2000 r--p 0000e000 08:01 7577       /usr/lib/i386-linux-gnu/libXi.so.6.1.0
+45ff2000-45ff3000 rw-p 0000f000 08:01 7577       /usr/lib/i386-linux-gnu/libXi.so.6.1.0
+45ff3000-45ff8000 r-xp 00000000 08:01 10292      /usr/lib/i386-linux-gnu/libXtst.so.6.1.0
+45ff8000-45ff9000 r--p 00004000 08:01 10292      /usr/lib/i386-linux-gnu/libXtst.so.6.1.0
+45ff9000-45ffa000 rw-p 00005000 08:01 10292      /usr/lib/i386-linux-gnu/libXtst.so.6.1.0
+45ffa000-4612a000 r-xp 00000000 08:01 10842      /usr/lib/i386-linux-gnu/libX11.so.6.3.0
+4612a000-4612b000 r--p 00130000 08:01 10842      /usr/lib/i386-linux-gnu/libX11.so.6.3.0
+4612b000-4612d000 rw-p 00131000 08:01 10842      /usr/lib/i386-linux-gnu/libX11.so.6.3.0
+4612d000-4612e000 rw-p 00000000 00:00 0 
+4612e000-46176000 r-xp 00000000 08:01 136828     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/xawt/libmawt.so
+46176000-46177000 r--p 00047000 08:01 136828     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/xawt/libmawt.so
+46177000-46179000 rw-p 00048000 08:01 136828     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/xawt/libmawt.so
+46179000-4617a000 rw-p 00000000 00:00 0 
+4617a000-46209000 r-xp 00000000 08:01 138964     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libawt.so
+46209000-4620a000 r--p 0008f000 08:01 138964     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libawt.so
+4620a000-46211000 rw-p 00090000 08:01 138964     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libawt.so
+46211000-46235000 rw-p 00000000 00:00 0 
+46235000-46271000 r-xp 00000000 08:01 136082     /lib/i386-linux-gnu/libpcre.so.3.13.1
+46271000-46272000 r--p 0003b000 08:01 136082     /lib/i386-linux-gnu/libpcre.so.3.13.1
+46272000-46273000 rw-p 0003c000 08:01 136082     /lib/i386-linux-gnu/libpcre.so.3.13.1
+46273000-4637d000 r-xp 00000000 08:01 136564     /lib/i386-linux-gnu/libglib-2.0.so.0.4002.0
+4637d000-4637e000 r--p 00109000 08:01 136564     /lib/i386-linux-gnu/libglib-2.0.so.0.4002.0
+4637e000-4637f000 rw-p 0010a000 08:01 136564     /lib/i386-linux-gnu/libglib-2.0.so.0.4002.0
+4637f000-464fc000 r-xp 00000000 08:01 1674       /usr/lib/i386-linux-gnu/libgio-2.0.so.0.4002.0
+464fc000-464fe000 r--p 0017d000 08:01 1674       /usr/lib/i386-linux-gnu/libgio-2.0.so.0.4002.0
+464fe000-464ff000 rw-p 0017f000 08:01 1674       /usr/lib/i386-linux-gnu/libgio-2.0.so.0.4002.0
+464ff000-46500000 rw-p 00000000 00:00 0 
+46500000-465ff000 rw-p 00000000 00:00 0 
+465ff000-46600000 ---p 00000000 00:00 0 
+46600000-46609000 r-xp 00000000 08:01 6199       /usr/lib/i386-linux-gnu/libXrender.so.1.3.0
+46609000-4660a000 r--p 00008000 08:01 6199       /usr/lib/i386-linux-gnu/libXrender.so.1.3.0
+4660a000-4660b000 rw-p 00009000 08:01 6199       /usr/lib/i386-linux-gnu/libXrender.so.1.3.0
+4660b000-4661c000 r-xp 00000000 08:01 6183       /usr/lib/i386-linux-gnu/libXext.so.6.4.0
+4661c000-4661d000 r--p 00010000 08:01 6183       /usr/lib/i386-linux-gnu/libXext.so.6.4.0
+4661d000-4661e000 rw-p 00011000 08:01 6183       /usr/lib/i386-linux-gnu/libXext.so.6.4.0
+4661e000-46631000 r-xp 00000000 08:01 159740     /lib/i386-linux-gnu/libresolv-2.19.so
+46631000-46632000 ---p 00013000 08:01 159740     /lib/i386-linux-gnu/libresolv-2.19.so
+46632000-46633000 r--p 00013000 08:01 159740     /lib/i386-linux-gnu/libresolv-2.19.so
+46633000-46634000 rw-p 00014000 08:01 159740     /lib/i386-linux-gnu/libresolv-2.19.so
+46634000-46636000 rw-p 00000000 00:00 0 
+46636000-46656000 r-xp 00000000 08:01 131406     /lib/i386-linux-gnu/libselinux.so.1
+46656000-46657000 r--p 0001f000 08:01 131406     /lib/i386-linux-gnu/libselinux.so.1
+46657000-46658000 rw-p 00020000 08:01 131406     /lib/i386-linux-gnu/libselinux.so.1
+46658000-46659000 rw-p 00000000 00:00 0 
+46659000-466a9000 r-xp 00000000 08:01 1672       /usr/lib/i386-linux-gnu/libgobject-2.0.so.0.4002.0
+466a9000-466aa000 r--p 0004f000 08:01 1672       /usr/lib/i386-linux-gnu/libgobject-2.0.so.0.4002.0
+466aa000-466ab000 rw-p 00050000 08:01 1672       /usr/lib/i386-linux-gnu/libgobject-2.0.so.0.4002.0
+466ab000-466ac000 r--s 00000000 08:01 394913     /var/cache/fontconfig/4794a0821666d79190d59a36cb4f44b5-le32d4.cache-4
+466ac000-466ad000 r--s 00000000 08:01 394797     /var/cache/fontconfig/56cf4f4769d0f4abc89a4895d7bd3ae1-le32d4.cache-4
+466ad000-466ae000 r--s 00000000 08:01 394796     /var/cache/fontconfig/b9d506c9ac06c20b433354fa67a72993-le32d4.cache-4
+466ae000-466b5000 r--s 00000000 08:01 394735     /var/cache/fontconfig/3f7329c5293ffd510edef78f73874cfd-le32d4.cache-4
+466b5000-466be000 r--s 00000000 08:01 394733     /var/cache/fontconfig/d589a48862398ed80a3d6066f4f56f4c-le32d4.cache-4
+466be000-466bf000 r--s 00000000 08:01 394716     /var/cache/fontconfig/0c9eb80ebd1c36541ebe2852d3bb0c49-le32d4.cache-4
+466bf000-466c2000 r--s 00000000 08:01 394715     /var/cache/fontconfig/7ef2298fde41cc6eeb7af42e48b7d293-le32d4.cache-4
+466c2000-466d9000 r-xp 00000000 08:01 138987     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libnet.so
+466d9000-466da000 r--p 00017000 08:01 138987     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libnet.so
+466da000-466db000 rw-p 00018000 08:01 138987     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libnet.so
+466db000-466dc000 ---p 00000000 00:00 0 
+466dc000-4675c000 rw-p 00000000 00:00 0          [stack:7486]
+4675c000-4675f000 ---p 00000000 00:00 0 
+4675f000-467ad000 rw-p 00000000 00:00 0          [stack:7485]
+467ad000-467b0000 ---p 00000000 00:00 0 
+467b0000-4682e000 rw-p 00000000 00:00 0          [stack:7484]
+4682e000-46831000 ---p 00000000 00:00 0 
+46831000-468af000 rw-p 00000000 00:00 0          [stack:7483]
+468af000-468b2000 ---p 00000000 00:00 0 
+468b2000-46900000 rw-p 00000000 00:00 0          [stack:7482]
+46900000-46b00000 r--p 00000000 08:01 369        /usr/lib/locale/locale-archive
+46b00000-46bff000 rw-p 00000000 00:00 0 
+46bff000-46c00000 ---p 00000000 00:00 0 
+46c00000-46c02000 r-xp 00000000 08:01 5352       /usr/lib/i386-linux-gnu/libXau.so.6.0.0
+46c02000-46c03000 r--p 00001000 08:01 5352       /usr/lib/i386-linux-gnu/libXau.so.6.0.0
+46c03000-46c04000 rw-p 00002000 08:01 5352       /usr/lib/i386-linux-gnu/libXau.so.6.0.0
+46c04000-46c09000 r-xp 00000000 08:01 1818       /usr/lib/i386-linux-gnu/libffi.so.6.0.1
+46c09000-46c0a000 r--p 00005000 08:01 1818       /usr/lib/i386-linux-gnu/libffi.so.6.0.1
+46c0a000-46c0b000 rw-p 00006000 08:01 1818       /usr/lib/i386-linux-gnu/libffi.so.6.0.1
+46c0b000-46c0e000 r-xp 00000000 08:01 1675       /usr/lib/i386-linux-gnu/libgmodule-2.0.so.0.4002.0
+46c0e000-46c0f000 r--p 00002000 08:01 1675       /usr/lib/i386-linux-gnu/libgmodule-2.0.so.0.4002.0
+46c0f000-46c10000 rw-p 00003000 08:01 1675       /usr/lib/i386-linux-gnu/libgmodule-2.0.so.0.4002.0
+46c10000-46c21000 r-xp 00000000 08:01 138994     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libnio.so
+46c21000-46c22000 r--p 00010000 08:01 138994     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libnio.so
+46c22000-46c23000 rw-p 00011000 08:01 138994     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libnio.so
+46c23000-46c2d000 r--s 000ae000 08:01 136954     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/resources.jar
+46c2d000-46c30000 ---p 00000000 00:00 0 
+46c30000-46c7e000 rw-p 00000000 00:00 0          [stack:7481]
+46c7e000-46c81000 ---p 00000000 00:00 0 
+46c81000-46ccf000 rw-p 00000000 00:00 0          [stack:7480]
+46ccf000-46e80000 r--s 01d29000 08:01 136944     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/rt.jar
+46e80000-4a900000 rw-p 00000000 00:00 0 
+4a900000-4a9f9000 rw-p 00000000 00:00 0 
+4a9f9000-4aa00000 ---p 00000000 00:00 0 
+4aa00000-4aa1d000 r--s 0014f000 08:10 280467     /media/user/Harddisk/Double-MAC/tools/cooja/lib/swingx-all-1.6.4.jar
+4aa1d000-4aa24000 r--s 0005b000 08:10 280465     /media/user/Harddisk/Double-MAC/tools/cooja/lib/jsyntaxpane.jar
+4aa24000-4aa25000 ---p 00000000 00:00 0 
+4aa25000-4ab00000 rw-p 00000000 00:00 0          [stack:7479]
+4ab00000-4ab5a000 rw-p 00000000 00:00 0 
+4ab5a000-4ac00000 ---p 00000000 00:00 0 
+4ac00000-4ac02000 r--s 00000000 08:01 393797     /var/cache/fontconfig/e13b20fdb08344e0e664864cc2ede53d-le32d4.cache-4
+4ac02000-4ac06000 r--s 00035000 08:10 276573     /media/user/Harddisk/Double-MAC/tools/cooja/apps/mrm/lib/mrm.jar
+4ac06000-4ac0d000 r--s 0004f000 08:10 280466     /media/user/Harddisk/Double-MAC/tools/cooja/lib/log4j.jar
+4ac0d000-4ac7d000 rw-p 00000000 00:00 0 
+4ac7d000-4ac7e000 ---p 00000000 00:00 0 
+4ac7e000-4acfe000 rw-p 00000000 00:00 0          [stack:7476]
+4acfe000-4acff000 ---p 00000000 00:00 0 
+4acff000-4ad8a000 rw-p 00000000 00:00 0          [stack:7475]
+4ad8a000-4ad91000 ---p 00000000 00:00 0 
+4ad91000-4adbf000 rw-p 00000000 00:00 0 
+4adbf000-4aea5000 rw-p 00000000 00:00 0 
+4aea5000-4afbf000 rw-p 00000000 00:00 0 
+4afbf000-4afca000 rw-p 00000000 00:00 0 
+4afca000-4afd1000 ---p 00000000 00:00 0 
+4afd1000-4afff000 rw-p 00000000 00:00 0 
+4afff000-4b0e5000 rw-p 00000000 00:00 0 
+4b0e5000-4b1ff000 rw-p 00000000 00:00 0 
+4b1ff000-4b2ee000 rw-p 00000000 00:00 0 
+4b2ee000-4b2ff000 ---p 00000000 00:00 0 
+4b2ff000-4c740000 rw-p 00000000 00:00 0 
+4c740000-4d5c0000 ---p 00000000 00:00 0 
+4d5c0000-53300000 rw-p 00000000 00:00 0 
+53300000-6fec0000 rw-p 00000000 00:00 0 
+6fec0000-93300000 rw-p 00000000 00:00 0 
+93300000-b1000000 rw-p 00000000 00:00 0 
+b1000000-b3300000 ---p 00000000 00:00 0 
+b3300000-b3303000 r--s 00022000 08:10 280464     /media/user/Harddisk/Double-MAC/tools/cooja/lib/jdom.jar
+b3303000-b3307000 r--s 00085000 08:01 144112     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/ext/localedata.jar
+b3307000-b330b000 r--s 00034000 08:01 144116     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/ext/sunjce_provider.jar
+b330b000-b330e000 r--s 0000f000 08:01 144120     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/ext/icedtea-sound.jar
+b330e000-b3326000 rw-p 00000000 00:00 0 
+b3326000-b33ce000 rw-p 00000000 00:00 0 
+b33ce000-b39a6000 rwxp 00000000 00:00 0 
+b39a6000-b63ce000 rw-p 00000000 00:00 0 
+b63ce000-b63d9000 r-xp 00000000 08:01 159744     /lib/i386-linux-gnu/libnss_files-2.19.so
+b63d9000-b63da000 r--p 0000a000 08:01 159744     /lib/i386-linux-gnu/libnss_files-2.19.so
+b63da000-b63db000 rw-p 0000b000 08:01 159744     /lib/i386-linux-gnu/libnss_files-2.19.so
+b63db000-b63e5000 r-xp 00000000 08:01 159715     /lib/i386-linux-gnu/libnss_nis-2.19.so
+b63e5000-b63e6000 r--p 00009000 08:01 159715     /lib/i386-linux-gnu/libnss_nis-2.19.so
+b63e6000-b63e7000 rw-p 0000a000 08:01 159715     /lib/i386-linux-gnu/libnss_nis-2.19.so
+b63e7000-b63fc000 r-xp 00000000 08:01 159717     /lib/i386-linux-gnu/libnsl-2.19.so
+b63fc000-b63fd000 r--p 00015000 08:01 159717     /lib/i386-linux-gnu/libnsl-2.19.so
+b63fd000-b63fe000 rw-p 00016000 08:01 159717     /lib/i386-linux-gnu/libnsl-2.19.so
+b63fe000-b6400000 rw-p 00000000 00:00 0 
+b6400000-b64fd000 rw-p 00000000 00:00 0 
+b64fd000-b6500000 ---p 00000000 00:00 0 
+b6500000-b6507000 r-xp 00000000 08:01 159727     /lib/i386-linux-gnu/libnss_compat-2.19.so
+b6507000-b6508000 r--p 00006000 08:01 159727     /lib/i386-linux-gnu/libnss_compat-2.19.so
+b6508000-b6509000 rw-p 00007000 08:01 159727     /lib/i386-linux-gnu/libnss_compat-2.19.so
+b6509000-b650a000 r--s 00002000 08:01 144114     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/ext/dnsns.jar
+b650a000-b650e000 r--s 0003c000 08:01 144118     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/ext/sunpkcs11.jar
+b650e000-b6516000 r-xp 00000000 08:01 138893     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libzip.so
+b6516000-b6517000 r--p 00007000 08:01 138893     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libzip.so
+b6517000-b6518000 rw-p 00008000 08:01 138893     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libzip.so
+b6518000-b6520000 rw-s 00000000 08:01 137504     /tmp/hsperfdata_user/7471
+b6520000-b6547000 r-xp 00000000 08:01 144073     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libjava.so
+b6547000-b6548000 r--p 00026000 08:01 144073     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libjava.so
+b6548000-b6549000 rw-p 00027000 08:01 144073     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libjava.so
+b6549000-b6550000 r-xp 00000000 08:01 159746     /lib/i386-linux-gnu/librt-2.19.so
+b6550000-b6551000 r--p 00006000 08:01 159746     /lib/i386-linux-gnu/librt-2.19.so
+b6551000-b6552000 rw-p 00007000 08:01 159746     /lib/i386-linux-gnu/librt-2.19.so
+b6552000-b6555000 ---p 00000000 00:00 0 
+b6555000-b65a3000 rw-p 00000000 00:00 0          [stack:7473]
+b65a3000-b65bf000 r-xp 00000000 08:01 131544     /lib/i386-linux-gnu/libgcc_s.so.1
+b65bf000-b65c0000 rw-p 0001b000 08:01 131544     /lib/i386-linux-gnu/libgcc_s.so.1
+b65c0000-b6604000 r-xp 00000000 08:01 159725     /lib/i386-linux-gnu/libm-2.19.so
+b6604000-b6605000 r--p 00043000 08:01 159725     /lib/i386-linux-gnu/libm-2.19.so
+b6605000-b6606000 rw-p 00044000 08:01 159725     /lib/i386-linux-gnu/libm-2.19.so
+b6606000-b66e2000 r-xp 00000000 08:01 540        /usr/lib/i386-linux-gnu/libstdc++.so.6.0.19
+b66e2000-b66e6000 r--p 000dc000 08:01 540        /usr/lib/i386-linux-gnu/libstdc++.so.6.0.19
+b66e6000-b66e7000 rw-p 000e0000 08:01 540        /usr/lib/i386-linux-gnu/libstdc++.so.6.0.19
+b66e7000-b66ee000 rw-p 00000000 00:00 0 
+b66ee000-b70dd000 r-xp 00000000 08:01 138935     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/server/libjvm.so
+b70dd000-b712f000 r--p 009ee000 08:01 138935     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/server/libjvm.so
+b712f000-b7143000 rw-p 00a40000 08:01 138935     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/server/libjvm.so
+b7143000-b7561000 rw-p 00000000 00:00 0 
+b7561000-b7579000 r-xp 00000000 08:01 158556     /lib/i386-linux-gnu/libz.so.1.2.8
+b7579000-b757a000 r--p 00017000 08:01 158556     /lib/i386-linux-gnu/libz.so.1.2.8
+b757a000-b757b000 rw-p 00018000 08:01 158556     /lib/i386-linux-gnu/libz.so.1.2.8
+b757b000-b7593000 r-xp 00000000 08:01 159736     /lib/i386-linux-gnu/libpthread-2.19.so
+b7593000-b7594000 r--p 00018000 08:01 159736     /lib/i386-linux-gnu/libpthread-2.19.so
+b7594000-b7595000 rw-p 00019000 08:01 159736     /lib/i386-linux-gnu/libpthread-2.19.so
+b7595000-b7597000 rw-p 00000000 00:00 0 
+b7597000-b759a000 r-xp 00000000 08:01 159003     /lib/i386-linux-gnu/libdl-2.19.so
+b759a000-b759b000 r--p 00002000 08:01 159003     /lib/i386-linux-gnu/libdl-2.19.so
+b759b000-b759c000 rw-p 00003000 08:01 159003     /lib/i386-linux-gnu/libdl-2.19.so
+b759c000-b7744000 r-xp 00000000 08:01 159001     /lib/i386-linux-gnu/libc-2.19.so
+b7744000-b7746000 r--p 001a8000 08:01 159001     /lib/i386-linux-gnu/libc-2.19.so
+b7746000-b7747000 rw-p 001aa000 08:01 159001     /lib/i386-linux-gnu/libc-2.19.so
+b7747000-b774a000 rw-p 00000000 00:00 0 
+b774a000-b774c000 r--s 00006000 08:01 276693     /usr/share/java/java-atk-wrapper.jar
+b774c000-b774e000 r--s 00012000 08:01 144121     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/ext/zipfs.jar
+b774e000-b774f000 r--p 002c5000 08:01 369        /usr/lib/locale/locale-archive
+b774f000-b7750000 rw-p 00000000 00:00 0 
+b7750000-b7751000 r--p 00000000 00:00 0 
+b7751000-b775f000 r-xp 00000000 08:01 138970     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libverify.so
+b775f000-b7760000 r--p 0000d000 08:01 138970     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libverify.so
+b7760000-b7761000 rw-p 0000e000 08:01 138970     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/libverify.so
+b7761000-b776d000 r-xp 00000000 08:01 138927     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/jli/libjli.so
+b776d000-b776e000 r--p 0000c000 08:01 138927     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/jli/libjli.so
+b776e000-b776f000 rw-p 0000d000 08:01 138927     /usr/lib/jvm/java-7-openjdk-i386/jre/lib/i386/jli/libjli.so
+b776f000-b7772000 rw-p 00000000 00:00 0 
+b7772000-b7773000 r-xp 00000000 00:00 0          [vdso]
+b7773000-b7793000 r-xp 00000000 08:01 159713     /lib/i386-linux-gnu/ld-2.19.so
+b7793000-b7794000 r--p 0001f000 08:01 159713     /lib/i386-linux-gnu/ld-2.19.so
+b7794000-b7795000 rw-p 00020000 08:01 159713     /lib/i386-linux-gnu/ld-2.19.so
+bfa6a000-bfa6b000 rwxp 00000000 00:00 0 
+bfa9d000-bfabe000 rw-p 00000000 00:00 0          [stack]
+
+VM Arguments:
+jvm_args: -Xmx1536m 
+java_command: org.contikios.cooja.Cooja
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+JAVA_HOME=/usr/lib/jvm/java-7-openjdk-i386
+PATH=/usr/local/sdcc/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/home/user/CodeSourcery/Sourcery_G++_Lite/bin:/usr/local/msp430/bin:/home/user/CodeSourcery/Sourcery_G++_Lite/bin
+LD_LIBRARY_PATH=.
+SHELL=/bin/bash
+DISPLAY=:0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x80cb90], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGBUS: [libjvm.so+0x80cb90], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGFPE: [libjvm.so+0x684e30], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGPIPE: [libjvm.so+0x684e30], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGXFSZ: [libjvm.so+0x684e30], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGILL: [libjvm.so+0x684e30], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGUSR1: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGUSR2: [libjvm.so+0x684cc0], sa_mask[0]=0x00000004, sa_flags=0x10000004
+SIGHUP: [libjvm.so+0x684ef0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGINT: [libjvm.so+0x684ef0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGTERM: [libjvm.so+0x684ef0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGQUIT: [libjvm.so+0x684ef0], sa_mask[0]=0x7ffbfeff, sa_flags=0x10000004
+SIGTRAP: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+
+
+---------------  S Y S T E M  ---------------
+
+OS:Ubuntu 14.04 (trusty)
+uname:Linux 3.13.0-62-generic #102-Ubuntu SMP Tue Aug 11 14:28:35 UTC 2015 i686
+libc:glibc 2.19 NPTL 2.19 
+rlimit: STACK 8192k, CORE 0k, NPROC 32159, NOFILE 4096, AS infinity
+load average:4.08 4.03 4.05
+
+/proc/meminfo:
+MemTotal:        4135720 kB
+MemFree:          267624 kB
+Buffers:          108156 kB
+Cached:          1492500 kB
+SwapCached:         5924 kB
+Active:          2287928 kB
+Inactive:        1409400 kB
+Active(anon):    1497276 kB
+Inactive(anon):   629980 kB
+Active(file):     790652 kB
+Inactive(file):   779420 kB
+Unevictable:          32 kB
+Mlocked:              32 kB
+HighTotal:       3280840 kB
+HighFree:         103248 kB
+LowTotal:         854880 kB
+LowFree:          164376 kB
+SwapTotal:       1046524 kB
+SwapFree:         988072 kB
+Dirty:              2020 kB
+Writeback:             0 kB
+AnonPages:       2091996 kB
+Mapped:            91856 kB
+Shmem:             30364 kB
+Slab:             141808 kB
+SReclaimable:     123496 kB
+SUnreclaim:        18312 kB
+KernelStack:        4136 kB
+PageTables:        11380 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     3114384 kB
+Committed_AS:    4433600 kB
+VmallocTotal:     122880 kB
+VmallocUsed:        9204 kB
+VmallocChunk:     108036 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:   1753088 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:       22520 kB
+DirectMap2M:      890880 kB
+
+
+CPU:total 2 (2 cores per cpu, 1 threads per core) family 6 model 158 stepping 9, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, aes, tsc, tscinvbit
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 158
+model name	: Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz
+stepping	: 9
+cpu MHz		: 3407.998
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 2
+core id		: 0
+cpu cores	: 2
+apicid		: 0
+initial apicid	: 0
+fdiv_bug	: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht nx rdtscp constant_tsc xtopology nonstop_tsc pni pclmulqdq ssse3 cx16 sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx rdrand hypervisor lahf_lm abm 3dnowprefetch rdseed
+bogomips	: 6815.99
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 158
+model name	: Intel(R) Core(TM) i5-7500 CPU @ 3.40GHz
+stepping	: 9
+cpu MHz		: 3407.998
+cache size	: 6144 KB
+physical id	: 0
+siblings	: 2
+core id		: 1
+cpu cores	: 2
+apicid		: 1
+initial apicid	: 1
+fdiv_bug	: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht nx rdtscp constant_tsc xtopology nonstop_tsc pni pclmulqdq ssse3 cx16 sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx rdrand hypervisor lahf_lm abm 3dnowprefetch rdseed
+bogomips	: 6815.99
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 4135720k(267624k free), swap 1046524k(988072k free)
+
+vm_info: OpenJDK Server VM (24.79-b02) for linux-x86 JRE (1.7.0_79-b14), built on Jul 24 2015 08:25:15 by "buildd" with gcc 4.8.2
+
+time: Tue Sep 12 15:53:36 2017
+elapsed time: 26833 seconds
+
