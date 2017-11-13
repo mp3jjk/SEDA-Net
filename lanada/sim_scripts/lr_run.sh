@@ -35,14 +35,17 @@ ONLY_LONG=${19}
 SEED_NUMBER=${20}
 
 sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
-
+DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
-    mkdir $DATE\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK\_seed$SEED_NUMBER
-    cd $DATE\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK\_seed$SEED_NUMBER
+    mkdir $DIR
+    cd $DIR
+#    cd $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
 else
-    mkdir $DATE\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK\_seed$SEED_NUMBER
-    cd $DATE\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK\_seed$SEED_NUMBER
+    mkdir $DIR
+    cd $DIR
+#    mkdir $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
+#    cd $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
 fi
 
 if [ $ONLY_LONG -eq 0 ]
@@ -56,11 +59,14 @@ fi
 
 ../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK $LSA_MAC $ALPHA_DIV $CHECK $LSA_ENHANCED $ROUTING_NO_ENERGY
 
-if [ ! -e $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY ]
+IN_DIR=lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_check$CHECK\_strobe$STROBE_CNT\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY
+if [ ! -e $IN_DIR ]
 then
-    mkdir $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY
+    mkdir $IN_DIR
+#    mkdir lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY
 fi
-cd $topology\_lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY
+cd $IN_DIR
+#cd lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY
 echo "#########################  We are in $PWD  ########################"
 
 HERE=$PWD
