@@ -1,6 +1,7 @@
 #!/bin/bash
 
-JOONKI=0
+JOONKI=1
+
 
 if [ $JOONKI -eq 0 ]
 then
@@ -33,16 +34,17 @@ LSA_ENHANCED=${17}
 ROUTING_NO_ENERGY=${18}
 ONLY_LONG=${19}
 SEED_NUMBER=${20}
+MRM=${21}
 
 sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
 
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
-    mkdir $DATE\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK\_seed$SEED_NUMBER
-    cd $DATE\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK\_seed$SEED_NUMBER
+    mkdir $DATE\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK\_seed$SEED_NUMBER\_mrm$MRM
+    cd $DATE\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK\_seed$SEED_NUMBER\_mrm$MRM
 else
-    mkdir $DATE\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK\_seed$SEED_NUMBER
-    cd $DATE\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK\_seed$SEED_NUMBER
+    mkdir $DATE\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK\_seed$SEED_NUMBER\_mrm$MRM
+    cd $DATE\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_dataack$DATA_ACK\_seed$SEED_NUMBER\_mrm$MRM
 fi
 
 if [ $ONLY_LONG -eq 0 ]
@@ -68,12 +70,23 @@ cd $CONTIKI/lanada
 make clean TARGET=cooja
 cd $HERE
 
-if [ ! -e COOJA.testlog ]
+if [ $MRM -eq 0 ]
 then
-#	cd $CONTIKI/tools/cooja
-     java -mx512m -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc -contiki="$CONTIKI"
-#		ant run_nogui -Dargs=/home/user/Desktop/Double-MAC/lanada/sim_scripts/scripts/0729_36grid_2X.csc
-#	cd $HERE
+	if [ ! -e COOJA.testlog ]
+	then
+	#	cd $CONTIKI/tools/cooja
+			 java -mx512m -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc -contiki="$CONTIKI"
+	#		ant run_nogui -Dargs=/home/user/Desktop/Double-MAC/lanada/sim_scripts/scripts/0729_36grid_2X.csc
+	#	cd $HERE
+	fi
+else
+	if [ ! -e COOJA.testlog ]
+	then
+		cd $CONTIKI/tools/cooja_mrm$MRM
+		ant run_nogui -Dargs=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc	
+		mv build/COOJA.testlog $HERE
+		cd $HERE
+	fi
 fi
 
 if [ ! -e report_summary.txt ]

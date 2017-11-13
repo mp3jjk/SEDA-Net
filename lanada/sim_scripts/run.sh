@@ -1,12 +1,12 @@
 #!/bin/bash
 
-SR=0 # Decide whether SR simulation runs or not
-LR=1 # For LR case
+SR=1 # Decide whether SR simulation runs or not
+LR=0 # For LR case
 ONLY_LONG=0 # SR = 1 with only Long
 TRAFFIC=1 # 0 = periodic, 1 = poisson
 VAR_PERIOD=(5 15 30 60)
 VAR_ARRIVAL=(10 30 60)
-VAR_TOPOLOGY=("34cluster")
+VAR_TOPOLOGY=("0729_36grid")
 VAR_LR_RANGE=("2X")
 VAR_LR_WEIGHT=(2)
 VAR_LSA_R=0
@@ -21,7 +21,8 @@ VAR_LSA_ENHANCED=0
 VAR_ROUTING_NO_ENERGY=0
 DATE="of0"
 LSA_MAC=1
-SEED_NUMBER=("1" "2" "3")
+SEED_NUMBER=("1")
+MRM=1
 
 # SR_RANGE simulation
 
@@ -43,7 +44,7 @@ then
 			do
 			    for check in "${VAR_CHECK_RATE[@]}"
 			    do
-			    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed
+			    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed $MRM
 			    done
 			done
 		    done
@@ -66,7 +67,7 @@ done
 			do
 			    for check in "${VAR_CHECK_RATE[@]}"
 			    do
-				./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed
+				./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed $MRM
 			    done
 			done
 		    done
@@ -100,7 +101,7 @@ then
 				do
 				    for check in "${VAR_CHECK_RATE[@]}"
 				    do
-					./lr_run.sh $topology $TRAFFIC $period 0 $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG $seed
+					./lr_run.sh $topology $TRAFFIC $period 0 $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG $seed $MRM
 				    done
 				done
 			    done
@@ -129,7 +130,7 @@ done
 				do
 				    for check in "${VAR_CHECK_RATE[@]}"
 				    do
-					./lr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG $seed
+					./lr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG $seed $MRM
 				    done
 				done
 			    done
