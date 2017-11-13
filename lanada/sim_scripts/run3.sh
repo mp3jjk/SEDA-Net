@@ -1,14 +1,14 @@
 #!/bin/bash
 
-SR=0 # Decide whether SR simulation runs or not
-LR=1 # For LR case
-ONLY_LONG=1 # SR = 1 with only Long
-TRAFFIC=1 # 0 = periodic, 1 = poisson
-VAR_PERIOD=(5 15 30 60)
+SR=1 # Decide whether SR simulation runs or not
+LR=0 # For LR case
+ONLY_LONG=0 # SR = 1 with only Long
+TRAFFIC=0 # 0 = periodic, 1 = poisson
+VAR_PERIOD=(30 60 90)
 VAR_ARRIVAL=(10)
-VAR_TOPOLOGY=("36grid")
-VAR_LR_RANGE=("4X")
-VAR_LR_WEIGHT=(2)
+VAR_TOPOLOGY=("50random2")
+VAR_LR_RANGE=("2X")
+VAR_LR_WEIGHT=(1)
 VAR_LSA_R=0
 VAR_STROBE_CNT=0
 VAR_ALPHA=(1)
@@ -16,12 +16,13 @@ VAR_ALPHA_DIV=(1)
 VAR_PARENT_REDUCTION=0
 VAR_REDUCTION_RATIO=0
 VAR_DATA_ACK=1
-VAR_CHECK_RATE=(4)
+VAR_CHECK_RATE=(4 8 16)
 VAR_LSA_ENHANCED=0
 VAR_ROUTING_NO_ENERGY=0
 DATE="ltmax"
 LSA_MAC=1
-SEED_NUMBER=("2")
+SEED_NUMBER=("1")
+MRM=0
 
 # SR_RANGE simulation
 
@@ -29,51 +30,51 @@ if [ $SR -eq 1 ]
 then
     if [ $TRAFFIC -eq 0 ]
     then
-			for seed in "${SEED_NUMBER[@]}"
-			do
-	for period in "${VAR_PERIOD[@]}"
+	for seed in "${SEED_NUMBER[@]}"
 	do
-	    for topology in "${VAR_TOPOLOGY[@]}"
+	    for period in "${VAR_PERIOD[@]}"
 	    do
-		for range in "${VAR_LR_RANGE[@]}"
+		for topology in "${VAR_TOPOLOGY[@]}"
 		do
-		    for alpha in "${VAR_ALPHA[@]}"
+		    for range in "${VAR_LR_RANGE[@]}"
 		    do
-			for alpha_div in "${VAR_ALPHA_DIV[@]}"
+			for alpha in "${VAR_ALPHA[@]}"
 			do
-			    for check in "${VAR_CHECK_RATE[@]}"
+			    for alpha_div in "${VAR_ALPHA_DIV[@]}"
 			    do
-			    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed
+				for check in "${VAR_CHECK_RATE[@]}"
+				do
+				    ./sr_run.sh $topology $TRAFFIC $period 0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed $MRM
+				done
 			    done
 			done
 		    done
 		done
 	    done
 	done
-done
     else
-			for seed in "${SEED_NUMBER[@]}"
-			do
-	for arrival in "${VAR_ARRIVAL[@]}"
+	for seed in "${SEED_NUMBER[@]}"
 	do
-	    for topology in "${VAR_TOPOLOGY[@]}"
+	    for arrival in "${VAR_ARRIVAL[@]}"
 	    do
-		for range in "${VAR_LR_RANGE[@]}"
+		for topology in "${VAR_TOPOLOGY[@]}"
 		do
-		    for alpha in "${VAR_ALPHA[@]}"
+		    for range in "${VAR_LR_RANGE[@]}"
 		    do
-			for alpha_div in "${VAR_ALPHA_DIV[@]}"
+			for alpha in "${VAR_ALPHA[@]}"
 			do
-			    for check in "${VAR_CHECK_RATE[@]}"
+			    for alpha_div in "${VAR_ALPHA_DIV[@]}"
 			    do
-				./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed
+				for check in "${VAR_CHECK_RATE[@]}"
+				do
+				    ./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed $MRM
+				done
 			    done
 			done
 		    done
 		done
 	    done
 	done
-done
     fi
 fi
 
@@ -82,25 +83,26 @@ if [ $LR -eq 1 ]
 then
     if [ $TRAFFIC -eq 0 ]
     then
-			for seed in "${SEED_NUMBER[@]}"
-			do
-	for period in "${VAR_PERIOD[@]}"
+	for seed in "${SEED_NUMBER[@]}"
 	do
-	    for topology in "${VAR_TOPOLOGY[@]}"
+	    for period in "${VAR_PERIOD[@]}"
 	    do
-		for range in "${VAR_LR_RANGE[@]}"
+		for topology in "${VAR_TOPOLOGY[@]}"
 		do
-		    for weight in "${VAR_LR_WEIGHT[@]}"
+		    for range in "${VAR_LR_RANGE[@]}"
 		    do
-			for ratio in $VAR_REDUCTION_RATIO
+			for weight in "${VAR_LR_WEIGHT[@]}"
 			do
-			    for alpha in "${VAR_ALPHA[@]}"
+			    for ratio in $VAR_REDUCTION_RATIO
 			    do
-				for alpha_div in "${VAR_ALPHA_DIV[@]}"
+				for alpha in "${VAR_ALPHA[@]}"
 				do
-				    for check in "${VAR_CHECK_RATE[@]}"
+				    for alpha_div in "${VAR_ALPHA_DIV[@]}"
 				    do
-					./lr_run.sh $topology $TRAFFIC $period 0 $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG $seed
+					for check in "${VAR_CHECK_RATE[@]}"
+					do
+					    ./lr_run.sh $topology $TRAFFIC $period 0 $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG $seed $MRM
+					done
 				    done
 				done
 			    done
@@ -109,27 +111,27 @@ then
 		done
 	    done
 	done
-done
     else
-			for seed in "${SEED_NUMBER[@]}"
-			do
-	for arrival in "${VAR_ARRIVAL[@]}"
+	for seed in "${SEED_NUMBER[@]}"
 	do
-	    for topology in "${VAR_TOPOLOGY[@]}"
+	    for arrival in "${VAR_ARRIVAL[@]}"
 	    do
-		for range in "${VAR_LR_RANGE[@]}"
+		for topology in "${VAR_TOPOLOGY[@]}"
 		do
-		    for weight in "${VAR_LR_WEIGHT[@]}"
+		    for range in "${VAR_LR_RANGE[@]}"
 		    do
-			for ratio in $VAR_REDUCTION_RATIO
+			for weight in "${VAR_LR_WEIGHT[@]}"
 			do
-			    for alpha in "${VAR_ALPHA[@]}"
+			    for ratio in $VAR_REDUCTION_RATIO
 			    do
-				for alpha_div in "${VAR_ALPHA_DIV[@]}"
+				for alpha in "${VAR_ALPHA[@]}"
 				do
-				    for check in "${VAR_CHECK_RATE[@]}"
+				    for alpha_div in "${VAR_ALPHA_DIV[@]}"
 				    do
-					./lr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG $seed
+					for check in "${VAR_CHECK_RATE[@]}"
+					do
+					    ./lr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG $seed $MRM
+					done
 				    done
 				done
 			    done
@@ -138,6 +140,5 @@ done
 		done
 	    done
 	done
-done
     fi
 fi

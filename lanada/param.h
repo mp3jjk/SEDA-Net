@@ -16,11 +16,11 @@
 #define LONG_WEIGHT_RATIO 1
 
 /* Weight ratio between rank and parent's degree */
-#define ALPHA	1
-#define ALPHA_DIV	1
+#define ALPHA	0
+#define ALPHA_DIV	8
 
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
-#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
+#define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 0
 
 /* Sink's infinite energy */
 #define SINK_INFINITE_ENERGY	1
@@ -37,7 +37,7 @@ uint8_t tree_level; // The candidates set of the most loaded node
 
 /* To determine valid parent set, only valid parents are considered as a parent set */
 #define PARENT_REDUCTION_MODE	0
-#define VALID_PARENT_RATIO	0
+#define VALID_PARENT_RATIO	1
 
 /* Enabling Data ACK */
 #define DATA_ACK      1
@@ -57,7 +57,7 @@ uint8_t data_btb; // Back to back data Tx
 #define SINGLE_UPDATE_ROUND	0
 
 /* Energy consumption X during routing */
-#define ROUTING_NO_ENERGY 0
+#define ROUTING_NO_ENERGY 
 #define ENERGY_CONV_TIME (900ul * CLOCK_SECOND)
 
 /* LSA-MAC, implemeted on cxmac
@@ -74,9 +74,9 @@ uint8_t data_btb; // Back to back data Tx
 
 #define SERVER_NODE 1
 
-#define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
+#define TRAFFIC_MODEL 30 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
-#define PERIOD 30
+#define PERIOD 0
 #elif TRAFFIC_MODEL == 1
 #define ARRIVAL_RATE 0 // Mean value, 1/lambda
 #endif
