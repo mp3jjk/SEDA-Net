@@ -7,7 +7,7 @@ TRAFFIC=0 # 0 = periodic, 1 = poisson
 VAR_PERIOD=(30 60 90)
 VAR_ARRIVAL=(10)
 VAR_TOPOLOGY=("50random2")
-VAR_LR_RANGE=("4X")
+VAR_LR_RANGE=("2X")
 VAR_LR_WEIGHT=(1)
 VAR_LSA_R=0
 VAR_STROBE_CNT=0
@@ -44,7 +44,11 @@ then
 			    do
 				for check in "${VAR_CHECK_RATE[@]}"
 				do
+<<<<<<< HEAD
 				    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed $MRM
+=======
+				    ./sr_run.sh $topology $TRAFFIC $period 0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed $MRM
+>>>>>>> ea53cca0bc0bb7ffb49b7acf1ed2d77569d0e5fd
 				done
 			    done
 			done
