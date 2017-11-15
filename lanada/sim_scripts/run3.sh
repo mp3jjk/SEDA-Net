@@ -1,10 +1,10 @@
 #!/bin/bash
 
-SR=0 # Decide whether SR simulation runs or not
-LR=1 # For LR case
-ONLY_LONG=1 # SR = 1 with only Long
+SR=1 # Decide whether SR simulation runs or not
+LR=0 # For LR case
+ONLY_LONG=0 # SR = 1 with only Long
 TRAFFIC=0 # 0 = periodic, 1 = poisson
-VAR_PERIOD=(30 60 90)
+VAR_PERIOD=(5 15 30 60)
 VAR_ARRIVAL=(10)
 VAR_TOPOLOGY=("50random2")
 VAR_LR_RANGE=("2X")
@@ -19,7 +19,7 @@ VAR_DATA_ACK=1
 VAR_CHECK_RATE=(4 8 16)
 VAR_LSA_ENHANCED=0
 VAR_ROUTING_NO_ENERGY=0
-DATE="of03"
+DATE="ltmax"
 LSA_MAC=1
 SEED_NUMBER=("1")
 MRM=0
@@ -44,11 +44,7 @@ then
 			    do
 				for check in "${VAR_CHECK_RATE[@]}"
 				do
-<<<<<<< HEAD
 				    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed $MRM
-=======
-				    ./sr_run.sh $topology $TRAFFIC $period 0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed $MRM
->>>>>>> ea53cca0bc0bb7ffb49b7acf1ed2d77569d0e5fd
 				done
 			    done
 			done

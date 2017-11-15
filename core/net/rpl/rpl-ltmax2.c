@@ -233,7 +233,8 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
       p->flags |= RPL_PARENT_FLAG_LINK_METRIC_VALID;
     }
 
-    PRINTF("RPL_LTMAX_OF: ETT changed from %u to %u (packet ETT = %u)\n",
+    PRINTF("RPL_LTMAX_OF: ip:%d %c ETT changed from %u to %u (packet ETT = %u)\n",
+    	rpl_get_nbr(p)->ipaddr.u8[15],rpl_get_nbr(p)->ipaddr.u8[8]>128? 'L':'S',
         (unsigned)(recorded_ett / RPL_DAG_MC_ETX_DIVISOR),
         (unsigned)(new_ett  / RPL_DAG_MC_ETX_DIVISOR),
         (unsigned)(packet_ett / RPL_DAG_MC_ETX_DIVISOR));
@@ -397,10 +398,10 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 //  if(linkaddr_node_addr.u8[15] == 12)
   if(0)
   {
-	  printf("Cmp %d %c p1: %d load: %d weight: %d rank: %d %c\n", nbr1->ipaddr.u8[15], nbr1->ipaddr.u8[8]==0x82 ? 'L' : 'S',
-			  p1_metric,p1->est_load,p1->parent_sum_weight, p1->rank,p1 == dag->preferred_parent ? 'P':'X');
-	  printf("Cmp %d %c p2: %d load: %d weight: %d rank: %d %c\n", nbr2->ipaddr.u8[15], nbr2->ipaddr.u8[8]==0x82 ? 'L' : 'S',
-			  p2_metric,p2->est_load,p2->parent_sum_weight, p2->rank,p2 == dag->preferred_parent ? 'P':'X');
+	  printf("Cmp %d %c p1: %d load: %d sum_weight: %d weight: %d rank: %d %c\n", nbr1->ipaddr.u8[15], nbr1->ipaddr.u8[8]==0x82 ? 'L' : 'S',
+			  p1_metric,p1->est_load,p1->parent_sum_weight, p1->parent_weight, p1->rank,p1 == dag->preferred_parent ? 'P':'X');
+	  printf("Cmp %d %c p2: %d load: %d sum_weight: %d weight: %d rank: %d %c\n", nbr2->ipaddr.u8[15], nbr2->ipaddr.u8[8]==0x82 ? 'L' : 'S',
+			  p2_metric,p2->est_load,p2->parent_sum_weight, p2->parent_weight, p2->rank,p2 == dag->preferred_parent ? 'P':'X');
   }
 #if RPL_LIFETIME_MAX_MODE2
   if(nbr1->ipaddr.u8[15] == 1 || nbr2->ipaddr.u8[15] == 1) {
@@ -439,7 +440,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  return p1_metric <= p2_metric ? p1 : p2;
 		  }
 		  else if(tree_level == 2) { // Locally load balancing
-			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+/*			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
 				  if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
 						  p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
 					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
@@ -448,13 +449,18 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 							  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
 					  return dag->preferred_parent;
 				  }
-			  }
+			  }*/
 			  return p1_metric <= p2_metric ? p1 : p2;
 		  }
 		  else { // Local and Global load balancing
 			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-				  if((p1_metric <= p2_metric + id_count[latest_id] + 1 &&
-						  p1_metric >= p2_metric - id_count[latest_id] + 1) || (p1->MLS_id == p2->MLS_id)) {
+				  if((p1_metric <= p2_metric + (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR &&
+#if RPL_ETX_WEIGHT
+						  p1_metric >= p2_metric - (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR))
+#else
+						  p1_metric >= p2_metric - (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR) || (p1->MLS_id == p2->MLS_id))
+#endif
+				  {
 					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
 							  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
 							  p1_metric,
