@@ -38,18 +38,18 @@ MRM=${21}
 
 sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
 #DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_mrm$MRM\_seed$SEED_NUMBER
-DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
-    mkdir $DIR
-    cd $DIR
-#    cd $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
+    DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
 else
-    mkdir $DIR
-    cd $DIR
+    DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
+fi
+
+#    cd $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
+mkdir $DIR
+cd $DIR
 #    mkdir $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
 #    cd $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
-fi
 
 if [ $ONLY_LONG -eq 0 ]
 then

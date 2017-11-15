@@ -18,7 +18,7 @@ topology=$1
 TRAFFIC_MODEL=$2
 PERIOD=$3
 ARRIVAL_RATE=$4
-ALPH=$5
+ALPHA=$5
 STROBE_CNT=$6
 LONG_WEIGHT=1
 LSA_R=0
@@ -44,19 +44,19 @@ MRM=${15}
 sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
 
 #DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_mrm$MRM\_seed$SEED_NUMBER
-DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
-    mkdir $DIR
-    cd $DIR
+    DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
+else
+    DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
+fi
+
+mkdir $DIR
+cd $DIR
 #    mkdir $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
 #    cd $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
-else
-    mkdir $DIR
-    cd $DIR
 #    mkdir $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
 #    cd $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
-fi
 
 ../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK 1 $ALPHA_DIV $CHECK 0 $ROUTING_NO_ENERGY
 

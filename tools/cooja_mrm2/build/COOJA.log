@@ -3766,3 +3766,29 @@ while (true) {&#xD;
 [16:29:38 - main] [ScriptRunner.java:386] [INFO] - Test script activated
 [16:29:38 - Thread-6] [Simulation.java:251] [INFO] - Simulation main loop started, system time: 1510558178496
 [16:29:38 - main] [PowerTracker.java:97] [WARN] - PowerTracker Started
+[16:43:06 - Thread-5] [LogScriptEngine.java:312] [FATAL] - Test script error, terminating Cooja.
+[16:43:06 - Thread-5] [LogScriptEngine.java:313] [FATAL] - Script error:
+java.lang.reflect.UndeclaredThrowableException
+	at com.sun.proxy.$Proxy5.run(Unknown Source)
+	at org.contikios.cooja.plugins.LogScriptEngine$4.run(LogScriptEngine.java:300)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: java.security.PrivilegedActionException: javax.script.ScriptException: sun.org.mozilla.javascript.JavaScriptException: Error:  (<Unknown source>#24) in <Unknown source> at line number 24
+	at java.security.AccessController.doPrivileged(Native Method)
+	at com.sun.script.util.InterfaceImplementor$InterfaceImplementorInvocationHandler.invoke(InterfaceImplementor.java:67)
+	... 3 more
+Caused by: javax.script.ScriptException: sun.org.mozilla.javascript.JavaScriptException: Error:  (<Unknown source>#24) in <Unknown source> at line number 24
+	at com.sun.script.javascript.RhinoScriptEngine.invoke(RhinoScriptEngine.java:300)
+	at com.sun.script.javascript.RhinoScriptEngine.invokeFunction(RhinoScriptEngine.java:258)
+	at com.sun.script.util.InterfaceImplementor$InterfaceImplementorInvocationHandler$1.run(InterfaceImplementor.java:70)
+	... 5 more
+Caused by: sun.org.mozilla.javascript.JavaScriptException: Error:  (<Unknown source>#24)
+	at sun.org.mozilla.javascript.Interpreter.interpretLoop(Interpreter.java:1018)
+	at sun.org.mozilla.javascript.Interpreter.interpret(Interpreter.java:815)
+	at sun.org.mozilla.javascript.InterpretedFunction.call(InterpretedFunction.java:109)
+	at sun.org.mozilla.javascript.ContextFactory.doTopCall(ContextFactory.java:394)
+	at com.sun.script.javascript.RhinoScriptEngine$1.superDoTopCall(RhinoScriptEngine.java:116)
+	at com.sun.script.javascript.RhinoScriptEngine$1.doTopCall(RhinoScriptEngine.java:109)
+	at sun.org.mozilla.javascript.ScriptRuntime.doTopCall(ScriptRuntime.java:3091)
+	at sun.org.mozilla.javascript.InterpretedFunction.call(InterpretedFunction.java:107)
+	at com.sun.script.javascript.RhinoScriptEngine.invoke(RhinoScriptEngine.java:294)
+	... 7 more

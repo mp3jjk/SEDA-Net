@@ -38,7 +38,21 @@ obj_zoul/contikimac.o: ..//core/net/mac/contikimac/contikimac.c \
  ..//core/./net/rime/rmh.h ..//core/./net/rime/route.h \
  ..//core/./net/rime/rucb.h ..//core/./net/rime/timesynch.h \
  ..//core/./net/rime/trickle.h ..//core/./sys/compower.h \
- ../lanada/param.h
+ ../platform/zoul/dual_radio.h ../platform/zoul/contiki-conf.h \
+ ..//dev/cc1200/cc1200.h ../cpu/cc2538/dev/cc2538-rf.h \
+ ..//cpu/cc2538/./dev/rfcore.h ..//cpu/cc2538/./dev/rfcore-ffsm.h \
+ ..//cpu/cc2538/./dev/rfcore-xreg.h ..//cpu/cc2538/./dev/rfcore-sfr.h \
+ ..//cpu/cc2538/./dev/ana-regs.h ..//core/./net/rpl/rpl-private.h \
+ ..//core/./net/rpl/rpl.h ..//core/./net/rpl/rpl-conf.h \
+ ..//core/./net/ipv6/uip-ds6.h ..//core/./sys/stimer.h \
+ ..//core/./net/ipv6/uip-nd6.h ..//core/./net/ipv6/uip-ds6-route.h \
+ ..//core/./net/nbr-table.h ..//core/./net/ipv6/uip-ds6-nbr.h \
+ ../lanada/param.h ..//core/./net/ipv6/multicast/uip-mcast6.h \
+ ..//core/./net/ipv6/multicast/uip-mcast6-engines.h \
+ ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
+ ..//core/./net/ipv6/multicast/smrf.h \
+ ..//core/./net/ipv6/multicast/roll-tm.h \
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h
 ..//core/net/mac/contikimac/contikimac.c :
  ..//platform/zoul/./contiki-conf.h ..//core/./dev/radio.h project-conf.h :
  ..//platform/zoul/firefly/board.h ..//cpu/cc2538/./dev/gpio.h :
@@ -79,4 +93,18 @@ obj_zoul/contikimac.o: ..//core/net/mac/contikimac/contikimac.c \
  ..//core/./net/rime/rmh.h ..//core/./net/rime/route.h :
  ..//core/./net/rime/rucb.h ..//core/./net/rime/timesynch.h :
  ..//core/./net/rime/trickle.h ..//core/./sys/compower.h :
- ../lanada/param.h :
+ ../platform/zoul/dual_radio.h ../platform/zoul/contiki-conf.h :
+ ..//dev/cc1200/cc1200.h ../cpu/cc2538/dev/cc2538-rf.h :
+ ..//cpu/cc2538/./dev/rfcore.h ..//cpu/cc2538/./dev/rfcore-ffsm.h :
+ ..//cpu/cc2538/./dev/rfcore-xreg.h ..//cpu/cc2538/./dev/rfcore-sfr.h :
+ ..//cpu/cc2538/./dev/ana-regs.h ..//core/./net/rpl/rpl-private.h :
+ ..//core/./net/rpl/rpl.h ..//core/./net/rpl/rpl-conf.h :
+ ..//core/./net/ipv6/uip-ds6.h ..//core/./sys/stimer.h :
+ ..//core/./net/ipv6/uip-nd6.h ..//core/./net/ipv6/uip-ds6-route.h :
+ ..//core/./net/nbr-table.h ..//core/./net/ipv6/uip-ds6-nbr.h :
+ ../lanada/param.h ..//core/./net/ipv6/multicast/uip-mcast6.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6-engines.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6-route.h :
+ ..//core/./net/ipv6/multicast/smrf.h :
+ ..//core/./net/ipv6/multicast/roll-tm.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :

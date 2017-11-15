@@ -1,12 +1,14 @@
 #!/bin/bash
 
+CONTIKI=/media/user/Harddisk/Double-MAC/
+
 if [ $1 == "h" ]
 then
     echo "USAGE: weight periodic0/poisson1 period rate ENHANCED CHECK_RATE OF0/LTMAX"
     exit 1
 fi
 
-# sed -i 's/\#define RESIDUAL_ENERGY_MAX 2000000/\#define RESIDUAL_ENERGY_MAX 10000000000/g' $CONTIKI/core/sys/residual.h
+sed -i 's/\#define RESIDUAL_ENERGY_MAX 2000000/\#define RESIDUAL_ENERGY_MAX 1000000000/g' $CONTIKI/core/sys/residual.h
 
 echo "#define RPL_ENERGY_MODE 0
 #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node

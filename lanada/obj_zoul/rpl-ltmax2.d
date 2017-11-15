@@ -32,7 +32,13 @@ obj_zoul/rpl-ltmax2.o: ..//core/net/rpl/rpl-ltmax2.c \
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h \
  ..//core/net/rpl/rpl_debug.h ..//core/./net/ip/uip-debug.h \
  ..//core/./sys/log_message.h ..//core/./cfs/cfs.h \
- ..//core/./sys/residual.h ..//core/./sys/energest.h
+ ..//core/./sys/residual.h ..//core/./sys/energest.h \
+ ../platform/zoul/dual_radio.h ../platform/zoul/contiki-conf.h \
+ ..//dev/cc1200/cc1200.h ..//core/./net/packetbuf.h \
+ ..//core/./net/mac/tsch/tsch-conf.h ..//core/./net/rime/rimestats.h \
+ ../cpu/cc2538/dev/cc2538-rf.h ..//cpu/cc2538/./dev/rfcore.h \
+ ..//cpu/cc2538/./dev/rfcore-ffsm.h ..//cpu/cc2538/./dev/rfcore-xreg.h \
+ ..//cpu/cc2538/./dev/rfcore-sfr.h ..//cpu/cc2538/./dev/ana-regs.h
 ..//core/net/rpl/rpl-ltmax2.c :
  ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h :
  ..//core/./net/rpl/rpl-conf.h ..//platform/zoul/./contiki-conf.h :
@@ -68,3 +74,9 @@ obj_zoul/rpl-ltmax2.o: ..//core/net/rpl/rpl-ltmax2.c \
  ..//core/net/rpl/rpl_debug.h ..//core/./net/ip/uip-debug.h :
  ..//core/./sys/log_message.h ..//core/./cfs/cfs.h :
  ..//core/./sys/residual.h ..//core/./sys/energest.h :
+ ../platform/zoul/dual_radio.h ../platform/zoul/contiki-conf.h :
+ ..//dev/cc1200/cc1200.h ..//core/./net/packetbuf.h :
+ ..//core/./net/mac/tsch/tsch-conf.h ..//core/./net/rime/rimestats.h :
+ ../cpu/cc2538/dev/cc2538-rf.h ..//cpu/cc2538/./dev/rfcore.h :
+ ..//cpu/cc2538/./dev/rfcore-ffsm.h ..//cpu/cc2538/./dev/rfcore-xreg.h :
+ ..//cpu/cc2538/./dev/rfcore-sfr.h ..//cpu/cc2538/./dev/ana-regs.h :
