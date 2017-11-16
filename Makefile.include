@@ -75,7 +75,7 @@ endif
 ifeq ($(CONTIKI_WITH_RIME),1)
   HAS_STACK = 1
   CFLAGS += -DNETSTACK_CONF_WITH_RIME=1 
-  MODULES += core/net/rime core/net/mac/rimac
+  MODULES += core/net/rime
 endif
 
 # Make IPv6 the default stack
