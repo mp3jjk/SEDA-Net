@@ -380,10 +380,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   nbr1 = rpl_get_nbr(p1);
   nbr2 = rpl_get_nbr(p2);
 #endif
-#if DUAL_RADIO
-//  uint8_t is_longrange1;
-//  uint8_t is_longrange2;
-#endif
+
 
   dag = p1->dag; /* Both parents are in the same DAG. */
 
@@ -404,6 +401,41 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  p2_metric,p2->est_load,p2->parent_sum_weight, p2->parent_weight, p2->rank,p2 == dag->preferred_parent ? 'P':'X');
   }
 #if RPL_LIFETIME_MAX_MODE2
+#if RPL_ETX_WEIGHT
+#if DUAL_RADIO
+  uint8_t is_longrange1 = long_ip_from_lladdr_map(&(nbr1->ipaddr)) == 1 ? 1 : 0;
+  uint8_t is_longrange2 = long_ip_from_lladdr_map(&(nbr2->ipaddr)) == 1 ? 1 : 0;
+#endif /* DUAL_RADIO */
+//  if(nbr1->ipaddr.u8[15] == 1 || nbr2->ipaddr.u8[15] == 1) {
+  	if(nbr1->ipaddr.u8[15] == 1 && nbr2->ipaddr.u8[15] == 1) {
+  		return p1_metric <= p2_metric ? p1 : p2;
+  	}
+  	else if(nbr1->ipaddr.u8[15] == 1) {
+#if DUAL_RADIO
+  		if(p1->parent_weight < RPL_DAG_MC_ETX_DIVISOR * 5 * (1 + is_longrange1*(LONG_WEIGHT_RATIO-1)))
+#else
+  		if(p1->parent_weight < RPL_DAG_MC_ETX_DIVISOR * 5)
+
+#endif /* DUAL_RADIO */
+  		{
+  			return p1;
+  		}
+  		else
+  			return p2;
+  	}
+  	else if(nbr2->ipaddr.u8[15] == 1) {
+#if DUAL_RADIO
+  		if(p2->parent_weight < RPL_DAG_MC_ETX_DIVISOR * 5 * (1 + is_longrange2*(LONG_WEIGHT_RATIO-1)))
+#else
+  		if(p2->parent_weight < RPL_DAG_MC_ETX_DIVISOR * 5)
+#endif /* DUAL_RADIO */
+  		{
+  			return p2;
+  		}
+  		else
+  			return p1;
+  	}
+#else /* RPL_ETX_WEIGHT */
   if(nbr1->ipaddr.u8[15] == 1 || nbr2->ipaddr.u8[15] == 1) {
   	if(nbr1->ipaddr.u8[15] == 1 && nbr2->ipaddr.u8[15] == 1) {
   		return p1_metric <= p2_metric ? p1 : p2;
@@ -412,6 +444,8 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   		return nbr1->ipaddr.u8[15] == 1 ? p1 : p2;
   	}
   }
+#endif /* RPL_ETX_WEIGHT */
+
   if(init_phase) {
 	  if(p1_metric == p2_metric) {
 		  if(p1 == dag->preferred_parent) {
@@ -539,7 +573,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	    }
     	return p1_metric <= p2_metric ? p1 : p2;
   }
-#endif
+#endif /* RPL_LIFETIME_MAX_MODE2 */
 }
 
 #if RPL_DAG_MC == RPL_DAG_MC_NONE
