@@ -474,7 +474,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  return p1_metric <= p2_metric ? p1 : p2;
 		  }
 		  else if(tree_level == 2) { // Locally load balancing
-/*			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
 				  if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
 						  p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
 					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
@@ -483,7 +483,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 							  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
 					  return dag->preferred_parent;
 				  }
-			  }*/
+			  }
 			  return p1_metric <= p2_metric ? p1 : p2;
 		  }
 		  else { // Local and Global load balancing
