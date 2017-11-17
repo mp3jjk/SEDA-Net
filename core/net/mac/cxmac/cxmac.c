@@ -1371,6 +1371,7 @@ send_packet(void)
 	got_strobe_ack=1;
 #if ACK_WEIGHT_INCLUDED
 	uint8_t ack_weight = 0;
+	uint8_t ack_load = 0;
 #endif
   /* restore the packet to send */
   queuebuf_to_packetbuf(packet);
@@ -1438,6 +1439,7 @@ send_packet(void)
 									got_data_ack = 1;
 #if ACK_WEIGHT_INCLUDED
 									ack_weight = temp[2];
+									ack_load = temp[3];
 //									printf("check 2 %d\n",ack_weight);
 #endif
 									//PRINTDEBUG("cxmac: got data ack\n");
@@ -1479,6 +1481,36 @@ send_packet(void)
   rpl_parent_t *p=rpl_get_parent(&recv_addr);
   if(p != NULL) {
 	  p->parent_sum_weight = ack_weight;
+	  p->est_load = ack_load;
+	  rpl_parent_t *p_temp;
+	  uip_ipaddr_t *ip_temp;
+	  ip_temp = &(rpl_get_nbr(p)->ipaddr);
+
+	  if(ip_temp->u8[8] == 0x82)
+	  {
+		  ip_temp->u8[8] = 0x2;
+	  }
+	  else
+	  {
+		  ip_temp->u8[8] = 0x82;
+	  }
+	  p_temp = rpl_get_parent(ip_temp);
+	  if(p_temp != NULL)
+	  {
+		  p_temp->parent_sum_weight = ack_weight;
+#if RPL_LIFETIME_MAX_MODE2
+		  p_temp->est_load = ack_load;
+#endif
+	  }
+	  /* Recover addr */
+	  if(ip_temp->u8[8] == 0x82)
+	  {
+		  ip_temp->u8[8] = 0x2;
+	  }
+	  else
+	  {
+		  ip_temp->u8[8] = 0x82;
+	  }
 
 //	  printf("MLS! %d\n",rpl_get_parent(&recv_addr)->MLS_id);
   }
@@ -1745,7 +1777,7 @@ input_packet(void)
 	    	{
 */
 //	    		printf("short!\n");
-	    		id_count[recv_id]++;
+//	    		id_count[recv_id]++;
 //	    	}
 #else
 	    	id_count[recv_id]++;
@@ -1845,11 +1877,20 @@ input_packet(void)
 		ack[len] = DISPATCH;
 		ack[len + 1] = TYPE_DATA_ACK;
 #if ACK_WEIGHT_INCLUDED && RPL_LIFETIME_MAX_MODE2
-		ack[len + 2] = my_weight;
+		if(linkaddr_node_addr.u8[15] == SERVER_NODE) {
+			ack[len + 2] = 0;
+		}
+		else {
+			ack[len + 2] = my_weight;
+		}
+
 		if(tree_level == 2) {
 			ack[len + 3] = id_count[latest_id];
 		}
-		else {
+	    else if(tree_level == 1 || tree_level == -1) { // do nothing (send 0)
+	    	ack[len + 3] = 0;
+	    }
+	    else {
 			if(rpl_get_any_dag()->preferred_parent != NULL) {
 				ack[len + 3] = rpl_get_any_dag()->preferred_parent->est_load;
 			}

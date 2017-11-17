@@ -128,34 +128,22 @@ calculate_path_metric(rpl_parent_t *p)
 		  ret_metric = p->rank + p->parent_weight * RPL_DAG_MC_ETX_DIVISOR;//(uint16_t)nbr->link_metric;
 	  }
 	  else {
-#if SINK_INFINITE_ENERGY
-		  if(tree_level == 2)
+#if RPL_ETX_WEIGHT
+		  ret_metric = p->rank + (p->parent_weight + p->parent_sum_weight + p->est_load) * RPL_DAG_MC_ETX_DIVISOR;
 #else
-		  if(tree_level == 1)
-#endif
+		  if(tree_level == 2)
 		  {
 			  ret_metric = (p->parent_sum_weight + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;
 		  }
-#if SINK_INFINITE_ENERGY
 		  else if(tree_level == 1) {
 			  ret_metric = p->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
 		  }
-#endif
 		  else {
 			  ret_metric = (p->parent_sum_weight * ALPHA / ALPHA_DIV + p->est_load + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;//(uint16_t)nbr->link_metric;
 		  }
-
-//	  PRINTF("rank, base_rank %d %d\n",p->rank,rpl_get_any_dag()->base_rank);
-//	  rank_rate = p->rank - rpl_get_any_dag()->base_rank < 0 ? 0 : p->rank - rpl_get_any_dag()->base_rank;
-//	  PRINTF("weight: %d rank_rate: %d\n",p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR, rank_rate);
-//	  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR + ALPHA * rank_rate;
-
-/*	  ret_metric = p->rank + p->est_load * RPL_DAG_MC_ETX_DIVISOR + p->parent_weight * RPL_DAG_MC_ETX_DIVISOR
-			  + (p->parent_sum_weight + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR * ALPHA / ALPHA_DIV;*/
-	  }
-#else
-	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
 #endif
+#endif
+	  }
 //	  printf("ip:%d %c weight:%d rank:%d ret_metric:%d %d\n",nbr->ipaddr.u8[15], nbr->ipaddr.u8[8]==0x82 ? 'L' : 'S',
 //			  p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR, p->rank, ret_metric, rpl_get_any_dag()->preferred_parent == p);
 	  return ret_metric;
@@ -423,7 +411,167 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   uint8_t is_longrange1 = long_ip_from_lladdr_map(&(nbr1->ipaddr)) == 1 ? 1 : 0;
   uint8_t is_longrange2 = long_ip_from_lladdr_map(&(nbr2->ipaddr)) == 1 ? 1 : 0;
 #endif /* DUAL_RADIO */
-  	if(nbr1->ipaddr.u8[15] == 1 && nbr2->ipaddr.u8[15] == 1) {
+
+  /* Change parent p1 -> p2 */
+  /* Only if changed p2's metric is still smaller than changed p1's metric*/
+  if(p1 == dag->preferred_parent) {
+	  switch(p2->rank) {
+	  case 256:
+		  if(p1->rank == 256) {
+			  return p1_metric <= p2_metric ? p1 : p2;
+		  }
+		  else if(p1->rank == 512) {
+			  if(p1_metric >= p2_metric + (1 + is_longrange1*(LONG_WEIGHT_RATIO-1)) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p2;
+			  }
+			  else {
+				  return p1;
+			  }
+		  }
+		  else {
+			  if(p1_metric >= p2_metric + (1 + is_longrange1*(LONG_WEIGHT_RATIO-1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p2;
+			  }
+			  else {
+				  return p1;
+			  }
+		  }
+		  break;
+	  case 512:
+		  if(p1->rank == 256) {
+			  if(p1_metric >= p2_metric + (1 + is_longrange1*(LONG_WEIGHT_RATIO-1)) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p2;
+			  }
+			  else {
+				  return p1;
+			  }
+		  }
+		  else if(p1->rank == 512) {
+			  if(p1_metric >= p2_metric + 2 * (1 + is_longrange1*(LONG_WEIGHT_RATIO-1)) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p2;
+			  }
+			  else {
+				  return p1;
+			  }
+		  }
+		  else {
+			  if(p1_metric >= p2_metric + (2 * (1 + is_longrange1*(LONG_WEIGHT_RATIO-1)) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p2;
+			  }
+			  else {
+				  return p1;
+			  }
+		  }
+		  break;
+	  default:
+		  if(p1->rank == 256) {
+			  if(p1_metric >= p2_metric + (1 + is_longrange1*(LONG_WEIGHT_RATIO-1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p2;
+			  }
+			  else {
+				  return p1;
+			  }
+		  }
+		  else if(p1->rank == 512) {
+			  if(p1_metric >= p2_metric + (2 * (1 + is_longrange1*(LONG_WEIGHT_RATIO-1)) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p2;
+			  }
+			  else {
+				  return p1;
+			  }
+		  }
+		  else {
+			  if(p1_metric >= p2_metric + 2 * (1 + is_longrange1*(LONG_WEIGHT_RATIO-1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p2;
+			  }
+			  else {
+				  return p1;
+			  }
+		  }
+		  break;
+	  }
+  }
+  else if(p2 == dag->preferred_parent) {
+	  switch(p1->rank) {
+	  case 256:
+		  if(p2->rank == 256) {
+			  return p2_metric <= p1_metric ? p2 : p1;
+		  }
+		  else if(p2->rank == 512) {
+			  if(p2_metric >= p1_metric + (1 + is_longrange2*(LONG_WEIGHT_RATIO-1)) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p1;
+			  }
+			  else {
+				  return p2;
+			  }
+		  }
+		  else {
+			  if(p2_metric >= p1_metric + (1 + is_longrange2*(LONG_WEIGHT_RATIO-1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p1;
+			  }
+			  else {
+				  return p2;
+			  }
+		  }
+		  break;
+	  case 512:
+		  if(p2->rank == 256) {
+			  if(p2_metric >= p1_metric + (1 + is_longrange2*(LONG_WEIGHT_RATIO-1)) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p1;
+			  }
+			  else {
+				  return p2;
+			  }
+		  }
+		  else if(p2->rank == 512) {
+			  if(p2_metric >= p1_metric + 2 * (1 + is_longrange2*(LONG_WEIGHT_RATIO-1)) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p1;
+			  }
+			  else {
+				  return p2;
+			  }
+		  }
+		  else {
+			  if(p2_metric >= p1_metric + (2 * (1 + is_longrange2*(LONG_WEIGHT_RATIO-1)) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p1;
+			  }
+			  else {
+				  return p2;
+			  }
+		  }
+		  break;
+	  default:
+		  if(p2->rank == 256) {
+			  if(p2_metric >= p1_metric + (1 + is_longrange2*(LONG_WEIGHT_RATIO-1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p1;
+			  }
+			  else {
+				  return p2;
+			  }
+		  }
+		  else if(p2->rank == 512) {
+			  if(p2_metric >= p1_metric + (2 * (1 + is_longrange2*(LONG_WEIGHT_RATIO-1)) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p1;
+			  }
+			  else {
+				  return p2;
+			  }
+		  }
+		  else {
+			  if(p2_metric >= p1_metric + 2 * (1 + is_longrange2*(LONG_WEIGHT_RATIO-1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+				  return p1;
+			  }
+			  else {
+				  return p2;
+			  }
+		  }
+		  break;
+	  }
+  }
+  else {
+	  return p1_metric <= p2_metric ? p1 : p2;
+  }
+/*  if(nbr1->ipaddr.u8[15] == 1 && nbr2->ipaddr.u8[15] == 1) {
   		return p1_metric <= p2_metric ? p1 : p2;
   	}
   	else if(nbr1->ipaddr.u8[15] == 1) {
@@ -432,7 +580,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 #else
   		if(p1->parent_weight < RPL_DAG_MC_ETX_DIVISOR * 5)
 
-#endif /* DUAL_RADIO */
+#endif  DUAL_RADIO
   		{
   			return p1;
   		}
@@ -444,7 +592,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   		if(p2->parent_weight < RPL_DAG_MC_ETX_DIVISOR * 5 * (1 + is_longrange2*(LONG_WEIGHT_RATIO-1)))
 #else
   		if(p2->parent_weight < RPL_DAG_MC_ETX_DIVISOR * 5)
-#endif /* DUAL_RADIO */
+#endif  DUAL_RADIO
   		{
   			return p2;
   		}
@@ -500,7 +648,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   				return dag->preferred_parent;
   			}
   		}
-  		return p1_metric <= p2_metric ? p1 : p2;
+  		return p1_metric <= p2_metric ? p1 : p2;*/
 
 
 #else /* RPL_ETX_WEIGHT */
@@ -551,12 +699,13 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   			  return p1_metric <= p2_metric ? p1 : p2;
   		  }
   	  }
+  }
 
 
 
 #endif /* RPL_ETX_WEIGHT */
 
-	  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+/*	  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
 		  if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
 				  p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
 			  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
@@ -565,9 +714,9 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 					  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
 			  return dag->preferred_parent;
 		  }
-	  }
-	  return p1_metric <= p2_metric ? p1 : p2;
-  }
+	  }*/
+  return p1_metric <= p2_metric ? p1 : p2;
+//  }
 #endif /* RPL_LIFETIME_MAX_MODE2 */
 }
 

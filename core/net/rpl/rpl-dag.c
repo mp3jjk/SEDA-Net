@@ -1166,7 +1166,7 @@ best_parent(rpl_dag_t *dag)
   }
 
 
-#if !ZOUL_MOTE && 0
+#if !ZOUL_MOTE
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
   if(best != prev && best != NULL && prev != NULL)
   {
@@ -1914,7 +1914,7 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
   p->MLS_id = dio->MLS_id;
   p->est_load = dio->est_load;
 #endif
-//  printf("rpl-dag ip: %d, p_weight: %d %c\n",from->u8[15],p->parent_weight,from->u8[8]==0x82?'L':'S');
+//  printf("rpl-dag ip: %d, sum_weight: %d\n",from->u8[15],p->parent_sum_weight);
   rpl_parent_t *p_temp;
   uip_ipaddr_t *ip_temp;
   p->parent_sum_weight = dio->dio_weight;
@@ -1937,6 +1937,7 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
 	  p_temp->MLS_id = p->MLS_id;
 	  p_temp->est_load = p->est_load;
 #endif
+//	  printf("rpl-dag ip2: %d, sum_weight: %d\n",rpl_get_nbr(p_temp)->ipaddr.u8[15],p_temp->parent_sum_weight);
   }
   /* Recover addr */
   if(ip_temp->u8[8] == 0x82)

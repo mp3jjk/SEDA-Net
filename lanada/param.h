@@ -126,7 +126,7 @@ uint8_t alpha;
 #ifdef ZOUL_MOTE
 #define RPL_ETX_WEIGHT 	1
 #else
-#define RPL_ETX_WEIGHT 	0
+#define RPL_ETX_WEIGHT 	1
 #endif
 uint8_t my_weight;
 uint8_t my_sink_reachability;
