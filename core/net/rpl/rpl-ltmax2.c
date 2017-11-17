@@ -401,12 +401,28 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  p2_metric,p2->est_load,p2->parent_sum_weight, p2->parent_weight, p2->rank,p2 == dag->preferred_parent ? 'P':'X');
   }
 #if RPL_LIFETIME_MAX_MODE2
+  if(init_phase) {
+	  if(p1_metric == p2_metric && p1 != NULL && p2 != NULL) {
+		  if(p1 == dag->preferred_parent) {
+			  return p2;
+		  }
+		  else if(p2 == dag->preferred_parent) {
+			  return p1;
+		  }
+		  else {
+			  return p1; // or p2? randomly
+		  }
+	  }
+	  else {
+		  return p1_metric <= p2_metric ? p1 : p2;
+	  }
+  }
+
 #if RPL_ETX_WEIGHT
 #if DUAL_RADIO
   uint8_t is_longrange1 = long_ip_from_lladdr_map(&(nbr1->ipaddr)) == 1 ? 1 : 0;
   uint8_t is_longrange2 = long_ip_from_lladdr_map(&(nbr2->ipaddr)) == 1 ? 1 : 0;
 #endif /* DUAL_RADIO */
-//  if(nbr1->ipaddr.u8[15] == 1 || nbr2->ipaddr.u8[15] == 1) {
   	if(nbr1->ipaddr.u8[15] == 1 && nbr2->ipaddr.u8[15] == 1) {
   		return p1_metric <= p2_metric ? p1 : p2;
   	}
@@ -435,6 +451,58 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   		else
   			return p1;
   	}
+  	else {
+  		if(p1->rank < p2->rank) {
+  			return p1;
+  		}
+  		else if(p1->rank > p2->rank) {
+  			return p2;
+  		}
+  		else { // p1 & p2 have the same rank
+  			if(tree_level == 1) {
+  				return p1_metric <= p2_metric ? p1 : p2;
+  			}
+  			else if(tree_level == 2) { // Locally load balancing
+  				if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+  					if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
+  							p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
+  						PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+  								p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+								p1_metric,
+								p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+  						return dag->preferred_parent;
+  					}
+  				}
+  				return p1_metric <= p2_metric ? p1 : p2;
+  			}
+  			else { // Local and Global load balancing
+  				if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+  					if((p1_metric <= p2_metric + (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR &&
+  							p1_metric >= p2_metric - (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR))
+  					{
+  						PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+  								p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+								p1_metric,
+								p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+  						return dag->preferred_parent;
+  					}
+  				}
+  				return p1_metric <= p2_metric ? p1 : p2;
+  			}
+  		}
+  		if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+  			if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
+  					p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
+  				PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+  						p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+						p1_metric,
+						p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+  				return dag->preferred_parent;
+  			}
+  		}
+  		return p1_metric <= p2_metric ? p1 : p2;
+
+
 #else /* RPL_ETX_WEIGHT */
   if(nbr1->ipaddr.u8[15] == 1 || nbr2->ipaddr.u8[15] == 1) {
   	if(nbr1->ipaddr.u8[15] == 1 && nbr2->ipaddr.u8[15] == 1) {
@@ -444,134 +512,61 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   		return nbr1->ipaddr.u8[15] == 1 ? p1 : p2;
   	}
   }
+  else {
+  	  if(p1->rank < p2->rank) {
+  		  return p1;
+  	  }
+  	  else if(p1->rank > p2->rank) {
+  		  return p2;
+  	  }
+  	  else { // p1 & p2 have the same rank
+  		  if(tree_level == 1) {
+  			  return p1_metric <= p2_metric ? p1 : p2;
+  		  }
+  		  else if(tree_level == 2) { // Locally load balancing
+  			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+  				  if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
+  						  p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
+  					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+  							  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+  							  p1_metric,
+  							  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+  					  return dag->preferred_parent;
+  				  }
+  			  }
+  			  return p1_metric <= p2_metric ? p1 : p2;
+  		  }
+  		  else { // Local and Global load balancing
+  			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+  				  if((p1_metric <= p2_metric + (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR &&
+  						  p1_metric >= p2_metric - (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR))
+  				  {
+  					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+  							  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+  							  p1_metric,
+  							  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+  					  return dag->preferred_parent;
+  				  }
+  			  }
+  			  return p1_metric <= p2_metric ? p1 : p2;
+  		  }
+  	  }
+
+
+
 #endif /* RPL_ETX_WEIGHT */
 
-  if(init_phase) {
-	  if(p1_metric == p2_metric) {
-		  if(p1 == dag->preferred_parent) {
-			  return p2;
-		  }
-		  else if(p2 == dag->preferred_parent) {
-			  return p1;
-		  }
-		  else {
-			  return p1; // or p2? randomly
+	  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+		  if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
+				  p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
+			  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+					  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+					  p1_metric,
+					  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+			  return dag->preferred_parent;
 		  }
 	  }
-	  else {
-		  return p1_metric <= p2_metric ? p1 : p2;
-	  }
-  }
-  else {
-	  if(p1->rank < p2->rank) {
-		  return p1;
-	  }
-	  else if(p1->rank > p2->rank) {
-		  return p2;
-	  }
-	  else { // p1 & p2 have the same rank
-		  if(tree_level == 1) {
-			  return p1_metric <= p2_metric ? p1 : p2;
-		  }
-		  else if(tree_level == 2) { // Locally load balancing
-			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-				  if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
-						  p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
-					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
-							  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
-							  p1_metric,
-							  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
-					  return dag->preferred_parent;
-				  }
-			  }
-			  return p1_metric <= p2_metric ? p1 : p2;
-		  }
-		  else { // Local and Global load balancing
-			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-				  if((p1_metric <= p2_metric + (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR &&
-#if RPL_ETX_WEIGHT
-						  p1_metric >= p2_metric - (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR))
-#else
-						  p1_metric >= p2_metric - (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR) || (p1->MLS_id == p2->MLS_id))
-#endif
-				  {
-					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
-							  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
-							  p1_metric,
-							  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
-					  return dag->preferred_parent;
-				  }
-			  }
-			  return p1_metric <= p2_metric ? p1 : p2;
-		  }
-
-
-
-/*	  if(tree_level == 2) {
-		  if(p1->rank == 512 || p2->rank == 512) {
-			  if(p1->rank == 512 && p2->rank == 512) {
-				  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-					  if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
-							  p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
-						  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
-								  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
-								  p1_metric,
-								  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
-						  return dag->preferred_parent;
-					  }
-				  }
-				  return p1_metric <= p2_metric ? p1: p2;
-			  }
-			  else {
-				  return p1->rank == 512 ? p1 : p2;
-			  }
-		  }
-	  }
-	  else if(tree_level >= 3) {
-		  if(p1->rank == 768 || p2->rank == 768) {
-			  if(p1->rank == 768 && p2->rank == 768) {
-
-				  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-					  if(p1_metric < p2_metric + RPL_DAG_MC_ETX_DIVISOR * 2 &&
-							  p1_metric > p2_metric - RPL_DAG_MC_ETX_DIVISOR * 2) {
-						  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
-								  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
-								  p1_metric,
-								  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
-						  return dag->preferred_parent;
-					  }
-				  }
-				  return p1_metric <= p2_metric ? p1: p2;
-			  }
-			  else {
-				  return p1->rank == 768 ? p1 : p2;
-			  }
-		  }*/
-/*		  else {
-			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-				  if(p1_metric < p2_metric + RPL_DAG_MC_ETX_DIVISOR * 2 &&
-						  p1_metric > p2_metric - RPL_DAG_MC_ETX_DIVISOR * 2) {
-					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
-							  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
-							  p1_metric,
-							  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
-					  return dag->preferred_parent;
-				  }
-			  }
-			  return p1_metric <= p2_metric ? p1: p2;
-		  }*/
-	  }
-	    if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-	      if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
-	         p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
-	        PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
-	               p2_metric - RPL_DAG_MC_ETX_DIVISOR,
-	               p1_metric,
-	               p2_metric + RPL_DAG_MC_ETX_DIVISOR);
-	        return dag->preferred_parent;
-	      }
-	    }
-    	return p1_metric <= p2_metric ? p1 : p2;
+	  return p1_metric <= p2_metric ? p1 : p2;
   }
 #endif /* RPL_LIFETIME_MAX_MODE2 */
 }

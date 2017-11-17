@@ -356,22 +356,17 @@ rpl_get_child_ipaddr(rpl_child_t *c)
 static void
 rpl_set_preferred_parent(rpl_dag_t *dag, rpl_parent_t *p)
 {
-  if(dag != NULL && dag->preferred_parent != p) {
-    PRINTF("RPL: rpl_set_preferred_parent ");
+
 #ifdef ZOUL_MOTE
+    if(dag != NULL && dag->preferred_parent != p) {
     LOG_MESSAGE("RPL: rpl_set_preferred_parent ");
     if(p != NULL) {
-      PRINT6ADDR(rpl_get_parent_ipaddr(p));
       LOG_MESSAGE("IP:%d %c",rpl_get_nbr(p)->ipaddr.u8[15],
     		rpl_get_nbr(p)->ipaddr.u8[8]>128? 'L':'S');
     } else {
-      PRINTF("NULL");
       LOG_MESSAGE("NULL");
-    }
-    PRINTF(" used to be ");
     LOG_MESSAGE(" used to be ");
     if(dag->preferred_parent != NULL) {
-      PRINT6ADDR(rpl_get_parent_ipaddr(dag->preferred_parent));
       LOG_MESSAGE("IP:%d %c",rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[15],
     		rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[8]>128? 'L':'S');
     } else {
@@ -380,6 +375,21 @@ rpl_set_preferred_parent(rpl_dag_t *dag, rpl_parent_t *p)
     }
     PRINTF("\n");
     LOG_MESSAGE("\n");
+#else
+    if(dag != NULL && dag->preferred_parent != p) {
+        PRINTF("RPL: rpl_set_preferred_parent ");
+        if(p != NULL) {
+            PRINT6ADDR(rpl_get_parent_ipaddr(p));
+        } else {
+            PRINTF("NULL");
+        }
+         PRINTF(" used to be ");
+         if(dag->preferred_parent != NULL) {
+        	 PRINT6ADDR(rpl_get_parent_ipaddr(dag->preferred_parent));
+         } else {
+        	 PRINTF("NULL");
+         }
+         PRINTF("\n");
 #endif
 #ifdef RPL_CALLBACK_PARENT_SWITCH
     RPL_CALLBACK_PARENT_SWITCH(dag->preferred_parent, p);
