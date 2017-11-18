@@ -1777,14 +1777,14 @@ input_packet(void)
 	    	{
 */
 //	    		printf("short!\n");
-//	    		id_count[recv_id]++;
+	    		id_count[recv_id]++;
 //	    	}
 #else
-//	    	id_count[recv_id]++;
+	    	id_count[recv_id]++;
 #endif
 #endif
 	    	id_array[ip] = recv_id;
-//	    	printf("id: %d count: %d\n",recv_id,id_count[recv_id]);
+/*//	    	printf("id: %d count: %d\n",recv_id,id_count[recv_id]);*/
 	    }
 	}
 //#else

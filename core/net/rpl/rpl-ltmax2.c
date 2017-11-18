@@ -414,7 +414,7 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 
   /* Change parent p1 -> p2 */
   /* Only if changed p2's metric is still smaller than changed p1's metric*/
-  if(p1 == dag->preferred_parent) {
+/*  if(p1 == dag->preferred_parent) {
 	  switch(p2->rank) {
 	  case 256:
 		  if(p1->rank == 256) {
@@ -636,8 +636,8 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   }
   else {
 	  return p1_metric <= p2_metric ? p1 : p2;
-  }
-/*  if(nbr1->ipaddr.u8[15] == 1 && nbr2->ipaddr.u8[15] == 1) {
+  }*/
+  if(nbr1->ipaddr.u8[15] == 1 && nbr2->ipaddr.u8[15] == 1) {
   		return p1_metric <= p2_metric ? p1 : p2;
   	}
   	else if(nbr1->ipaddr.u8[15] == 1) {
@@ -704,18 +704,8 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   				return p1_metric <= p2_metric ? p1 : p2;
   			}
   		}
-  		if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
-  			if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
-  					p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
-  				PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
-  						p2_metric - RPL_DAG_MC_ETX_DIVISOR,
-						p1_metric,
-						p2_metric + RPL_DAG_MC_ETX_DIVISOR);
-  				return dag->preferred_parent;
-  			}
-  		}
-  		return p1_metric <= p2_metric ? p1 : p2;*/
-
+  		return p1_metric <= p2_metric ? p1 : p2;
+  	}
 
 #else /* RPL_ETX_WEIGHT */
   if(nbr1->ipaddr.u8[15] == 1 || nbr2->ipaddr.u8[15] == 1) {
