@@ -421,7 +421,12 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  return p1_metric <= p2_metric ? p1 : p2;
 		  }
 		  else if(p1->rank == 512) {
+#if DUAL_RADIO
 			  if(p1_metric >= p2_metric + (1 + is_longrange1*(LONG_WEIGHT_RATIO-1)) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p1_metric >= p2_metric + (1) * RPL_DAG_MC_ETX_DIVISOR) {
+
+#endif
 				  return p2;
 			  }
 			  else {
@@ -429,7 +434,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  }
 		  }
 		  else {
+#if DUAL_RADIO
 			  if(p1_metric >= p2_metric + (1 + is_longrange1*(LONG_WEIGHT_RATIO-1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p1_metric >= p2_metric + (1 + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p2;
 			  }
 			  else {
@@ -439,7 +448,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 		  break;
 	  case 512:
 		  if(p1->rank == 256) {
+#if DUAL_RADIO
 			  if(p1_metric >= p2_metric + (1 + is_longrange1*(LONG_WEIGHT_RATIO-1)) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p1_metric >= p2_metric + (1) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p2;
 			  }
 			  else {
@@ -447,7 +460,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  }
 		  }
 		  else if(p1->rank == 512) {
+#if DUAL_RADIO
 			  if(p1_metric >= p2_metric + 2 * (1 + is_longrange1*(LONG_WEIGHT_RATIO-1)) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p1_metric >= p2_metric + 2 * (1) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p2;
 			  }
 			  else {
@@ -455,7 +472,12 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  }
 		  }
 		  else {
+#if DUAL_RADIO
 			  if(p1_metric >= p2_metric + (2 * (1 + is_longrange1*(LONG_WEIGHT_RATIO-1)) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p1_metric >= p2_metric + (2 * (1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+
+#endif
 				  return p2;
 			  }
 			  else {
@@ -465,7 +487,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 		  break;
 	  default:
 		  if(p1->rank == 256) {
+#if DUAL_RADIO
 			  if(p1_metric >= p2_metric + (1 + is_longrange1*(LONG_WEIGHT_RATIO-1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p1_metric >= p2_metric + (1 + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p2;
 			  }
 			  else {
@@ -473,7 +499,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  }
 		  }
 		  else if(p1->rank == 512) {
+#if DUAL_RADIO
 			  if(p1_metric >= p2_metric + (2 * (1 + is_longrange1*(LONG_WEIGHT_RATIO-1)) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p1_metric >= p2_metric + (2 * (1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p2;
 			  }
 			  else {
@@ -481,7 +511,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  }
 		  }
 		  else {
+#if DUAL_RADIO
 			  if(p1_metric >= p2_metric + 2 * (1 + is_longrange1*(LONG_WEIGHT_RATIO-1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p1_metric >= p2_metric + 2 * (1 + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p2;
 			  }
 			  else {
@@ -498,7 +532,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  return p2_metric <= p1_metric ? p2 : p1;
 		  }
 		  else if(p2->rank == 512) {
+#if DUAL_RADIO
 			  if(p2_metric >= p1_metric + (1 + is_longrange2*(LONG_WEIGHT_RATIO-1)) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p2_metric >= p1_metric + (1) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p1;
 			  }
 			  else {
@@ -506,7 +544,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  }
 		  }
 		  else {
+#if DUAL_RADIO
 			  if(p2_metric >= p1_metric + (1 + is_longrange2*(LONG_WEIGHT_RATIO-1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p2_metric >= p1_metric + (1 + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p1;
 			  }
 			  else {
@@ -516,7 +558,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 		  break;
 	  case 512:
 		  if(p2->rank == 256) {
+#if DUAL_RADIO
 			  if(p2_metric >= p1_metric + (1 + is_longrange2*(LONG_WEIGHT_RATIO-1)) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p2_metric >= p1_metric + (1) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p1;
 			  }
 			  else {
@@ -524,7 +570,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  }
 		  }
 		  else if(p2->rank == 512) {
+#if DUAL_RADIO
 			  if(p2_metric >= p1_metric + 2 * (1 + is_longrange2*(LONG_WEIGHT_RATIO-1)) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p2_metric >= p1_metric + 2 * (1) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p1;
 			  }
 			  else {
@@ -532,7 +582,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  }
 		  }
 		  else {
+#if DUAL_RADIO
 			  if(p2_metric >= p1_metric + (2 * (1 + is_longrange2*(LONG_WEIGHT_RATIO-1)) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p2_metric >= p1_metric + (2 * (1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p1;
 			  }
 			  else {
@@ -542,7 +596,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 		  break;
 	  default:
 		  if(p2->rank == 256) {
+#if DUAL_RADIO
 			  if(p2_metric >= p1_metric + (1 + is_longrange2*(LONG_WEIGHT_RATIO-1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p2_metric >= p1_metric + (1 + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p1;
 			  }
 			  else {
@@ -550,7 +608,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  }
 		  }
 		  else if(p2->rank == 512) {
+#if DUAL_RADIO
 			  if(p2_metric >= p1_metric + (2 * (1 + is_longrange2*(LONG_WEIGHT_RATIO-1)) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p2_metric >= p1_metric + (2 * (1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p1;
 			  }
 			  else {
@@ -558,7 +620,11 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 			  }
 		  }
 		  else {
+#if DUAL_RADIO
 			  if(p2_metric >= p1_metric + 2 * (1 + is_longrange2*(LONG_WEIGHT_RATIO-1) + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#else
+			  if(p2_metric >= p1_metric + 2 * (1 + id_count[latest_id]) * RPL_DAG_MC_ETX_DIVISOR) {
+#endif
 				  return p1;
 			  }
 			  else {

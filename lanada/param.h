@@ -140,7 +140,7 @@ uint8_t my_valid_parent_number;
 uint8_t parent_update; /* Update parent only once for each data_id */
 #endif /* RPL_ENERGY_MODE */
 #define MAX_NUM_NODE 100
-#define BUF_SIZE 10000
+#define BUF_SIZE 5000
 extern int id_array[MAX_NUM_NODE];
 extern uint8_t id_count[BUF_SIZE];
 int latest_id;
