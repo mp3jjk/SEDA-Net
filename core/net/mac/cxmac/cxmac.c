@@ -1780,7 +1780,7 @@ input_packet(void)
 //	    		id_count[recv_id]++;
 //	    	}
 #else
-	    	id_count[recv_id]++;
+//	    	id_count[recv_id]++;
 #endif
 #endif
 	    	id_array[ip] = recv_id;
@@ -1877,7 +1877,13 @@ input_packet(void)
 		ack[len] = DISPATCH;
 		ack[len + 1] = TYPE_DATA_ACK;
 #if ACK_WEIGHT_INCLUDED && RPL_LIFETIME_MAX_MODE2
+//		printf("cxmac who I'am %d %d %d %d %d %d %d %d\n",linkaddr_node_addr.u8[0],linkaddr_node_addr.u8[1],linkaddr_node_addr.u8[2],
+//				linkaddr_node_addr.u8[3],linkaddr_node_addr.u8[4],linkaddr_node_addr.u8[5],linkaddr_node_addr.u8[6],linkaddr_node_addr.u8[7]);
+#if ZOUL_MOTE
+		if(linkaddr_node_addr.u8[7] == SERVER_NODE) {
+#else
 		if(linkaddr_node_addr.u8[15] == SERVER_NODE) {
+#endif
 			ack[len + 2] = 0;
 		}
 		else {

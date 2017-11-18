@@ -361,31 +361,34 @@ rpl_set_preferred_parent(rpl_dag_t *dag, rpl_parent_t *p)
     if(dag != NULL && dag->preferred_parent != p) {
     LOG_MESSAGE("RPL: rpl_set_preferred_parent ");
     if(p != NULL) {
-      LOG_MESSAGE("IP:%d %c",rpl_get_nbr(p)->ipaddr.u8[15],
+      LOG_MESSAGE("IP:%d %d %d %d %d %d %d %d %c",rpl_get_nbr(p)->ipaddr.u8[8],rpl_get_nbr(p)->ipaddr.u8[9],rpl_get_nbr(p)->ipaddr.u8[10],rpl_get_nbr(p)->ipaddr.u8[11],
+    		  rpl_get_nbr(p)->ipaddr.u8[12],rpl_get_nbr(p)->ipaddr.u8[13],rpl_get_nbr(p)->ipaddr.u8[14],rpl_get_nbr(p)->ipaddr.u8[15],
     		rpl_get_nbr(p)->ipaddr.u8[8]>128? 'L':'S');
     } else {
       LOG_MESSAGE("NULL");
-    LOG_MESSAGE(" used to be ");
+      LOG_MESSAGE(" used to be ");
+    }
     if(dag->preferred_parent != NULL) {
-      LOG_MESSAGE("IP:%d %c",rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[15],
+      LOG_MESSAGE("IP:%d %d %d %d %d %d %d %d %c",rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[8],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[9],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[10],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[11],
+    		  rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[12],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[13],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[14],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[15],
     		rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[8]>128? 'L':'S');
     } else {
-      PRINTF("NULL");
       LOG_MESSAGE("NULL");
     }
-    PRINTF("\n");
     LOG_MESSAGE("\n");
 #else
     if(dag != NULL && dag->preferred_parent != p) {
         PRINTF("RPL: rpl_set_preferred_parent ");
         if(p != NULL) {
             PRINT6ADDR(rpl_get_parent_ipaddr(p));
+            PRINTF("%d %c",rpl_get_parent_ipaddr(p)->u8[15],rpl_get_nbr(p)->ipaddr.u8[8]>128? 'L':'S');
         } else {
-            PRINTF("NULL");
+        	PRINTF("NULL");
         }
-         PRINTF(" used to be ");
+        PRINTF(" used to be ");
          if(dag->preferred_parent != NULL) {
         	 PRINT6ADDR(rpl_get_parent_ipaddr(dag->preferred_parent));
+             PRINTF("%d %c",rpl_get_parent_ipaddr(dag->preferred_parent)->u8[15],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[8]>128? 'L':'S');
          } else {
         	 PRINTF("NULL");
          }
@@ -1166,7 +1169,7 @@ best_parent(rpl_dag_t *dag)
   }
 
 
-#if !ZOUL_MOTE
+//#if !ZOUL_MOTE
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
   if(best != prev && best != NULL && prev != NULL)
   {
@@ -1196,9 +1199,10 @@ best_parent(rpl_dag_t *dag)
 #endif
   }
 #endif
-#endif
+//#endif
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
   if(init_phase && prev != NULL) {
+//	  printf("strange prev %d %d best %d %d\n",rpl_get_nbr(prev)->ipaddr.u8[8],rpl_get_nbr(prev)->ipaddr.u8[9],rpl_get_nbr(best)->ipaddr.u8[8],rpl_get_nbr(best)->ipaddr.u8[9]);
 	  if(prev != best) {
 		  if(prev->rank > best->rank) { // best has small metric
 			  return best;
@@ -1208,6 +1212,7 @@ best_parent(rpl_dag_t *dag)
 			  return random == 0 ? best : prev;
 		  }
 	  }
+	  return best;
   }
   else {
 	  //  printf("return best my_parent_number %d\n",my_parent_number);
@@ -1224,7 +1229,6 @@ rpl_select_parent(rpl_dag_t *dag)
 {
   rpl_parent_t *best = best_parent(dag);
   if(best != NULL) {
-
     rpl_set_preferred_parent(dag, best);
     dag->rank = dag->instance->of->calculate_rank(dag->preferred_parent, 0);
   } else {
@@ -1300,7 +1304,6 @@ void
 rpl_move_parent(rpl_dag_t *dag_src, rpl_dag_t *dag_dst, rpl_parent_t *parent)
 {
   if(parent == dag_src->preferred_parent) {
-
       rpl_set_preferred_parent(dag_src, NULL);
       dag_src->rank = INFINITE_RANK;
     if(dag_src->joined && dag_src->instance->def_route != NULL) {
