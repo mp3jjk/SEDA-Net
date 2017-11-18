@@ -361,17 +361,19 @@ rpl_set_preferred_parent(rpl_dag_t *dag, rpl_parent_t *p)
     if(dag != NULL && dag->preferred_parent != p) {
     LOG_MESSAGE("RPL: rpl_set_preferred_parent ");
     if(p != NULL) {
-      LOG_MESSAGE("IP:%d %d %d %d %d %d %d %d %c",rpl_get_nbr(p)->ipaddr.u8[8],rpl_get_nbr(p)->ipaddr.u8[9],rpl_get_nbr(p)->ipaddr.u8[10],rpl_get_nbr(p)->ipaddr.u8[11],
-    		  rpl_get_nbr(p)->ipaddr.u8[12],rpl_get_nbr(p)->ipaddr.u8[13],rpl_get_nbr(p)->ipaddr.u8[14],rpl_get_nbr(p)->ipaddr.u8[15],
-    		rpl_get_nbr(p)->ipaddr.u8[8]>128? 'L':'S');
+//      LOG_MESSAGE("IP:%d %d %d %d %d %d %d %d %c",rpl_get_nbr(p)->ipaddr.u8[8],rpl_get_nbr(p)->ipaddr.u8[9],rpl_get_nbr(p)->ipaddr.u8[10],rpl_get_nbr(p)->ipaddr.u8[11],
+//    		  rpl_get_nbr(p)->ipaddr.u8[12],rpl_get_nbr(p)->ipaddr.u8[13],rpl_get_nbr(p)->ipaddr.u8[14],rpl_get_nbr(p)->ipaddr.u8[15],
+//    		rpl_get_nbr(p)->ipaddr.u8[8]>128? 'L':'S');
+    	LOG_MESSAGE("IP:%d %c",rpl_get_nbr(p)->ipaddr.u8[15],rpl_get_nbr(p)->ipaddr.u8[8]>128? 'L':'S');
     } else {
       LOG_MESSAGE("NULL");
       LOG_MESSAGE(" used to be ");
     }
     if(dag->preferred_parent != NULL) {
-      LOG_MESSAGE("IP:%d %d %d %d %d %d %d %d %c",rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[8],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[9],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[10],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[11],
-    		  rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[12],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[13],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[14],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[15],
-    		rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[8]>128? 'L':'S');
+//      LOG_MESSAGE("IP:%d %d %d %d %d %d %d %d %c",rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[8],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[9],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[10],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[11],
+//    		  rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[12],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[13],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[14],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[15],
+//    		rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[8]>128? 'L':'S');
+    	LOG_MESSAGE("IP:%d %c",rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[15],rpl_get_nbr(dag->preferred_parent)->ipaddr.u8[8]>128? 'L':'S');
     } else {
       LOG_MESSAGE("NULL");
     }
