@@ -666,6 +666,17 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   			return p1;
   	}
   	else {
+  		if(nbr1->link_metric == MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR && nbr2->link_metric == MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR) {
+  		  uint8_t random = rand() % 2;
+  		  return random == 0 ? p1 : p2;
+  		}
+  		else if(nbr1->link_metric == MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR) {
+  			return p2;
+  		}
+  		else if(nbr2->link_metric == MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR) {
+  			return p1;
+  		}
+
   		if(p1->rank < p2->rank) {
   			return p1;
   		}

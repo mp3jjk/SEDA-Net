@@ -1178,14 +1178,7 @@ send_packet(void)
 #endif /* LSA_MAC */ 
 #endif
 
-#if COOJA
-			if (recv_addr.u8[1] == SERVER_NODE )
-#else
-			if (recv_addr.u8[7] == SERVER_NODE )
-#endif
-			{
-				got_strobe_ack = 1;
-			}
+
 
 			/* for debug */
 #if TIMING
@@ -1248,6 +1241,14 @@ send_packet(void)
 							PRINTF("cxmac: send failed to parse %u\n", len);
 						}
 					}
+				}
+#if COOJA
+				if (recv_addr.u8[1] == SERVER_NODE )
+#else
+				if (recv_addr.u8[7] == SERVER_NODE )
+#endif
+				{
+					got_strobe_ack = 1;
 				}
 				t = RTIMER_NOW();
 #if TIMING
@@ -1518,16 +1519,20 @@ send_packet(void)
   if(!is_broadcast && got_strobe_ack)
   {
 	  PRINTF("cxmac: recv %s\n",got_data_ack ? "data_ack" : "data_noack");
-  }
 #if COOJA
-			if (recv_addr.u8[1] == SERVER_NODE && !got_data_ack )
+//			if (recv_addr.u8[1] == SERVER_NODE && !got_data_ack )
+			if (!got_data_ack )
+
 #else
-			if (recv_addr.u8[7] == SERVER_NODE && !got_data_ack)
-#endif
+//			if (recv_addr.u8[7] == SERVER_NODE && !got_data_ack)
+			if (!got_data_ack)
+#endif /* COOJA */
 			{
 				collisions++;
 			}
-#endif
+  }
+
+#endif /* DATA_ACK */
 
 
 #if CXMAC_CONF_COMPOWER
