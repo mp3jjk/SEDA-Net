@@ -39,7 +39,7 @@
 
 #define DUAL_RADIO 0
 #if DUAL_RADIO == 1
-#define ONLY_LONG 0
+#define ONLY_LONG 1
 #endif
 #define ADDR_MAP DUAL_RADIO
 

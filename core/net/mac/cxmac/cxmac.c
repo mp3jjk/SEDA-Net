@@ -1519,17 +1519,17 @@ send_packet(void)
   if(!is_broadcast && got_strobe_ack)
   {
 	  PRINTF("cxmac: recv %s\n",got_data_ack ? "data_ack" : "data_noack");
-#if COOJA
-//			if (recv_addr.u8[1] == SERVER_NODE && !got_data_ack )
-			if (!got_data_ack )
+/*#if COOJA
+			if (recv_addr.u8[1] == SERVER_NODE && !got_data_ack )
+//			if (!got_data_ack )
 
 #else
-//			if (recv_addr.u8[7] == SERVER_NODE && !got_data_ack)
-			if (!got_data_ack)
-#endif /* COOJA */
+			if (recv_addr.u8[7] == SERVER_NODE && !got_data_ack)
+//			if (!got_data_ack)
+#endif  COOJA
 			{
 				collisions++;
-			}
+			}*/
   }
 
 #endif /* DATA_ACK */
