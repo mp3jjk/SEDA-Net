@@ -637,43 +637,32 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   else {
 	  return p1_metric <= p2_metric ? p1 : p2;
   }*/
-  if(nbr1->ipaddr.u8[15] == 1 && nbr2->ipaddr.u8[15] == 1) {
-  		return p1_metric <= p2_metric ? p1 : p2;
-  	}
-  	else if(nbr1->ipaddr.u8[15] == 1) {
-#if DUAL_RADIO
-  		if(p1->parent_weight < RPL_DAG_MC_ETX_DIVISOR * 5 * (1 + is_longrange1*(LONG_WEIGHT_RATIO-1)))
-#else
-  		if(p1->parent_weight < RPL_DAG_MC_ETX_DIVISOR * 5)
-
-#endif  DUAL_RADIO
-  		{
-  			return p1;
-  		}
-  		else
-  			return p2;
-  	}
-  	else if(nbr2->ipaddr.u8[15] == 1) {
-#if DUAL_RADIO
-  		if(p2->parent_weight < RPL_DAG_MC_ETX_DIVISOR * 5 * (1 + is_longrange2*(LONG_WEIGHT_RATIO-1)))
-#else
-  		if(p2->parent_weight < RPL_DAG_MC_ETX_DIVISOR * 5)
-#endif  DUAL_RADIO
-  		{
-  			return p2;
-  		}
-  		else
-  			return p1;
-  	}
-  	else {
-  		if(nbr1->link_metric == MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR && nbr2->link_metric == MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR) {
+/*  if(nbr1->ipaddr.u8[15] == 1 && nbr2->ipaddr.u8[15] == 1) {
+	  return p1_metric <= p2_metric ? p1 : p2;
+  }
+  else if(nbr1->ipaddr.u8[15] == 1) {
+	  if(nbr1->link_metric >= (MAX_LINK_METRIC -1) * RPL_DAG_MC_ETX_DIVISOR) {
+		  return p2;
+	  }
+	  else
+		  return p1;
+  }
+  else if(nbr2->ipaddr.u8[15] == 1) {
+	  if(nbr2->link_metric >= (MAX_LINK_METRIC -1) * RPL_DAG_MC_ETX_DIVISOR) {
+		  return p1;
+	  }
+	  else
+		  return p2;
+  }*/
+  /*else*/ {
+  		if(nbr1->link_metric >= (MAX_LINK_METRIC - 1) * RPL_DAG_MC_ETX_DIVISOR && nbr2->link_metric >= (MAX_LINK_METRIC -1) * RPL_DAG_MC_ETX_DIVISOR) {
   		  uint8_t random = rand() % 2;
   		  return random == 0 ? p1 : p2;
   		}
-  		else if(nbr1->link_metric == MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR) {
+  		else if(nbr1->link_metric >= (MAX_LINK_METRIC - 1) * RPL_DAG_MC_ETX_DIVISOR) {
   			return p2;
   		}
-  		else if(nbr2->link_metric == MAX_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR) {
+  		else if(nbr2->link_metric >= (MAX_LINK_METRIC - 1) * RPL_DAG_MC_ETX_DIVISOR) {
   			return p1;
   		}
 
