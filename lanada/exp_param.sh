@@ -8,6 +8,13 @@ then
     exit 1
 fi
 
+if [ $7 == 1 ]
+then
+    sed -i 's/\#define RPL_CONF_OF rpl_of0/\#define RPL_CONF_OF rpl_ltmax2_of/g' $CONTIKI/platform/zoul/contiki-conf.h
+else
+    sed -i 's/\#define RPL_CONF_OF rpl_ltmax2_of/\#define RPL_CONF_OF rpl_of0/g' $CONTIKI/platform/zoul/contiki-conf.h
+fi
+
 sed -i 's/\#define RESIDUAL_ENERGY_MAX 2000000/\#define RESIDUAL_ENERGY_MAX 1000000000/g' $CONTIKI/core/sys/residual.h
 
 echo "#define RPL_ENERGY_MODE 0
@@ -151,8 +158,8 @@ uint8_t my_valid_parent_number;
 #define LOAD_ALPHA	90
 uint8_t parent_update; /* Update parent only once for each data_id */
 #endif /* RPL_ENERGY_MODE */
-#define MAX_NUM_NODE 100
-#define BUF_SIZE 10000
+#define MAX_NUM_NODE 50
+#define BUF_SIZE 5000
 extern int id_array[MAX_NUM_NODE];
 extern uint8_t id_count[BUF_SIZE];
 int latest_id;

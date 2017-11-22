@@ -129,7 +129,8 @@ calculate_path_metric(rpl_parent_t *p)
 	  }
 	  else {
 #if RPL_ETX_WEIGHT
-		  ret_metric = p->rank + (p->parent_weight + p->parent_sum_weight + p->est_load) * RPL_DAG_MC_ETX_DIVISOR;
+//		  ret_metric = p->rank + (p->parent_weight + p->parent_sum_weight + p->est_load) * RPL_DAG_MC_ETX_DIVISOR;
+		  ret_metric = p->rank + p->parent_weight * (p->parent_sum_weight + p->est_load) * RPL_DAG_MC_ETX_DIVISOR;
 #else
 		  if(tree_level == 2)
 		  {
@@ -406,11 +407,14 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	  }
   }
 
+
 #if RPL_ETX_WEIGHT
-#if DUAL_RADIO
+  /*
+  #if DUAL_RADIO
   uint8_t is_longrange1 = long_ip_from_lladdr_map(&(nbr1->ipaddr)) == 1 ? 1 : 0;
   uint8_t is_longrange2 = long_ip_from_lladdr_map(&(nbr2->ipaddr)) == 1 ? 1 : 0;
-#endif /* DUAL_RADIO */
+#endif  DUAL_RADIO
+*/
 
   /* Change parent p1 -> p2 */
   /* Only if changed p2's metric is still smaller than changed p1's metric*/
