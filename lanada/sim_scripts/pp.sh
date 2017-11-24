@@ -331,4 +331,5 @@ do
 done < energy/final_energy.txt
 
 
-paste temp.txt delay/avg_packet_delay.txt energy/percent_energy.txt PRR/PRR.txt collision/collision_ratio.txt > report_summary.txt
+paste temp.txt delay/avg_packet_delay.txt energy/percent_energy.txt PRR/PRR.txt  > report_summary.txt
+# collision/collision_ratio.txt
