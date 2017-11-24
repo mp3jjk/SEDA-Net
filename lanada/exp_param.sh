@@ -16,6 +16,7 @@ else
 fi
 
 sed -i 's/\#define RESIDUAL_ENERGY_MAX 2000000/\#define RESIDUAL_ENERGY_MAX 1000000000/g' $CONTIKI/core/sys/residual.h
+sed -i 's/\#define RESIDUAL_ENERGY_MAX 4000000/\#define RESIDUAL_ENERGY_MAX 1000000000/g' $CONTIKI/core/sys/residual.h
 
 echo "#define RPL_ENERGY_MODE 0
 #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node

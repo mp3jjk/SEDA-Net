@@ -6,9 +6,9 @@ ONLY_LONG=0 # SR = 1 with only Long
 TRAFFIC=0 # 0 = periodic, 1 = poisson
 VAR_PERIOD=(5 15 30 60)
 VAR_ARRIVAL=(10)
-VAR_TOPOLOGY=("36grid_mrm2")
+VAR_TOPOLOGY=("50random_mrm2")
 VAR_LR_RANGE=("2X")
-VAR_LR_WEIGHT=(1 2)
+VAR_LR_WEIGHT=(2)
 VAR_LSA_R=0
 VAR_STROBE_CNT=0
 VAR_ALPHA=(1)
