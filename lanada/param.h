@@ -1,6 +1,6 @@
 #define RPL_ENERGY_MODE 0
 #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
-#define RPL_LIFETIME_MAX_MODE2 0 // Improving LT MAX MODE
+#define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
 
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
@@ -13,7 +13,7 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 1
+#define LONG_WEIGHT_RATIO 2
 
 /* Weight ratio between rank and parent's degree */
 #define ALPHA	1
@@ -76,7 +76,11 @@ uint8_t data_btb; // Back to back data Tx
 
 #define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
+<<<<<<< HEAD
 #define PERIOD 60
+=======
+#define PERIOD 15
+>>>>>>> 740379ca4c223ccf87ab984e9f17f139ee1e468b
 #elif TRAFFIC_MODEL == 1
 #define ARRIVAL_RATE 0 // Mean value, 1/lambda
 #endif
