@@ -4,7 +4,7 @@ SR=1 # Decide whether SR simulation runs or not
 LR=0 # For LR case
 ONLY_LONG=0 # SR = 1 with only Long
 TRAFFIC=0 # 0 = periodic, 1 = poisson
-VAR_PERIOD=(5 15 30 60)
+VAR_PERIOD=(30)
 VAR_ARRIVAL=(10)
 VAR_TOPOLOGY=("50random_mrm2")
 VAR_LR_RANGE=("2X")
@@ -21,7 +21,7 @@ VAR_LSA_ENHANCED=0
 VAR_ROUTING_NO_ENERGY=0
 DATE="of0"
 LSA_MAC=1
-SEED_NUMBER=("2" "3")
+SEED_NUMBER=("3")
 MRM=3
 
 # SR_RANGE simulation

@@ -524,8 +524,8 @@ struct radio_driver NETSTACK_RADIO;
 #define RPL_CONF_STATS                       0
 
 #ifndef RPL_CONF_OF
-//#define RPL_CONF_OF rpl_ltmax2_of
-#define RPL_CONF_OF rpl_ltmax2_of
+//#define RPL_CONF_OF rpl_of0
+#define RPL_CONF_OF rpl_of0
 #endif
 
 #define UIP_CONF_ND6_REACHABLE_TIME     600000

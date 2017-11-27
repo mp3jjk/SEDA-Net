@@ -18,8 +18,8 @@ do
 				let "tot_delay=$tot_delay + $delay"
 				let "node_count=$node_count + 1"
 			done < delay/avg_packet_delay.txt
-			let "avg_delay=$tot_delay / $node_count /100"
-			echo $traffic $dir : $avg_delay ms
+			let "avg_delay=$tot_delay / $node_count /1000000"
+			echo $traffic $dir : $avg_delay s
 			cd ..
 		done
 		echo 
