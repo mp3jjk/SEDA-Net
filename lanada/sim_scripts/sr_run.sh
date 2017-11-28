@@ -33,6 +33,7 @@ CHECK=${12}
 ROUTING_NO_ENERGY=${13}
 SEED_NUMBER=${14}
 MRM=${15}
+LT_PERCENT=${16}
 
 #if [ $ONLY_LONG -eq 0]
 #then
@@ -42,6 +43,17 @@ MRM=${15}
 #fi 
 
 sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
+
+if [ $topology == "36grid_mrm2_cnt" ]
+then
+    sed -i "1124s/.*/var death = $LT_PERCENT;&#xD;" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
+elif [ $topology == "50random_mrm2_cnt" ]
+then
+    sed -i "1488s/.*/var death = $LT_PERCENT;&#xD;" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
+elif [ $topology == "34cluster_mrm2_cnt" ]
+then
+    sed -i "1072s/.*/var death = $LT_PERCENT;&#xD;" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc
+fi
 
 #DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_mrm$MRM\_seed$SEED_NUMBER
 if [ $TRAFFIC_MODEL -eq 0 ]

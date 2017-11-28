@@ -74,15 +74,11 @@ uint8_t data_btb; // Back to back data Tx
 
 #define SERVER_NODE 1
 
-#define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
+#define TRAFFIC_MODEL 1 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
-<<<<<<< HEAD
 #define PERIOD 60
-=======
-#define PERIOD 15
->>>>>>> 740379ca4c223ccf87ab984e9f17f139ee1e468b
 #elif TRAFFIC_MODEL == 1
-#define ARRIVAL_RATE 0 // Mean value, 1/lambda
+#define ARRIVAL_RATE 10 // Mean value, 1/lambda
 #endif
 
 uint8_t dead;
