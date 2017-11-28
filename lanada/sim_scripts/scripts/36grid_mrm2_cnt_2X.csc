@@ -1121,7 +1121,7 @@ TIMEOUT(200000000000000, log.log("last message: " + msg + "\n"));&#xD;
 &#xD;
 var count = 0;&#xD;
 var lifetime_cnt = 0;&#xD;
-var death = 5;&#xD;
+var death = 2;&#xD;
 &#xD;
 while (true) {&#xD;
   log.log(time + ":" + id + ":" + msg + "\n");&#xD;

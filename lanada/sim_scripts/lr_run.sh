@@ -41,13 +41,13 @@ sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_
 
 if [ $topology == "36grid_mrm2_cnt" ]
 then
-    sed -i "1124s/.*/var death = $LT_PERCENT;&#xD;" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
+    sed -i "1124s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
 elif [ $topology == "50random_mrm2_cnt" ]
 then
-    sed -i "1488s/.*/var death = $LT_PERCENT;&#xD;" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
+    sed -i "1488s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
 elif [ $topology == "34cluster_mrm2_cnt" ]
 then
-    sed -i "1072s/.*/var death = $LT_PERCENT;&#xD;" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc
+    sed -i "1072s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc
 fi
 
 #DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_mrm$MRM\_seed$SEED_NUMBER
