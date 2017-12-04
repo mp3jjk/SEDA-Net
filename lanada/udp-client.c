@@ -343,6 +343,7 @@ PROCESS_THREAD(udp_client_process, ev, data)
   static struct ctimer backoff_timer;
 #if TRAFFIC_MODEL == 1 // Poisson traffic
   static clock_time_t poisson_int;
+  float rand_num;
 #endif
 #if WITH_COMPOWER
   static int print = 0;
@@ -417,10 +418,13 @@ PROCESS_THREAD(udp_client_process, ev, data)
 #if TRAFFIC_MODEL == 0 // Periodic
   etimer_set(&arrival, SEND_INTERVAL);
 #elif TRAFFIC_MODEL == 1 // Poisson traffic
-  poisson_int = (-ARRIVAL_RATE) * logf(random_rand()/(float)RANDOM_RAND_MAX) * CLOCK_SECOND;
+  rand_num=random_rand()/(float)RANDOM_RAND_MAX;
+  //  printf("rand_num %f\n",rand_num);
+  //  poisson_int = (-ARRIVAL_RATE) * logf(random_rand()/(float)RANDOM_RAND_MAX) * CLOCK_SECOND;
+  poisson_int = (-ARRIVAL_RATE) * logf(rand_num) * CLOCK_SECOND;
   if(poisson_int == 0)
 	  poisson_int = 1;
-//  printf("poisson %d\n",poisson_int);
+  //  printf("poisson %d\n",poisson_int);
   etimer_set(&arrival, poisson_int);
 #endif
 
@@ -476,9 +480,14 @@ PROCESS_THREAD(udp_client_process, ev, data)
     	etimer_restart(&arrival);
         ctimer_set(&backoff_timer, SEND_TIME, send_packet, NULL);
 #elif TRAFFIC_MODEL == 1
-        ctimer_set(&backoff_timer, random_rand() % (poisson_int  * CLOCK_SECOND), send_packet, NULL);
-        poisson_int = (-ARRIVAL_RATE) * logf(random_rand()/(float)RANDOM_RAND_MAX) * CLOCK_SECOND;
-//    	printf("poisson %d\n",poisson_int);
+        ctimer_set(&backoff_timer, random_rand() % (poisson_int), send_packet, NULL);
+
+	rand_num=random_rand()/(float)RANDOM_RAND_MAX;
+	//	printf("rand_num %f\n",rand_num);
+
+	//        poisson_int = (-ARRIVAL_RATE) * logf(random_rand()/(float)RANDOM_RAND_MAX) * CLOCK_SECOND;
+        poisson_int = (-ARRIVAL_RATE) * logf(rand_num) * CLOCK_SECOND;
+	//    	printf("poisson %d\n",poisson_int);
         if(poisson_int == 0)
       	  poisson_int = 1;
     	etimer_set(&arrival, poisson_int);
