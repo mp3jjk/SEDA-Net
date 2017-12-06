@@ -28,14 +28,7 @@ endif
 CONTIKI_WITH_IPV6 = 1
 include $(CONTIKI)/Makefile.include
 
-<<<<<<< HEAD
-# LDFLAGS+=-lm
-# CFLAGS+=-lm
-ASFLAGS+=-lm
-# TARGET_LIBFILES+=-lm
-=======
 LDFLAGS+=-lm
 CFLAGS+=-lm
 TARGET_LIBFILES+=-lm
 AFLAGS+=-lm
->>>>>>> 9e3276cf128a400e8387f93393a80f9630f57718
