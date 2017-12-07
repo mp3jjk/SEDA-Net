@@ -130,7 +130,7 @@ calculate_path_metric(rpl_parent_t *p)
 	  else {
 #if RPL_ETX_WEIGHT
 //		  ret_metric = p->rank + (p->parent_weight + p->parent_sum_weight + p->est_load) * RPL_DAG_MC_ETX_DIVISOR;
-		  ret_metric = p->rank + p->parent_weight * (p->parent_sum_weight + p->est_load) * RPL_DAG_MC_ETX_DIVISOR;
+		  ret_metric = p->rank + p->parent_weight * (p->parent_sum_weight * ALPHA / ALPHA_DIV + p->est_load) * RPL_DAG_MC_ETX_DIVISOR;
 #else
 		  if(tree_level == 2)
 		  {
