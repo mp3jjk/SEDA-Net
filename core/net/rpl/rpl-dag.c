@@ -1185,13 +1185,17 @@ best_parent(rpl_dag_t *dag)
 #else /* PARENT_REDUCTION_MODE */
 //	  if(rand() % (my_parent_number * my_parent_number) > (prev->parent_sum_weight - best->parent_sum_weight))
 //	  uint8_t random = rand() % ((my_parent_number * my_parent_number) * 2);
+#if PROB_PARENT_SWITCH
+	  uint8_t random = rand() % (prev->est_load + prev->parent_sum_weight - (best->est_load + best->parent_sum_weight));
+#else
 	  uint8_t random = rand() % 2;
+#endif
+	  prev->parent_sum_weight;
 
 #if RPL_LIFETIME_MAX_MODE2
 //	  printf("random %d cmp %d p_num %d\n",random, prev->est_load - best->est_load,my_parent_number);
 //	  if(random > (prev->est_load - best->est_load))
 	  if(random == 0)
-
 	  {
 //		  printf("return prev\n");
 		  return prev;
@@ -1919,6 +1923,7 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
 #if RPL_LIFETIME_MAX_MODE2
   p->MLS_id = dio->MLS_id;
   p->est_load = dio->est_load;
+  p->rem_energy = dio->rem_energy;
 #endif
 //  printf("rpl-dag ip: %d, sum_weight: %d\n",from->u8[15],p->parent_sum_weight);
   rpl_parent_t *p_temp;

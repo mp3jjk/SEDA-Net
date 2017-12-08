@@ -456,10 +456,12 @@ dio_input(void)
   dio.rem_energy = buffer[i++];
   i += 1;
 #elif RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-  dio.parent_weight = buffer[i++];
-  PRINTF("recv dio p's weight %d\n",dio.parent_weight);
+//  dio.parent_weight = buffer[i++];
+  dio.rem_energy = buffer[i++];
+//  PRINTF("recv dio p's weight %d\n",dio.parent_weight);
+  PRINTF("recv dio rem_e %d\n",dio.rem_energy);
   dio.dio_weight = buffer[i++];
-  PRINTF("recv dio s' weight %d\n",dio.dio_weight);
+  PRINTF("recv dio degree %d\n",dio.dio_weight);
 #else
   i += 2;
 #endif
@@ -672,17 +674,18 @@ dio_input(void)
 	    {
 		  PRINTF("it's me\n");
 		  // weight update
-		  if(c->weight != dio.parent_weight)
+/*		  if(c->weight != dio.parent_weight)
 		  {
 			  my_weight -= c->weight;
 			  c->weight = dio.parent_weight;
 			  my_weight += c->weight;
 			  PRINTF("my_weight update in dio %d\n",my_weight);
-		  }
+		  }*/
 	    }
 	  else
 	    {
-	      my_weight -= c->weight;
+//	      my_weight -= c->weight;
+		  my_weight--;
 	      rpl_remove_child(c);
 	      PRINTF("my_weight deduct in dio %d\n",my_weight);
 		  PRINTF("child list in dio input\n");
@@ -705,7 +708,8 @@ dio_input(void)
 #endif
 	  {
 
-		  c = rpl_add_child(dio.parent_weight, &from);
+//		  c = rpl_add_child(dio.parent_weight, &from);
+		  c = rpl_add_child(1, &from);
 		  if(c == NULL)
 		  {
 			  PRINTF("fail to add child\n");
@@ -803,33 +807,34 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   buffer[pos++] = remaining_energy; /* remaining energy JJH */
   buffer[pos++] = 0; /* reserved */
 #elif RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-  if(dag->preferred_parent != NULL)
+/*  if(dag->preferred_parent != NULL)
   {
 	  if(dag->preferred_parent->parent_weight == 0)
 	  {
 #if DUAL_RADIO
 		  PRINTF("send dio weight %d %d default\n",sending_in_LR()==LONG_RADIO ? LONG_WEIGHT_RATIO : 1,sending_in_LR());
-		  buffer[pos++] = sending_in_LR()==LONG_RADIO ? LONG_WEIGHT_RATIO : 1; /* parent's weight default */
-#else	/* DUAL_RADIO */
+		  buffer[pos++] = sending_in_LR()==LONG_RADIO ? LONG_WEIGHT_RATIO : 1;  parent's weight default
+#else	 DUAL_RADIO
 			PRINTF("send dio weight %d default\n",1);
-		  buffer[pos++] = 1; /* parent's weight default */
-#endif	/* DUAL_RADIO */
+		  buffer[pos++] = 1;  parent's weight default
+#endif	 DUAL_RADIO
 	  }
 	  else
 	  {
 		  PRINTF("send dio weight %d\n",dag->preferred_parent->parent_weight);
-		  buffer[pos++] = dag->preferred_parent->parent_weight; /* parent's weight  */
+		  buffer[pos++] = dag->preferred_parent->parent_weight;  parent's weight
 	  }
   }
   else
   {
 	  buffer[pos++] = 0;
-  }
+  }*/
+  buffer[pos++] = (char)((get_residual_energy()/(double)RESIDUAL_ENERGY_MAX)*100); /* remaining energy percent JJH */
 //  buffer[pos++] = 0; /* reserved */
 #if SINK_INFINITE_ENERGY
   /* For sink node, set weight 0 */
 //  printf("I'am who? %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
-  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == SERVER_NODE)
+  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == SERVER_NODE && 0) // Need to test both cases
   {
 	  PRINTF("send my weight sink %d but 0\n",my_weight);
 	  buffer[pos++] = 0;
@@ -1687,7 +1692,8 @@ fwd_dao:
 #endif
   if (c == NULL)
   {
-	  c = rpl_add_child(weight,&dao_sender_addr);
+//	  c = rpl_add_child(weight,&dao_sender_addr);
+	  c = rpl_add_child(1,&dao_sender_addr);
 	  if(c == NULL)
 	  {
 		  PRINTF("fail to add child\n");
@@ -1700,7 +1706,7 @@ fwd_dao:
 	  PRINTF("child list in dao input\n");
 	  rpl_print_child_neighbor_list();
   }
-  else
+/*  else
   {
 	  if(c->weight != weight)
 	  {
@@ -1709,7 +1715,7 @@ fwd_dao:
 		  my_weight += c->weight;
 		  PRINTF("my_weight update in dao %d\n",my_weight);
 	  }
-  }
+  }*/
 #endif
   if(learned_from == RPL_ROUTE_FROM_UNICAST_DAO) {
     int should_ack = 0;
