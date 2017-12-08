@@ -1186,12 +1186,19 @@ best_parent(rpl_dag_t *dag)
 //	  if(rand() % (my_parent_number * my_parent_number) > (prev->parent_sum_weight - best->parent_sum_weight))
 //	  uint8_t random = rand() % ((my_parent_number * my_parent_number) * 2);
 #if PROB_PARENT_SWITCH
-	  uint8_t random = rand() % (prev->est_load + prev->parent_sum_weight - (best->est_load + best->parent_sum_weight));
+	  uint8_t load_diff = prev->est_load + prev->parent_sum_weight - (best->est_load + best->parent_sum_weight);
+	  uint8_t random;
+	  if(load_diff > 0) {
+		  random = rand() % load_diff;
+	  }
+	  else {
+		  random = 0;
+	  }
+//	  uint8_t random = rand() % (prev->est_load + prev->parent_sum_weight - (best->est_load + best->parent_sum_weight));
 #else
 	  uint8_t random = rand() % 2;
 #endif
 	  prev->parent_sum_weight;
-
 #if RPL_LIFETIME_MAX_MODE2
 //	  printf("random %d cmp %d p_num %d\n",random, prev->est_load - best->est_load,my_parent_number);
 //	  if(random > (prev->est_load - best->est_load))
