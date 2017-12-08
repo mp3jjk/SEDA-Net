@@ -1,14 +1,14 @@
 #!/bin/bash
 
-SR=1 # Decide whether SR simulation runs or not
-LR=0 # For LR case
+SR=0 # Decide whether SR simulation runs or not
+LR=1 # For LR case
 ONLY_LONG=0 # SR = 1 with only Long
 TRAFFIC=0 # 0 = periodic, 1 = poisson
-VAR_PERIOD=(5)
+VAR_PERIOD=(5 15 30 60)
 VAR_ARRIVAL=(10)
-VAR_TOPOLOGY=("36grid")
+VAR_TOPOLOGY=("36grid_mrm2")
 VAR_LR_RANGE=("2X")
-VAR_LR_WEIGHT=(2)
+VAR_LR_WEIGHT=(4)
 VAR_LSA_R=0
 VAR_STROBE_CNT=0
 VAR_ALPHA=(1)
@@ -21,8 +21,8 @@ VAR_LSA_ENHANCED=0
 VAR_ROUTING_NO_ENERGY=0
 DATE="ltmax"
 LSA_MAC=1
-SEED_NUMBER=("4" "5")
-MRM=0
+SEED_NUMBER=("2" "3" "4" "5")
+MRM=3
 VAR_PERCENT=("1")
 
 # SR_RANGE simulation

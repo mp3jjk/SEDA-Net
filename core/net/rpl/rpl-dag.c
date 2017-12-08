@@ -1157,10 +1157,11 @@ best_parent(rpl_dag_t *dag)
 	  }
 #endif
 #if PARENT_REDUCTION_MODE
-    if(p->dag != dag || p->rank == INFINITE_RANK || p->valid_flag == 0) {
+    if(p->dag != dag || p->rank == INFINITE_RANK || p->valid_flag == 0)
 #else
-    if(p->dag != dag || p->rank == INFINITE_RANK) {
+    if(p->dag != dag || p->rank == INFINITE_RANK)
 #endif
+    {
       /* ignore this neighbor */
     } else if(best == NULL) {
       best = p;
@@ -1181,7 +1182,7 @@ best_parent(rpl_dag_t *dag)
 	  {
 		  return prev;
 	  }
-#else
+#else /* PARENT_REDUCTION_MODE */
 //	  if(rand() % (my_parent_number * my_parent_number) > (prev->parent_sum_weight - best->parent_sum_weight))
 //	  uint8_t random = rand() % ((my_parent_number * my_parent_number) * 2);
 	  uint8_t random = rand() % 2;
@@ -1196,7 +1197,7 @@ best_parent(rpl_dag_t *dag)
 		  return prev;
 	  }
 //	  printf("parent changed!\n");
-#endif
+#endif /* RPL_LIFETIME_MAX_MODE2 */
 
 #endif
   }

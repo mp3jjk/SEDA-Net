@@ -13,7 +13,7 @@
 /* Metric ratio between weight and rank */
 //#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 1
+#define LONG_WEIGHT_RATIO 2
 
 /* Weight ratio between rank and parent's degree */
 #define ALPHA	1
