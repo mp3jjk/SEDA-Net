@@ -3,10 +3,10 @@
 # programmed by Joonki Hong
 
 node_count=2
-MAX_NODE_NUMBER=50
-DELAY=1
-ENERGY=1
-PRR=1
+MAX_NODE_NUMBER=1
+DELAY=0
+ENERGY=0
+PRR=0
 COLLISION=0
 
 
