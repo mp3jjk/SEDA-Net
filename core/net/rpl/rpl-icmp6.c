@@ -834,7 +834,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 #if SINK_INFINITE_ENERGY
   /* For sink node, set weight 0 */
 //  printf("I'am who? %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
-  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == SERVER_NODE && 0) // Need to test both cases
+  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == SERVER_NODE) // Need to test both cases
   {
 	  PRINTF("send my weight sink %d but 0\n",my_weight);
 	  buffer[pos++] = 0;
