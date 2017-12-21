@@ -374,8 +374,8 @@ struct radio_driver NETSTACK_RADIO;
 #else /* DUAL_RADIO */
 
 #ifndef NETSTACK_CONF_RADIO
-#define NETSTACK_CONF_RADIO         cc2538_rf_driver
-// #define NETSTACK_CONF_RADIO         cc1200_driver
+/* #define NETSTACK_CONF_RADIO         cc2538_rf_driver */
+#define NETSTACK_CONF_RADIO         cc1200_driver
 #endif
 #endif /* DUAL_RADIO */
 

@@ -74,7 +74,7 @@ uint8_t data_btb; // Back to back data Tx
 
 #define SERVER_NODE 1
 
-#define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
+#define TRAFFIC_MODEL 1 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
 #define PERIOD 15
 #elif TRAFFIC_MODEL == 1
