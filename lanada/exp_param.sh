@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CONTIKI=/media/user/Harddisk/Double-MAC/
+CONTITIKI=~/Desktop/Double-MAC/lanada
 
 if [ $1 == "h" ]
 then
@@ -21,6 +21,8 @@ sed -i 's/\#define RESIDUAL_ENERGY_MAX 4000000/\#define RESIDUAL_ENERGY_MAX 1000
 echo "#define RPL_ENERGY_MODE 0
 #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
 #define RPL_LIFETIME_MAX_MODE2 $7 // Improving LT MAX MODE
+
+#define PROB_PARENT_SWITCH 0
 
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0

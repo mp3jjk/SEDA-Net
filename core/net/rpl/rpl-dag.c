@@ -1157,10 +1157,11 @@ best_parent(rpl_dag_t *dag)
 	  }
 #endif
 #if PARENT_REDUCTION_MODE
-    if(p->dag != dag || p->rank == INFINITE_RANK || p->valid_flag == 0) {
+    if(p->dag != dag || p->rank == INFINITE_RANK || p->valid_flag == 0)
 #else
-    if(p->dag != dag || p->rank == INFINITE_RANK) {
+    if(p->dag != dag || p->rank == INFINITE_RANK)
 #endif
+    {
       /* ignore this neighbor */
     } else if(best == NULL) {
       best = p;
@@ -1181,22 +1182,33 @@ best_parent(rpl_dag_t *dag)
 	  {
 		  return prev;
 	  }
-#else
+#else /* PARENT_REDUCTION_MODE */
 //	  if(rand() % (my_parent_number * my_parent_number) > (prev->parent_sum_weight - best->parent_sum_weight))
 //	  uint8_t random = rand() % ((my_parent_number * my_parent_number) * 2);
+#if PROB_PARENT_SWITCH
+	  uint8_t load_diff = prev->est_load + prev->parent_sum_weight - (best->est_load + best->parent_sum_weight);
+	  uint8_t random;
+	  if(load_diff > 0) {
+		  random = rand() % load_diff;
+	  }
+	  else {
+		  random = 0;
+	  }
+//	  uint8_t random = rand() % (prev->est_load + prev->parent_sum_weight - (best->est_load + best->parent_sum_weight));
+#else
 	  uint8_t random = rand() % 2;
-
+#endif
+	  prev->parent_sum_weight;
 #if RPL_LIFETIME_MAX_MODE2
 //	  printf("random %d cmp %d p_num %d\n",random, prev->est_load - best->est_load,my_parent_number);
 //	  if(random > (prev->est_load - best->est_load))
 	  if(random == 0)
-
 	  {
 //		  printf("return prev\n");
 		  return prev;
 	  }
 //	  printf("parent changed!\n");
-#endif
+#endif /* RPL_LIFETIME_MAX_MODE2 */
 
 #endif
   }
@@ -1918,6 +1930,7 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
 #if RPL_LIFETIME_MAX_MODE2
   p->MLS_id = dio->MLS_id;
   p->est_load = dio->est_load;
+  p->rem_energy = dio->rem_energy;
 #endif
 //  printf("rpl-dag ip: %d, sum_weight: %d\n",from->u8[15],p->parent_sum_weight);
   rpl_parent_t *p_temp;

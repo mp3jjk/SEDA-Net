@@ -12,14 +12,20 @@ do
 			cd $dir
 			part1=`grep -r ":Lifetime"`
 			lifetime=`echo "$part1" | cut -d':' -f2`
+
+			node=`echo "$part1" | cut -d':' -f3`
+			echo $dir : node$node
 			if [ -n "$lifetime" ]
 			then
-				let "lifetime=${lifetime} / 1000000"
+			for temp in ${lifetime}
+				do	
+					let "temp = $temp /1000000"
+					echo $temp
+				done
 			fi
-			node=`echo "$part1" | cut -d':' -f3`
-			echo $dir : node$node $lifetime
 			cd ..
 		done
+
 		echo 
 	fi
 	cd ..

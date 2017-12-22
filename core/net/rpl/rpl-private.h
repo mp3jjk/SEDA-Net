@@ -267,7 +267,8 @@ struct rpl_dio {
 #elif RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
   uint8_t parent_id;
   uint8_t parent_long;
-  uint8_t parent_weight; /* dio parent's weight info. JJH */
+//  uint8_t parent_weight; /* dio parent's weight info. JJH */
+  uint8_t rem_energy;
   uint8_t dio_weight; /* dio sender's total weight JJH */
 #endif
 #if RPL_LIFETIME_MAX_MODE2

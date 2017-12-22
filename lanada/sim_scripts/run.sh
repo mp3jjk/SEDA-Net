@@ -6,9 +6,9 @@ ONLY_LONG=0 # SR = 1 with only Long
 TRAFFIC=0 # 0 = periodic, 1 = poisson
 VAR_PERIOD=(5 15 30 60)
 VAR_ARRIVAL=(10)
-VAR_TOPOLOGY=("34cluster_mrm2")
+VAR_TOPOLOGY=("36grid_mrm2")
 VAR_LR_RANGE=("2X")
-VAR_LR_WEIGHT=(2)
+VAR_LR_WEIGHT=(1 2 3 4 5)
 VAR_LSA_R=0
 VAR_STROBE_CNT=0
 VAR_ALPHA=(1)
@@ -21,8 +21,9 @@ VAR_LSA_ENHANCED=0
 VAR_ROUTING_NO_ENERGY=0
 DATE="ltmax"
 LSA_MAC=1
-SEED_NUMBER=("2")
+SEED_NUMBER=("1" "2" "3" "4" "5")
 MRM=1
+VAR_PERCENT=("1")
 
 # SR_RANGE simulation
 
@@ -42,9 +43,12 @@ then
 			do
 			    for alpha_div in "${VAR_ALPHA_DIV[@]}"
 			    do
-				for check in "${VAR_CHECK_RATE[@]}"
+				for percent in "${VAR_PERCENT[@]}"
 				do
-				    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed $MRM
+				    for check in "${VAR_CHECK_RATE[@]}"
+				    do
+				    ./sr_run.sh $topology $TRAFFIC $period  0 $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed $MRM $percent
+				    done
 				done
 			    done
 			done
@@ -65,9 +69,12 @@ then
 			do
 			    for alpha_div in "${VAR_ALPHA_DIV[@]}"
 			    do
-				for check in "${VAR_CHECK_RATE[@]}"
+				for percent in "${VAR_PERCENT[@]}"
 				do
-				    ./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed $MRM
+				    for check in "${VAR_CHECK_RATE[@]}"
+				    do
+					./sr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT "${DATE}" $VAR_DATA_ACK $alpha_div 0 $range $check $VAR_ROUTING_NO_ENERGY $seed $MRM $percent
+				    done
 				done
 			    done
 			done
@@ -99,9 +106,12 @@ then
 				do
 				    for alpha_div in "${VAR_ALPHA_DIV[@]}"
 				    do
-					for check in "${VAR_CHECK_RATE[@]}"
+					for percent in "${VAR_PERCENT[@]}"
 					do
-					    ./lr_run.sh $topology $TRAFFIC $period 0 $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG $seed $MRM
+					    for check in "${VAR_CHECK_RATE[@]}"
+					    do
+						./lr_run.sh $topology $TRAFFIC $period 0 $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG $seed $MRM $percent
+					    done
 					done
 				    done
 				done
@@ -128,9 +138,12 @@ then
 				do
 				    for alpha_div in "${VAR_ALPHA_DIV[@]}"
 				    do
-					for check in "${VAR_CHECK_RATE[@]}"
+					for percent in "${VAR_PERCENT[@]}"
 					do
-					    ./lr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG $seed $MRM
+					    for check in "${VAR_CHECK_RATE[@]}"
+					    do
+						./lr_run.sh $topology $TRAFFIC 0 $arrival $alpha $VAR_STROBE_CNT $weight $VAR_LSA_R $range $VAR_PARENT_REDUCTION $ratio "${DATE}" $VAR_DATA_ACK $LSA_MAC $alpha_div $check $VAR_LSA_ENHANCED $VAR_ROUTING_NO_ENERGY $ONLY_LONG $seed $MRM $percent
+					    done
 					done
 				    done
 				done

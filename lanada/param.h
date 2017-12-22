@@ -2,6 +2,8 @@
 #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
 #define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
 
+#define PROB_PARENT_SWITCH 0
+
 /* Distributed weight update problem solutions */
 #define MODE_DIO_WEIGHT_UPDATED 0
 #define MODE_LAST_PARENT	0 // Tx Last parent info. in dio_ack
@@ -74,9 +76,9 @@ uint8_t data_btb; // Back to back data Tx
 
 #define SERVER_NODE 1
 
-#define TRAFFIC_MODEL 1 // 0: Periodic, 1: Poisson
+#define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
-#define PERIOD 15
+#define PERIOD 20
 #elif TRAFFIC_MODEL == 1
 #define ARRIVAL_RATE 0 // Mean value, 1/lambda
 #endif
@@ -139,8 +141,8 @@ uint8_t my_valid_parent_number;
 #define LOAD_ALPHA	90
 uint8_t parent_update; /* Update parent only once for each data_id */
 #endif /* RPL_ENERGY_MODE */
-#define MAX_NUM_NODE 100
-#define BUF_SIZE 10000
+#define MAX_NUM_NODE 50
+#define BUF_SIZE 5000
 extern int id_array[MAX_NUM_NODE];
 extern uint8_t id_count[BUF_SIZE];
 int latest_id;
