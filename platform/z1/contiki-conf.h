@@ -36,8 +36,8 @@
 #define XMAC_CONF_COMPOWER          1
 #define CXMAC_CONF_COMPOWER         1
 
-#define DUAL_RADIO 	1
-#define ADDR_MAP 		1 
+#define DUAL_RADIO 	0
+#define ADDR_MAP 		1
 
 #if DUAL_RADIO
 #define NETSTACK_DUAL_RADIO		1
@@ -94,6 +94,8 @@ struct radio_driver NETSTACK_RADIO;
 #define NETSTACK_CONF_RDC     nullrdc_driver
 #define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
 #define NETSTACK_CONF_FRAMER  contikimac_framer
+
+#define NETSTACK_CONF_RADIO   cc1200_driver
 
 #define CC2420_CONF_AUTOACK              1
 

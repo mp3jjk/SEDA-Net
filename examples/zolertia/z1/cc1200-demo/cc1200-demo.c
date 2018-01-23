@@ -87,7 +87,7 @@ PROCESS_THREAD(cc1200_demo_process, ev, data)
 
   etimer_set(&et, LOOP_INTERVAL);
 
-	dual_radio_switch(LONG_RADIO);
+  //	dual_radio_switch(LONG_RADIO);
   while(1) {
     PROCESS_YIELD();
     if(linkaddr_node_addr.u8[0] == 13)

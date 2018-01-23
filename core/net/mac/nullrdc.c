@@ -129,21 +129,12 @@
 #include "sys/log_message.h"
 //extern int collision_count, transmission_count;
 
-#if RPL_ENERGY_MODE
-extern uint8_t remaining_energy;
-#endif
 /*---------------------------------------------------------------------------*/
 static int
 send_one_packet(mac_callback_t sent, void *ptr)
 {
   int ret;
   int last_sent_ok = 0;
-
-#if RPL_ENERGY_MODE
-	// JJH
-  int original_datalen;
-  uint8_t *original_dataptr;
-#endif
 
 	// fprintf(debugfp,"nullrdc/send_one_packet/sent : %x\n\n",sent);
 	// fflush(debugfp); 
@@ -181,35 +172,6 @@ send_one_packet(mac_callback_t sent, void *ptr)
     dsn = ((uint8_t *)packetbuf_hdrptr())[2] & 0xff;
     NETSTACK_RADIO.prepare(packetbuf_hdrptr(), packetbuf_totlen());
 
-#if RPL_ENERGY_MODE
-    /* Relaying Tx energy consumption for Data packet JJH */
-    original_datalen = packetbuf_totlen();
-    original_dataptr = packetbuf_hdrptr();
-//    PRINTF("nullrdc: Tx test %c\n",original_dataptr[original_datalen-1]);
-    if(original_dataptr[original_datalen-1]=='X')
-    {
-    	/* For each data relay, energy reduction 1 for short 2 for long */
-    	if(remaining_energy >1)
-	{
-#if DUAL_RADIO
-    		if(radio_received_is_longrange()==LONG_RADIO)
-    		{
-    			if(remaining_energy-2 < 1)
-    				remaining_energy=1;
-    			else
-    				remaining_energy-=2;
-    		}
-    		else
-    			remaining_energy--;
-#else
-	remaining_energy--;
-#endif
-	}
-	PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
-    	if(remaining_energy == 1) // A node dies first
-    		PRINTF("ENERGY DEPLETION\n");
-    }
-#endif
     is_broadcast = packetbuf_holds_broadcast();
 
     if(NETSTACK_RADIO.receiving_packet() ||
@@ -425,43 +387,6 @@ packet_input(void)
  
 #if NULLRDC_SEND_802154_ACK
     {
-#if RPL_ENERGY_MODE
-    	// JJH successful receiving data trace
-    	uint8_t src_addr1=original_dataptr[original_datalen-4];
-    	uint8_t src_addr2=original_dataptr[original_datalen-3];
-    	uint8_t src_addr3=original_dataptr[original_datalen-2];
-//    	if(original_dataptr[original_datalen-1]=='X' && linkaddr_node_addr.u8[1]!=1)
-    	if(original_dataptr[original_datalen-1]=='X')
-    	{
-    		/* For each data relay, energy reduction 1 for short 2 for long */
-    		if(linkaddr_node_addr.u8[1]!=1 && remaining_energy >1){
-#if DUAL_RADIO
-    			if(radio_received_is_longrange()==LONG_RADIO)
-    			{
-    				if(remaining_energy-2 < 1){
-    					remaining_energy=1;
-						}	else {
-    					remaining_energy-=2;
-						}
-    			}
-				} else {
-    				remaining_energy--;
-				}
-#else
-		remaining_energy--;
-#endif
-		PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
-    		if(remaining_energy == 1) // A node dies 
-    			PRINTF("ENERGY DEPLETION\n");
-#if DUAL_RADIO		
-    		PRINTF("DATA from: %d to: %d %c %d\n",
-    				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],radio_received_is_longrange()==LONG_RADIO ? 'L' : 'S',remaining_energy);
-#else
-		PRINTF("DATA from: %d to: %d %d\n",
-    				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],remaining_energy);
-#endif
-    	}
-#endif
 			/* JOONKI
 			 * Is the retransmission comming from this part?? */
       frame802154_t info154;

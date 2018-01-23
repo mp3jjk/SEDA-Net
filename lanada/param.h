@@ -4,18 +4,8 @@
 
 #define PROB_PARENT_SWITCH 0
 
-/* Distributed weight update problem solutions */
-#define MODE_DIO_WEIGHT_UPDATED 0
-#define MODE_LAST_PARENT	0 // Tx Last parent info. in dio_ack
-#define MODE_PARENT_UPDATE_IN_ROUND 0 // Update parent only when round is synchronized // Not implemented yet
-
-/* OF best parent selection strategy */
-#define OF_MWHOF	0 // Minimum Weight Hysteresis Objective Function
-
-/* Metric ratio between weight and rank */
-//#define ALPHA 2
 /* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 2
+#define LONG_WEIGHT_RATIO 1
 
 /* Weight ratio between rank and parent's degree */
 #define ALPHA	1
@@ -37,26 +27,15 @@ uint8_t tree_level; // The candidates set of the most loaded node
 #define STROBE_CNT_MODE		0
 #endif
 
-/* To determine valid parent set, only valid parents are considered as a parent set */
-#define PARENT_REDUCTION_MODE	0
-#define VALID_PARENT_RATIO	0
-
 /* Enabling Data ACK */
 #define DATA_ACK      1
 #define ACK_WEIGHT_INCLUDED		1
-uint8_t data_btb; // Back to back data Tx
 
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
 
-/* Data aggregation shceme enabled or not */
-#define DATA_AGGREGATION 1	// not implemented yet
-
 /* Dual routing converge */
 #define DUAL_ROUTING_CONVERGE 	0
-
-/* Allow only a update per round */
-#define SINGLE_UPDATE_ROUND	0
 
 /* Energy consumption X during routing */
 #define ROUTING_NO_ENERGY 0
@@ -119,12 +98,7 @@ uint8_t simple_convergence;
 #define RPL_LIFETIME_MAX_MODE2 0 // Is it fine?
 #endif /* LSA_R */
 
-#if RPL_ENERGY_MODE
-uint8_t remaining_energy;
-uint8_t alpha;
-#define LONG_ETX_PENALTY 5
-
-#elif RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
 #ifdef ZOUL_MOTE
 #define RPL_ETX_WEIGHT 	1
 #else
@@ -134,9 +108,6 @@ uint8_t my_weight;
 uint8_t my_sink_reachability;
 uint8_t my_parent_number;
 uint8_t init_phase; // It is in init_phase while it is 1
-#if PARENT_REDUCTION_MODE
-uint8_t my_valid_parent_number;
-#endif
 #define LOAD_SCALE 	100
 #define LOAD_ALPHA	90
 uint8_t parent_update; /* Update parent only once for each data_id */

@@ -362,7 +362,6 @@ rpl_init(void)
 
   // RPL_CONVERGENCE TEMP timer
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-  parent_update = 1; /* update parent only once in each est_load */
 #if DUAL_RADIO
 #if DUAL_ROUTING_CONVERGE
 	rpl_convergence_timer();

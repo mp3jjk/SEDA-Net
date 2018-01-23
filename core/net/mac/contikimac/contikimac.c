@@ -55,11 +55,6 @@
 
 #include <string.h>
 
-#if CONTIKI_TARGET_COOJA
-#include "lib/simEnvChange.h"
-#include "sys/cooja_mt.h"
-#endif /* CONTIKI_TARGET_COOJA */
-
 /* TX/RX cycles are synchronized with neighbor wake periods */
 #ifdef CONTIKIMAC_CONF_WITH_PHASE_OPTIMIZATION
 #define WITH_PHASE_OPTIMIZATION      CONTIKIMAC_CONF_WITH_PHASE_OPTIMIZATION
@@ -212,13 +207,13 @@ static int we_are_receiving_burst = 0;
 #define INTER_PACKET_INTERVAL              RTIMER_ARCH_SECOND / 2500
 #endif
 
-/* AFTER_ACK_DETECTECT_WAIT_TIME is the time to wait after a potential
+/* AFTER_ACK_DETECTED_WAIT_TIME is the time to wait after a potential
    ACK packet has been detected until we can read it out from the
    radio. */
-#ifdef CONTIKIMAC_CONF_AFTER_ACK_DETECTECT_WAIT_TIME
-#define AFTER_ACK_DETECTECT_WAIT_TIME      CONTIKIMAC_CONF_AFTER_ACK_DETECTECT_WAIT_TIME
+#ifdef CONTIKIMAC_CONF_AFTER_ACK_DETECTED_WAIT_TIME
+#define AFTER_ACK_DETECTED_WAIT_TIME      CONTIKIMAC_CONF_AFTER_ACK_DETECTED_WAIT_TIME
 #else
-#define AFTER_ACK_DETECTECT_WAIT_TIME      RTIMER_ARCH_SECOND / 1500
+#define AFTER_ACK_DETECTED_WAIT_TIME      RTIMER_ARCH_SECOND / 1500
 #endif
 
 /* MAX_PHASE_STROBE_TIME is the time that we transmit repeated packets
@@ -229,7 +224,6 @@ static int we_are_receiving_burst = 0;
 #define MAX_PHASE_STROBE_TIME              RTIMER_ARCH_SECOND / 60
 #endif
 
-#define CONTIKIMAC_CONF_SEND_SW_ACK 1 // JJH
 #ifdef CONTIKIMAC_CONF_SEND_SW_ACK
 #define CONTIKIMAC_SEND_SW_ACK CONTIKIMAC_CONF_SEND_SW_ACK
 #else
@@ -237,17 +231,6 @@ static int we_are_receiving_burst = 0;
 #endif
 
 #define ACK_LEN 3
-// JJH
-#if DUAL_RADIO
-#ifdef ZOLERTIA_Z1
-#include	"../platform/z1/dual_radio.h"
-#elif COOJA /* ZOLERTIA_Z1 */
-#include	"../platform/cooja/dual_conf.h"
-#else /* ZOLERTIA_Z1 */
-#include "../platform/zoul/dual_radio.h"
-#endif /* ZOLERTIA_Z1 */
-#endif /* DUAL_RADIO */
-
 
 #include <stdio.h>
 static struct rtimer rt;
@@ -259,7 +242,7 @@ static volatile uint8_t contikimac_keep_radio_on = 0;
 static volatile unsigned char we_are_sending = 0;
 static volatile unsigned char radio_is_on = 0;
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
 #include <stdio.h>
 #define PRINTF(...) printf(__VA_ARGS__)
@@ -286,12 +269,6 @@ static struct timer broadcast_rate_timer;
 static int broadcast_rate_counter;
 #endif /* CONTIKIMAC_CONF_BROADCAST_RATE_LIMIT */
 
-/* remaining energy JJH */
-#include "../lanada/param.h"
-#if RPL_ENERGY_MODE
-extern uint8_t remaining_energy;
-#endif
-
 /*---------------------------------------------------------------------------*/
 static void
 on(void)
@@ -312,9 +289,15 @@ off(void)
   }
 }
 /*---------------------------------------------------------------------------*/
-static volatile rtimer_clock_t cycle_start;
 static void powercycle_wrapper(struct rtimer *t, void *ptr);
 static char powercycle(struct rtimer *t, void *ptr);
+/*---------------------------------------------------------------------------*/
+static volatile rtimer_clock_t cycle_start;
+#if SYNC_CYCLE_STARTS
+static volatile rtimer_clock_t sync_cycle_start;
+static volatile uint8_t sync_cycle_phase;
+#endif
+/*---------------------------------------------------------------------------*/
 static void
 schedule_powercycle(struct rtimer *t, rtimer_clock_t time)
 {
@@ -349,7 +332,7 @@ schedule_powercycle_fixed(struct rtimer *t, rtimer_clock_t fixed_time)
     if(RTIMER_CLOCK_LT(fixed_time, now + RTIMER_GUARD_TIME)) {
       fixed_time = now + RTIMER_GUARD_TIME;
     }
-    printf("before rtimer_set\n");
+
     r = rtimer_set(t, fixed_time, 1, powercycle_wrapper, NULL);
     if(r != RTIMER_OK) {
       PRINTF("schedule_powercycle: could not set rtimer\n");
@@ -363,7 +346,7 @@ powercycle_turn_radio_off(void)
 #if CONTIKIMAC_CONF_COMPOWER
   uint8_t was_on = radio_is_on;
 #endif /* CONTIKIMAC_CONF_COMPOWER */
-  
+
   if(we_are_sending == 0 && we_are_receiving_burst == 0) {
     off();
 #if CONTIKIMAC_CONF_COMPOWER
@@ -385,17 +368,37 @@ powercycle_turn_radio_on(void)
 static void
 powercycle_wrapper(struct rtimer *t, void *ptr)
 {
-	printf("powercycle_wrapper\n");
   powercycle(t, ptr);
+}
+/*---------------------------------------------------------------------------*/
+static void
+advance_cycle_start(void)
+{
+  #if SYNC_CYCLE_STARTS
+
+  /* Compute cycle start when RTIMER_ARCH_SECOND is not a multiple
+  of CHANNEL_CHECK_RATE */
+  if(sync_cycle_phase++ == NETSTACK_RDC_CHANNEL_CHECK_RATE) {
+    sync_cycle_phase = 0;
+    sync_cycle_start += RTIMER_ARCH_SECOND;
+    cycle_start = sync_cycle_start;
+  } else if( (RTIMER_ARCH_SECOND * NETSTACK_RDC_CHANNEL_CHECK_RATE) > 65535) {
+    uint32_t phase_time = sync_cycle_phase*RTIMER_ARCH_SECOND;
+
+    cycle_start = sync_cycle_start + phase_time/NETSTACK_RDC_CHANNEL_CHECK_RATE;
+  } else {
+    unsigned phase_time = sync_cycle_phase*RTIMER_ARCH_SECOND;
+
+    cycle_start = sync_cycle_start + phase_time/NETSTACK_RDC_CHANNEL_CHECK_RATE;
+  }
+  #endif
+
+  cycle_start += CYCLE_TIME;
 }
 /*---------------------------------------------------------------------------*/
 static char
 powercycle(struct rtimer *t, void *ptr)
 {
-#if SYNC_CYCLE_STARTS
-  static volatile rtimer_clock_t sync_cycle_start;
-  static volatile uint8_t sync_cycle_phase;
-#endif
 
   PT_BEGIN(&pt);
 
@@ -409,30 +412,11 @@ powercycle(struct rtimer *t, void *ptr)
     static uint8_t packet_seen;
     static uint8_t count;
 
-#if SYNC_CYCLE_STARTS
-    /* Compute cycle start when RTIMER_ARCH_SECOND is not a multiple
-       of CHANNEL_CHECK_RATE */
-    if(sync_cycle_phase++ == NETSTACK_RDC_CHANNEL_CHECK_RATE) {
-      sync_cycle_phase = 0;
-      sync_cycle_start += RTIMER_ARCH_SECOND;
-      cycle_start = sync_cycle_start;
-    } else {
-#if (RTIMER_ARCH_SECOND * NETSTACK_RDC_CHANNEL_CHECK_RATE) > 65535
-      cycle_start = sync_cycle_start + ((unsigned long)(sync_cycle_phase*RTIMER_ARCH_SECOND))/NETSTACK_RDC_CHANNEL_CHECK_RATE;
-#else
-      cycle_start = sync_cycle_start + (sync_cycle_phase*RTIMER_ARCH_SECOND)/NETSTACK_RDC_CHANNEL_CHECK_RATE;
-#endif
-    }
-#else
-    cycle_start += CYCLE_TIME;
-#endif
-
     packet_seen = 0;
-printf("powercycle before radio_on\n");
+
     for(count = 0; count < CCA_COUNT_MAX; ++count) {
       if(we_are_sending == 0 && we_are_receiving_burst == 0) {
         powercycle_turn_radio_on();
-        printf("powercycle after radio_on\n");
         /* Check if a packet is seen in the air. If so, we keep the
              radio on for a while (LISTEN_TIME_AFTER_PACKET_DETECTED) to
              be able to receive the packet. We also continuously check
@@ -441,15 +425,12 @@ printf("powercycle before radio_on\n");
              caused by an incoming packet. */
         if(NETSTACK_RADIO.channel_clear() == 0) {
           packet_seen = 1;
-          printf("not channel clear\n");
           break;
         }
         powercycle_turn_radio_off();
       }
-      printf("powercycle schedule\n");
       schedule_powercycle_fixed(t, RTIMER_NOW() + CCA_SLEEP_TIME);
       PT_YIELD(&pt);
-      printf("powercycle after pt_yield comeback\n");
     }
 
     if(packet_seen) {
@@ -511,22 +492,25 @@ printf("powercycle before radio_on\n");
       }
     }
 
-    if(RTIMER_CLOCK_LT(RTIMER_NOW() - cycle_start, CYCLE_TIME - CHECK_TIME * 4)) {
+    advance_cycle_start();
+
+    if(RTIMER_CLOCK_LT(RTIMER_NOW() , cycle_start - CHECK_TIME * 4)) {
       /* Schedule the next powercycle interrupt, or sleep the mcu
-	 until then.  Sleeping will not exit from this interrupt, so
-	 ensure an occasional wake cycle or foreground processing will
-	 be blocked until a packet is detected */
+      until then.  Sleeping will not exit from this interrupt, so
+      ensure an occasional wake cycle or foreground processing will
+      be blocked until a packet is detected */
 #if RDC_CONF_MCU_SLEEP
+
       static uint8_t sleepcycle;
       if((sleepcycle++ < 16) && !we_are_sending && !radio_is_on) {
-        rtimer_arch_sleep(CYCLE_TIME - (RTIMER_NOW() - cycle_start));
+        rtimer_arch_sleep(RTIMER_NOW() - cycle_start);
       } else {
         sleepcycle = 0;
-        schedule_powercycle_fixed(t, CYCLE_TIME + cycle_start);
+        schedule_powercycle_fixed(t, cycle_start);
         PT_YIELD(&pt);
       }
 #else
-      schedule_powercycle_fixed(t, CYCLE_TIME + cycle_start);
+      schedule_powercycle_fixed(t, cycle_start);
       PT_YIELD(&pt);
 #endif
     }
@@ -577,18 +561,13 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
   int len;
   uint8_t seqno;
 #endif
-#if RPL_ENERGY_MODE
-	// JJH
-  int original_datalen;
-  uint8_t *original_dataptr;
-#endif
 
   /* Exit if RDC and radio were explicitly turned off */
    if(!contikimac_is_on && !contikimac_keep_radio_on) {
     PRINTF("contikimac: radio is turned off\n");
     return MAC_TX_ERR_FATAL;
   }
- 
+
   if(packetbuf_totlen() == 0) {
     PRINTF("contikimac: send_packet data len 0\n");
     return MAC_TX_ERR_FATAL;
@@ -598,17 +577,6 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
   /* If NETSTACK_CONF_BRIDGE_MODE is set, assume PACKETBUF_ADDR_SENDER is already set. */
   packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
 #endif
-	/* JOONKI */
-#if DUAL_RADIO
-	if(sending_in_LR() == LONG_RADIO){
-  	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &long_linkaddr_node_addr);
-	}	else	{
-  	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
-	}
-#else
-  	packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
-#endif
-
   if(packetbuf_holds_broadcast()) {
     is_broadcast = 1;
     PRINTDEBUG("contikimac: send broadcast\n");
@@ -641,40 +609,10 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
       return MAC_TX_ERR_FATAL;
     }
   }
-  
+
   transmit_len = packetbuf_totlen();
   NETSTACK_RADIO.prepare(packetbuf_hdrptr(), transmit_len);
 
-#if RPL_ENERGY_MODE
-    /* Relaying Tx energy consumption for Data packet JJH */
-    original_datalen = packetbuf_totlen();
-    original_dataptr = packetbuf_hdrptr();
-    if(original_dataptr[original_datalen-1]=='X')
-    {
-    	/* For each data relay, energy reduction 1 for short 2 for long */
-    	if(remaining_energy >1)
-			{
-#if DUAL_RADIO
-    		if(radio_received_is_longrange()==LONG_RADIO)
-    		{
-    			if(remaining_energy-2 < 1)	{
-    				remaining_energy=1;
-					}	else	{
-    				remaining_energy-=2;
-					}
-				}	else	{
-    			remaining_energy--;
-				}
-#else
-	remaining_energy--;
-#endif
-		}
-		PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
-    	if(remaining_energy == 1) {		// A node dies first
-    		PRINTF("ENERGY DEPLETION\n");
-			}
-    }
-#endif
   if(!is_broadcast && !is_receiver_awake) {
 #if WITH_PHASE_OPTIMIZATION
     ret = phase_wait(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
@@ -686,9 +624,9 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
     if(ret != PHASE_UNKNOWN) {
       is_known_receiver = 1;
     }
-#endif /* WITH_PHASE_OPTIMIZATION */ 
+#endif /* WITH_PHASE_OPTIMIZATION */
   }
-  
+
 
 
   /* By setting we_are_sending to one, we ensure that the rtimer
@@ -706,7 +644,7 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
            NETSTACK_RADIO.receiving_packet(), NETSTACK_RADIO.pending_packet());
     return MAC_TX_COLLISION;
   }
-  
+
   /* Switch off the radio to ensure that we didn't start sending while
      the radio was doing a channel check. */
   off();
@@ -816,25 +754,14 @@ send_packet(mac_callback_t mac_callback, void *mac_callback_ptr,
 #else /* RDC_CONF_HARDWARE_ACK */
      /* Wait for the ACK packet */
       wt = RTIMER_NOW();
-      while(RTIMER_CLOCK_LT(RTIMER_NOW(), wt + INTER_PACKET_INTERVAL)) {
-#if CONTIKI_TARGET_COOJA
-            simProcessRunValue = 1;
-            cooja_mt_yield();
-#endif /* CONTIKI_TARGET_COOJA */
-
- }
+      while(RTIMER_CLOCK_LT(RTIMER_NOW(), wt + INTER_PACKET_INTERVAL)) { }
 
       if(!is_broadcast && (NETSTACK_RADIO.receiving_packet() ||
                            NETSTACK_RADIO.pending_packet() ||
                            NETSTACK_RADIO.channel_clear() == 0)) {
         uint8_t ackbuf[ACK_LEN];
         wt = RTIMER_NOW();
-        while(RTIMER_CLOCK_LT(RTIMER_NOW(), wt + AFTER_ACK_DETECTECT_WAIT_TIME)) { 
-      #if CONTIKI_TARGET_COOJA
-                  simProcessRunValue = 1;
-                  cooja_mt_yield();
-      #endif /* CONTIKI_TARGET_COOJA */
-}
+        while(RTIMER_CLOCK_LT(RTIMER_NOW(), wt + AFTER_ACK_DETECTED_WAIT_TIME)) { }
 
         len = NETSTACK_RADIO.read(ackbuf, ACK_LEN);
         if(len == ACK_LEN && seqno == ackbuf[ACK_LEN - 1]) {
@@ -923,7 +850,7 @@ qsend_list(mac_callback_t sent, void *ptr, struct rdc_buf_list *buf_list)
   int ret;
   int is_receiver_awake;
   int pending;
-  
+
   if(buf_list == NULL) {
     return;
   }
@@ -935,7 +862,7 @@ qsend_list(mac_callback_t sent, void *ptr, struct rdc_buf_list *buf_list)
     mac_call_sent_callback(sent, ptr, MAC_TX_COLLISION, 1);
     return;
   }
-  
+
   /* Create and secure frames in advance */
   curr = buf_list;
   do {
@@ -946,19 +873,23 @@ qsend_list(mac_callback_t sent, void *ptr, struct rdc_buf_list *buf_list)
       if(next != NULL) {
         packetbuf_set_attr(PACKETBUF_ATTR_PENDING, 1);
       }
+#if !NETSTACK_CONF_BRIDGE_MODE
+      /* If NETSTACK_CONF_BRIDGE_MODE is set, assume PACKETBUF_ADDR_SENDER is already set. */
+      packetbuf_set_addr(PACKETBUF_ADDR_SENDER, &linkaddr_node_addr);
+#endif
       packetbuf_set_attr(PACKETBUF_ATTR_MAC_ACK, 1);
       if(NETSTACK_FRAMER.create() < 0) {
         PRINTF("contikimac: framer failed\n");
         mac_call_sent_callback(sent, ptr, MAC_TX_ERR_FATAL, 1);
         return;
       }
-      
+
       packetbuf_set_attr(PACKETBUF_ATTR_IS_CREATED_AND_SECURED, 1);
       queuebuf_update_from_packetbuf(curr->buf);
     }
     curr = next;
   } while(next != NULL);
-  
+
   /* The receiver needs to be awoken before we send */
   is_receiver_awake = 0;
   curr = buf_list;
@@ -1024,18 +955,8 @@ input_packet(void)
   }
 
   /*  printf("cycle_start 0x%02x 0x%02x\n", cycle_start, cycle_start % CYCLE_TIME);*/
-  /* JJH DUAL_RADIO ADDR CHECK */
 
   if(packetbuf_totlen() > 0 && NETSTACK_FRAMER.parse() >= 0) {
-#if DUAL_RADIO
-    if(packetbuf_datalen() > 0 &&
-       packetbuf_totlen() > 0 &&
-       (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-                     &linkaddr_node_addr) ||
-	linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
-		     &long_linkaddr_node_addr) ||
-        packetbuf_holds_broadcast())) {
-#else
     if(packetbuf_datalen() > 0 &&
        packetbuf_totlen() > 0 &&
        (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),
@@ -1043,7 +964,7 @@ input_packet(void)
         packetbuf_holds_broadcast())) {
       /* This is a regular packet that is destined to us or to the
          broadcast address. */
-#endif
+
       /* If FRAME_PENDING is set, we are receiving a packets in a burst */
       we_are_receiving_burst = packetbuf_attr(PACKETBUF_ATTR_PENDING);
       if(we_are_receiving_burst) {
@@ -1084,80 +1005,22 @@ input_packet(void)
       PRINTDEBUG("contikimac: data (%u)\n", packetbuf_datalen());
 
 #if CONTIKIMAC_SEND_SW_ACK
-	printf("send_sw_ack\n");
-/*
-			uint8_t src_addr1=original_dataptr[original_datalen-4];
-    	uint8_t src_addr2=original_dataptr[original_datalen-3];
-    	uint8_t src_addr3=original_dataptr[original_datalen-2];
-*/
-#if RPL_ENERGY_MODE
-    	if(original_dataptr[original_datalen-1]=='X')
-    	{
-    		/* For each data relay, energy reduction 1 for short 2 for long */
-    		if(linkaddr_node_addr.u8[1]!=1 && remaining_energy >1)
-				{
-#if DUAL_RADIO
-    			if(radio_received_is_longrange()==LONG_RADIO)
-    			{
-    				if(remaining_energy-2 < 1){
-    					remaining_energy=1;
-						}	else	{
-    					remaining_energy-=2;
-						}
-					}	else	{
-    				remaining_energy--;
-					}
-#else
-					remaining_energy--;
-#endif
-				}
-		PRINTF("node %d energy %d\n",linkaddr_node_addr.u8[1],remaining_energy);
-    		if(remaining_energy == 1) // A node dies 
-    			PRINTF("ENERGY DEPLETION\n");
-#if DUAL_RADIO		
-    		PRINTF("DATA from: %d to: %d %c %d\n",
-    				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],radio_received_is_longrange()==LONG_RADIO ? 'L' : 'S',remaining_energy);
-#else
-		PRINTF("DATA from: %d to: %d %d\n",
-    				packetbuf_addr(PACKETBUF_ADDR_SENDER)->u8[1],linkaddr_node_addr.u8[1],remaining_energy);
-#endif
-    	}
-#endif
+      {
         frame802154_t info154;
         frame802154_parse(original_dataptr, original_datalen, &info154);
-
-        /* printf("debug %d %d %d %d\n",info154.fcf.frame_type == FRAME802154_DATAFRAME,info154.fcf.ack_required != 0,linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
-                &linkaddr_node_addr),linkaddr_cmp((linkaddr_t*)&info154.dest_addr,
-		&long_linkaddr_node_addr)); */
-#if DUAL_RADIO
-        if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
-            info154.fcf.ack_required != 0 &&
-            (linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
-                &linkaddr_node_addr) ||
-	    linkaddr_cmp((linkaddr_t*)&info154.dest_addr,
-		&long_linkaddr_node_addr))) {
-#else
         if(info154.fcf.frame_type == FRAME802154_DATAFRAME &&
             info154.fcf.ack_required != 0 &&
             linkaddr_cmp((linkaddr_t *)&info154.dest_addr,
-			 &linkaddr_node_addr)) {
-#endif
+                &linkaddr_node_addr)) {
           uint8_t ackdata[ACK_LEN] = {0, 0, 0};
-	  printf("tx ack!\n");
+
           we_are_sending = 1;
           ackdata[0] = FRAME802154_ACKFRAME;
           ackdata[1] = 0;
           ackdata[2] = info154.seq;
-#if DUAL_RADIO
-				if (radio_received_is_longrange()==LONG_RADIO){
-					dual_radio_switch(LONG_RADIO);
-				}	else if (radio_received_is_longrange() == SHORT_RADIO){
-					dual_radio_switch(SHORT_RADIO);
-				}
-#endif
-
           NETSTACK_RADIO.send(ackdata, ACK_LEN);
           we_are_sending = 0;
+        }
       }
 #endif /* CONTIKIMAC_SEND_SW_ACK */
 

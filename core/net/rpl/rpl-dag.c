@@ -860,16 +860,6 @@ rpl_add_parent(rpl_dag_t *dag, rpl_dio_t *dio, uip_ipaddr_t *addr)
       p->dtsn = dio->dtsn;
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
       my_parent_number++;
-#if PARENT_REDUCTION_MODE
-      if(my_valid_parent_number == 0
-    		  || random_rand() % 100 <= (VALID_PARENT_RATIO * 100))
-      {
-    	  my_valid_parent_number++;
-    	  p->valid_flag = 1;
-      }
-//      printf("PARENT_REDUCTION #parent: %d, #valid_parent: %d\n",my_parent_number,my_valid_parent_number);
-#endif
-
 #endif
 //      printf("my_parent_number inc: %d\n",my_parent_number);
       /* Check whether we have a neighbor that has not gotten a link metric yet */
@@ -1078,21 +1068,6 @@ rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *p)
     PRINTF("RPL: Preferred parent update, rank changed from %u to %u\n",
   	(unsigned)old_rank, best_dag->rank);
   }
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-  if(last_parent != best_dag->preferred_parent)
-  {
-      /* Tx dio_ack only if parent changes */
-#if MODE_LAST_PARENT
-	  instance->last_parent = last_parent;
-	  if(last_parent != NULL)
-	  {
-		  instance->last_parent_weight = last_parent->parent_weight;
-	  }
-#endif
-//	    rpl_schedule_dio_ack(instance);
-//      dio_ack_output(rpl_get_parent_ipaddr(best_dag->preferred_parent)); // JJH for debug
-  }
-#endif
   return best_dag;
 }
 /*---------------------------------------------------------------------------*/
@@ -1101,7 +1076,6 @@ best_parent(rpl_dag_t *dag)
 {
   rpl_parent_t *p, *best, *prev;
 #if RPL_LIFETIME_MAX_MODE2
-//  printf("rpl-dag best_parent called %d\n",parent_update);
 #endif
   best = NULL;
 #if DETERMINED_ROUTING_TREE
@@ -1111,12 +1085,6 @@ best_parent(rpl_dag_t *dag)
   rpl_print_neighbor_list();
   p = nbr_table_head(rpl_parents);
   prev = dag->preferred_parent;
-#if RPL_LIFETIME_MAX_MODE2 && SINGLE_UPDATE_ROUND
-  if(parent_update == 0) {
-	  return prev;
-  }
-  parent_update = 0;
-#endif
 #if LSA_R
 	/* Don't change parent after LSA converge message input */
 #if CONVERGE_MODE == 1
@@ -1156,11 +1124,7 @@ best_parent(rpl_dag_t *dag)
 		  dag->base_rank = p->rank;
 	  }
 #endif
-#if PARENT_REDUCTION_MODE
-    if(p->dag != dag || p->rank == INFINITE_RANK || p->valid_flag == 0)
-#else
     if(p->dag != dag || p->rank == INFINITE_RANK)
-#endif
     {
       /* ignore this neighbor */
     } else if(best == NULL) {
@@ -1176,15 +1140,6 @@ best_parent(rpl_dag_t *dag)
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
   if(best != prev && best != NULL && prev != NULL)
   {
-//	  printf("among my_parent_number^2: %d weight diff: %d\n",my_parent_number, prev->parent_sum_weight - best->parent_sum_weight);
-#if PARENT_REDUCTION_MODE
-	  if(rand() % (my_valid_parent_number * my_valid_parent_number) > (prev->parent_sum_weight - best->parent_sum_weight))
-	  {
-		  return prev;
-	  }
-#else /* PARENT_REDUCTION_MODE */
-//	  if(rand() % (my_parent_number * my_parent_number) > (prev->parent_sum_weight - best->parent_sum_weight))
-//	  uint8_t random = rand() % ((my_parent_number * my_parent_number) * 2);
 #if PROB_PARENT_SWITCH
 	  uint8_t load_diff = prev->est_load + prev->parent_sum_weight - (best->est_load + best->parent_sum_weight);
 	  uint8_t random;
@@ -1210,7 +1165,6 @@ best_parent(rpl_dag_t *dag)
 //	  printf("parent changed!\n");
 #endif /* RPL_LIFETIME_MAX_MODE2 */
 
-#endif
   }
 #endif
 //#endif
@@ -1258,10 +1212,6 @@ rpl_remove_parent(rpl_parent_t *parent)
   PRINTF("RPL: Removing parent ");
   PRINT6ADDR(rpl_get_parent_ipaddr(parent));
   PRINTF("\n");
-#if PARENT_REDUCTION_MODE
-  if(parent->valid_flag == 1)
-	  my_valid_parent_number--;
-#endif
   rpl_nullify_parent(parent);
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
   my_parent_number--;
@@ -2013,10 +1963,6 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
     uip_ds6_defrt_add(from, RPL_DEFAULT_ROUTE_INFINITE_LIFETIME ? 0 : RPL_LIFETIME(instance, instance->default_lifetime));
   }
   p->dtsn = dio->dtsn;
-
-#if RPL_ENERGY_MODE
-  p->rem_energy = dio->rem_energy; // Copy rem_energy to parent JJH
-#endif
 
 }
 /*---------------------------------------------------------------------------*/

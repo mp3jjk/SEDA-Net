@@ -262,9 +262,7 @@ struct rpl_dio {
   rpl_prefix_t destination_prefix;
   rpl_prefix_t prefix_info;
   struct rpl_metric_container mc;
-#if RPL_ENERGY_MODE
-  uint8_t rem_energy; //dio remaining energy JJH
-#elif RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
   uint8_t parent_id;
   uint8_t parent_long;
 //  uint8_t parent_weight; /* dio parent's weight info. JJH */

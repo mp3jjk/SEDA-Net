@@ -79,9 +79,6 @@
 #include "sys/log_message.h"
 #include "sys/residual.h"
 #include <stdlib.h>
-#if RPL_ENERGY_MODE
-extern uint8_t remaining_energy;
-#endif
 
 /*---------------------------------------------------------------------------*/
 #define RPL_DIO_GROUNDED                 0x80
@@ -97,9 +94,6 @@ static void dis_input(void);
 static void dio_input(void);
 static void dao_input(void);
 static void dao_ack_input(void);
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-static void dio_ack_input(void);
-#endif
 #if LSA_R
 #if CONVERGE_MODE == 1
 static void LSA_converge_input(void);
@@ -131,9 +125,6 @@ UIP_ICMP6_HANDLER(dis_handler, ICMP6_RPL, RPL_CODE_DIS, dis_input);
 UIP_ICMP6_HANDLER(dio_handler, ICMP6_RPL, RPL_CODE_DIO, dio_input);
 UIP_ICMP6_HANDLER(dao_handler, ICMP6_RPL, RPL_CODE_DAO, dao_input);
 UIP_ICMP6_HANDLER(dao_ack_handler, ICMP6_RPL, RPL_CODE_DAO_ACK, dao_ack_input);
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-UIP_ICMP6_HANDLER(dio_ack_handler, ICMP6_RPL, RPL_CODE_DIO_ACK, dio_ack_input);
-#endif
 #if LSA_R
 #if CONVERGE_MODE == 1
 UIP_ICMP6_HANDLER(LSA_converge_handler, ICMP6_RPL, RPL_CODE_LSA, LSA_converge_input);
@@ -157,49 +148,6 @@ find_route_entry_by_dao_ack(uint8_t seq)
   return NULL;
 }
 #endif /* RPL_WITH_DAO_ACK */
-
-/* JOONKI
- * maybe wrong place?? */
-/* #if RPL_LIFETIME_MAX_MODE
-static int
-add_nbr_from_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
-{
-  if(rpl_icmp6_update_nbr_table(from, NBR_TABLE_REASON_RPL_DIO, dio) == NULL) {
-    PRINTF("RPL: Out of memory, dropping DIO from ");
-    PRINT6ADDR(from);
-    PRINTF("\n");
-    return 0;
-  }
-  return 1;
-}
-#endif */
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-static int
-add_nbr_from_dio_ack(uip_ipaddr_t *from, uint8_t weight)
-{
-  /* add this to the neighbor cache if not already there */
-  if(rpl_icmp6_update_nbr_table(from, NBR_TABLE_REASON_UNDEFINED, &weight) == NULL) {
-    PRINTF("RPL: Out of memory, dropping DIO_ACK from ");
-    PRINT6ADDR(from);
-    PRINTF("\n");
-    return 0;
-  }
-  return 1;
-}
-#endif
-/* #if RPL_LIFETIME_MAX_MODE
-static int
-add_nbr_from_dao(uip_ipaddr_t *from, uint8_t weight)
-{
-  if(rpl_icmp6_update_nbr_table(from, NBR_TABLE_REASON_RPL_DAO, &weight) == NULL) {
-    PRINTF("RPL: Out of memory, dropping DAO from ");
-    PRINT6ADDR(from);
-    PRINTF("\n");
-    return 0;
-  }
-  return 1;
-}
-#endif */
 
 /* prepare for forwarding of DAO */
 static uint8_t
@@ -452,10 +400,7 @@ dio_input(void)
   dio.dtsn = buffer[i++];
   /* two reserved bytes */
   /* One byte for remaining energy JJH*/
-#if RPL_ENERGY_MODE
-  dio.rem_energy = buffer[i++];
-  i += 1;
-#elif RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
 //  dio.parent_weight = buffer[i++];
   dio.rem_energy = buffer[i++];
 //  PRINTF("recv dio p's weight %d\n",dio.parent_weight);
@@ -642,9 +587,6 @@ dio_input(void)
   uint8_t is_longrange = radio_received_is_longrange();
   PRINTF("before child cmp %d\n",is_longrange);
 #endif
-#if MODE_DIO_WEIGHT_UPDATED
-  uint8_t prev_weight = my_weight;
-#endif
   uint8_t prev_weight = my_weight;
 
   PRINTF("DIO_from:");
@@ -724,13 +666,6 @@ dio_input(void)
 		  // Not included in child list but I'm the parent maybe due to the DIO_ACK loss
 	  }
   }
-#if MODE_DIO_WEIGHT_UPDATED
-  // If my_weight changed,
-  if(prev_weight != my_weight)
-  {
-	  dio_broadcast(rpl_get_default_instance());
-  }
-#endif
 /*  if(prev_weight != my_weight)
   {
 	  PRINTF("DIO Reset in DIO\n");
@@ -803,10 +738,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     RPL_LOLLIPOP_INCREMENT(instance->dtsn_out);
   }
 
-#if RPL_ENERGY_MODE
-  buffer[pos++] = remaining_energy; /* remaining energy JJH */
-  buffer[pos++] = 0; /* reserved */
-#elif RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
 /*  if(dag->preferred_parent != NULL)
   {
 	  if(dag->preferred_parent->parent_weight == 0)
@@ -949,6 +881,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 //    	pos += 16;
     }
 #endif
+#ifdef RPL_LIFETIME_MAX_MODE
 #if RPL_LIFETIME_MAX_MODE2
 #if SINK_INFINITE_ENERGY
     if(tree_level == 2) { // I'm in the most loaded node set
@@ -1014,7 +947,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     	}
     }
 #endif
-
+#endif
 #endif
 #if RPL_LEAF_ONLY
 #if (DEBUG) & DEBUG_PRINT
@@ -1077,259 +1010,6 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 #endif /* RPL_LEAF_ONLY */
 }
 /*---------------------------------------------------------------------------*/
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-void
-dio_ack_input(void)
-{
-	PRINTF("dio_ack_input!\n");
-	unsigned char *buffer;
-	uip_ipaddr_t from, parent;
-	rpl_child_t *c = NULL;
-	uint8_t weight, pos, buffer_length;
-#if MODE_LAST_PARENT
-	uip_ipaddr_t last_parent;
-	uint8_t last_weight;
-#endif
-
-	if(rpl_get_default_instance() == NULL)
-	{
-		PRINTF("rpl-icmp6 before joining instance\n");
-		uip_clear_buf();
-		return;
-	}
-
-	pos = 0;
-
-	buffer = UIP_ICMP_PAYLOAD;
-	uip_ipaddr_copy(&from, &UIP_IP_BUF->srcipaddr);
-	buffer_length = uip_len - uip_l3_icmp_hdr_len;
-	PRINTF("bufferlen %d\n",buffer_length);
-	if(buffer_length == 1) // NULL parent
-	{
-		PRINTF("dio_ack NULL parent\n");
-		weight = buffer[pos++];
-	}
-	else if(buffer_length == 17) // Only preferred parent
-	{
-		memcpy(&parent,&buffer[pos],16);
-		pos += 16;
-		PRINTF("recv dio_ack addr: ");
-		PRINT6ADDR(&parent);
-    	PRINTF("\n");
-		weight = buffer[pos++];
-	}
-#if MODE_LAST_PARENT
-	else if(buffer_length == 34) //Last parent case
-	{
-		memcpy(&last_parent,&buffer[pos],16);
-		pos += 16;
-		PRINTF("recv dio_ack lp addr: ");
-		PRINT6ADDR(&last_parent);
-    	PRINTF("\n");
-		last_weight = buffer[pos++];
-	}
-#endif
-
-	if(!add_nbr_from_dio_ack(&from, weight)) // Should I add nbr for all dio_ack sender? JJH
-	{
-		PRINTF("fail to add nbr with dio_ack\n");
-	}
-	c = rpl_find_child(&from);
-#if DUAL_RADIO
-	uint8_t is_longrange = radio_received_is_longrange();
-	if((is_longrange == LONG_RADIO
-			&& uip_ipaddr_cmp(&parent, &uip_ds6_long_get_link_local(-1)->ipaddr))
-			|| (is_longrange == SHORT_RADIO
-					&& uip_ipaddr_cmp(&parent, &uip_ds6_get_link_local(-1)->ipaddr)))
-#else
-		if(uip_ipaddr_cmp(&parent, &uip_ds6_get_link_local(-1)->ipaddr))
-#endif
-	{
-		if (c == NULL)
-		{
-			c = rpl_add_child(weight,&from);
-			if(c == NULL)
-			{
-				PRINTF("fail to add child\n");
-			}
-			else
-			{
-				my_weight += c->weight;
-				PRINTF("my_weight in dio_ack %d\n",my_weight);
-			}
-			PRINTF("child list in dio_ack input\n");
-			rpl_print_child_neighbor_list();
-		}
-		else
-		{
-			if(c->weight != weight)
-			{
-				my_weight -= c->weight;
-				c->weight = weight;
-				my_weight += c->weight;
-				PRINTF("my_weight update in dio_ack %d\n",my_weight);
-			}
-		}
-	}
-	// If I'm a last parent
-#if MODE_LAST_PARENT
-#if DUAL_RADIO
-	else if((is_longrange == LONG_RADIO
-			&& uip_ipaddr_cmp(&last_parent, &uip_ds6_long_get_link_local(-1)->ipaddr))
-			|| (is_longrange == SHORT_RADIO
-					&& uip_ipaddr_cmp(&last_parent, &uip_ds6_get_link_local(-1)->ipaddr)))
-#else
-		else if(uip_ipaddr_cmp(&last_parent, &uip_ds6_get_link_local(-1)->ipaddr))
-#endif
-	{
-		if (c != NULL)
-		{
-			my_weight -= c->weight;
-			PRINTF("my_weight update deduct in dio_ack %d\n",my_weight);
-			rpl_remove_child(c);
-		}
-		rpl_parent_t *p = NULL;
-
-		p = rpl_find_parent(rpl_get_default_instance()->current_dag,&parent);
-		if(p != NULL )
-		{
-			p->parent_sum_weight += weight;
-		}
-	}
-#endif
-	// Just third party
-	else
-	{
-		if (c != NULL)
-		{
-			my_weight -= c->weight;
-			PRINTF("my_weight update deduct in dio_ack %d\n",my_weight);
-			rpl_remove_child(c);
-		}
-		rpl_parent_t *p = NULL, *lp = NULL;
-		if(rpl_get_default_instance() == NULL)
-		{
-			PRINTF("rpl-icmp6 before joining instance\n");
-			return;
-		}
-//		p = rpl_find_parent(rpl_get_default_instance()->current_dag,&parent);
-		if(p != NULL )
-		{
-			p->parent_sum_weight += weight;
-		}
-#if MODE_LAST_PARENT
-//		lp = rpl_find_parent(rpl_get_default_instance()->current_dag,&last_parent);
-		if(lp != NULL )
-		{
-			lp->parent_sum_weight -= last_weight;
-		}
-#endif
-	}
-#if MODE_DIO_WEIGHT_UPDATED
-	uint8_t prev_weight = my_weight;
-	// If my_weight changed,
-	if(prev_weight != my_weight)
-	{
-		dio_broadcast(rpl_get_default_instance());
-	}
-#endif
-	/* child info list add
-	   Compare it with previous info */
-	uip_clear_buf();
-}
-/*---------------------------------------------------------------------------*/
-void
-dio_ack_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
-{
-	unsigned char *buffer;
-	int pos;
-	uip_ipaddr_t addr;
-	rpl_dag_t *dag = instance->current_dag;
-	rpl_parent_t *p = dag->preferred_parent;
-
-#if PS_COUNT
-	dio_ack_count ++;
-#endif
-#if RPL_ICMP_ENERGY_LOG
-	LOG_MESSAGE("DIO_ACK_OUTPUT, Energy: %d\n",(int) get_residual_energy());
-#endif
-
-	pos = 0;
-
-	buffer = UIP_ICMP_PAYLOAD;
-
-	if(p != NULL)
-	{
-		PRINTF("send dio_ack addr: ");
-		PRINT6ADDR(rpl_get_parent_ipaddr(dag->preferred_parent));
-		PRINTF("\n");
-
-		memcpy(&buffer[pos],rpl_get_parent_ipaddr(p),16);
-		pos += 16;
-		PRINTF("dio_ack p weight %d\n",p->parent_weight);
-		buffer[pos++] = p->parent_weight;
-	}
-	else
-	{
-		PRINTF("send dio_ack parent NULL\n");
-		buffer[pos++] = 1;
-	}
-#if MODE_LAST_PARENT
-	if(instance->last_parent != NULL)
-	{
-		PRINTF("send dio_ack lp addr: ");
-		PRINT6ADDR(rpl_get_parent_ipaddr(instance->last_parent));
-		PRINTF("\n");
-
-		memcpy(&buffer[pos],rpl_get_parent_ipaddr(instance->last_parent),16);
-		pos += 16;
-		PRINTF("dio_ack lp weight %d\n",instance->last_parent_weight);
-		buffer[pos++] = instance->last_parent_weight;
-	}
-#endif
-
-	if (uc_addr == NULL)
-	{
-		PRINTF("RPL: Sending a multicast-DIO_ACK\n");
-		uip_create_linklocal_rplnodes_mcast(&addr);
-		uip_icmp6_send(&addr, ICMP6_RPL, RPL_CODE_DIO_ACK, pos);
-	}
-	else
-	{
-		uip_ds6_nbr_t *nbr = NULL;
-		nbr = uip_ds6_nbr_lookup(uc_addr);
-
-		/*JOONKI*/
-#if DUAL_RADIO
-#if ADDR_MAP
-		int i;
-		for (i=0; i<NBR_TABLE_MAX_NEIGHBORS; i++){
-			/*		 PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
-				PRINTF("\n");
-				PRINTLLADDR(&ds6_lr_addrmap[i].lladdr);
-				PRINTF("\n");*/
-			if (linkaddr_cmp(&ds6_lr_addrmap[i].lladdr, (const linkaddr_t *)uip_ds6_nbr_get_ll(nbr))){
-				if (ds6_lr_addrmap[i].lr == 1){
-					dual_radio_switch(LONG_RADIO);
-				}	else	{
-					dual_radio_switch(SHORT_RADIO);
-				}
-				//			PRINTF("SUCCESS!!!\n");
-				break;
-			}
-		}
-#else /* ADDR_MAP */
-		if (dest->u8[8] == 0x82)	{
-			dual_radio_switch(LONG_RADIO);
-		}	else	{
-			dual_radio_switch(SHORT_RADIO);
-		}
-#endif	/* ADDR_MAP */
-#endif /* DUAL_RADIO */
-	uip_icmp6_send(uc_addr, ICMP6_RPL, RPL_CODE_DIO_ACK, pos);
-	}
-}
-#endif
 
 #if LSA_R
 #if CONVERGE_MODE == 1
@@ -2256,9 +1936,6 @@ rpl_icmp6_register_handlers()
   uip_icmp6_register_input_handler(&dio_handler);
   uip_icmp6_register_input_handler(&dao_handler);
   uip_icmp6_register_input_handler(&dao_ack_handler);
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-  uip_icmp6_register_input_handler(&dio_ack_handler);
-#endif
 #if LSA_R
 #if CONVERGE_MODE == 1
   uip_icmp6_register_input_handler(&LSA_converge_handler);

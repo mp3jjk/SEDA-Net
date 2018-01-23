@@ -117,16 +117,10 @@ struct rpl_parent {
   clock_time_t last_tx_time;
   uint8_t dtsn;
   uint8_t flags;
-#if RPL_ENERGY_MODE
-  uint8_t rem_energy; // JJH
-#endif
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
   uint8_t parent_weight; /* The parent's weight */
   uint8_t parent_sum_weight; /* The parent's sum of chilren's weight  JJH */
   uint8_t rem_energy;
-#if PARENT_REDUCTION_MODE
-  uint8_t valid_flag; /* Only valid parent has 1 */
-#endif
 #endif
 #if RPL_LIFETIME_MAX_MODE2
   uint8_t MLS_id;
@@ -286,10 +280,6 @@ struct rpl_instance {
 #endif /* RPL_WITH_DAO_ACK */
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
   struct ctimer dio_ack_timer;
-#if MODE_LAST_PARENT
-  rpl_parent_t *last_parent;
-  uint8_t last_parent_weight;
-#endif
 #endif
 };
 

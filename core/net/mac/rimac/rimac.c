@@ -321,10 +321,6 @@ static rtimer_clock_t stream_until;
 
 static uint8_t is_short_waiting = 0;
 
-/* remaining energy JJH */
-#if RPL_ENERGY_MODE
-extern uint8_t remaining_energy;
-#endif
 #if DUAL_RADIO
 static void dual_radio_on(char target);
 static void dual_radio_off(char target);
@@ -1559,7 +1555,7 @@ input_packet(void)
 	    }
 	 }
 	}
-#endif /* RPL_ENERGY_MODE */
+#endif
 
 #if DATA_ACK
 	if(!linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),&linkaddr_null)) // Only when it is not broadcast data

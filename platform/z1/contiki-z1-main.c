@@ -438,6 +438,7 @@ main(int argc, char **argv)
   }
 
 #else /* NETSTACK_CONF_WITH_IPV6 */
+#if DUAL_RADIO
 	NETSTACK_CONF_RADIO = cc2420_driver;
 	NETSTACK_RADIO = cc2420_driver;
   NETSTACK_RDC.init();
@@ -446,7 +447,10 @@ main(int argc, char **argv)
 	NETSTACK_CONF_RADIO = cc1200_driver;
 	NETSTACK_RADIO = cc1200_driver;
   NETSTACK_RDC.init();
-
+#else
+  NETSTACK_RDC.init();
+#endif
+  
   NETSTACK_MAC.init();
   NETSTACK_NETWORK.init();
 

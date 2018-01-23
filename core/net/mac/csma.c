@@ -236,10 +236,10 @@ free_packet(struct neighbor_queue *n, struct rdc_buf_list *p, int status)
 //    	printf("BTB addr %d %d\n",n->addr.u8[0],n->addr.u8[1]);
       n->transmissions = 0;
       n->collisions = CSMA_MIN_BE;
-      if(n->addr.u8[1] != 0) {
-    	  data_btb = 1; // unicast backtoback
-//          printf("data BTB in MAC\n");
-      }
+//      if(n->addr.u8[1] != 0) {
+//    	  data_btb = 1; // unicast backtoback
+////          printf("data BTB in MAC\n");
+//      }
       /* Schedule next transmissions */
       schedule_transmission(n);
     } else {

@@ -53,14 +53,12 @@
 
 #include "param.h"
 /* Remaining energy init JJH*/
-#if RPL_ENERGY_MODE
-uint8_t remaining_energy = INITIAL_ENERGY;
-uint8_t alpha = ALPHA;
-#elif RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
 uint8_t my_weight = 0;
 #endif
 int id_array[MAX_NUM_NODE]={0,};
 uint8_t id_count[BUF_SIZE]={0,};
+//extern uint8_t id_count[BUF_SIZE]={0,};
 static struct uip_udp_conn *server_conn;
 
 PROCESS(udp_server_process, "UDP server process");

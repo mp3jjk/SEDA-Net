@@ -373,12 +373,6 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 
   dag = p1->dag; /* Both parents are in the same DAG. */
 
-#if OF_MWHOF
-  rpl_path_metric_t min_diff;
-  min_diff = RPL_DAG_MC_ETX_DIVISOR /
-             PARENT_SWITCH_THRESHOLD_DIV;
-#endif
-
   p1_metric = calculate_path_metric(p1);
   p2_metric = calculate_path_metric(p2);
 //  if(linkaddr_node_addr.u8[15] == 12)

@@ -35,7 +35,9 @@ CONTIKI_TARGET_SOURCEFILES += i2cmaster.c adxl345.c
 CONTIKI_TARGET_SOURCEFILES += dual_radio.c
 
 
-MCU=msp430f2617
+#MCU=msp430f2617
+MCU=msp430f5438a
+
 
 # Platform has a MSP430X MCU with 20-bit support
 CPU_HAS_MSP430X=1

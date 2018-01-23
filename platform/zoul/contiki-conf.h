@@ -31,7 +31,7 @@
 /**
  * \addtogroup zoul
  * @{
- *
+*
  * \defgroup zoul-platforms Zolertia platforms based on the Zoul core module
  *
  * The Zoul allows a fast reuse and easy integration to most applications and
@@ -363,10 +363,10 @@ typedef uint32_t rtimer_clock_t;
 
 /* JOONKI
  * To switch the radio driver in runtime */
-#define DUAL_RADIO	1
+#define DUAL_RADIO	0
 #define ADDR_MAP DUAL_RADIO
 #define NETSTACK_DUAL_RADIO	DUAL_RADIO
-#define ZOUL_ONLY_LONG 0
+#define ZOUL_ONLY_LONG 1
 
 #if DUAL_RADIO
 struct radio_driver NETSTACK_CONF_RADIO;
@@ -529,7 +529,7 @@ struct radio_driver NETSTACK_RADIO;
 
 #ifndef RPL_CONF_OF
 //#define RPL_CONF_OF rpl_ltmax2_of
-#define RPL_CONF_OF rpl_ltmax2_of
+#define RPL_CONF_OF rpl_of0
 #endif
 
 #define UIP_CONF_ND6_REACHABLE_TIME     600000

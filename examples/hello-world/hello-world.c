@@ -36,7 +36,6 @@
  * \author
  *         Adam Dunkels <adam@sics.se>
  */
-
 #include "contiki.h"
 
 #include <stdio.h> /* For printf() */

@@ -94,14 +94,13 @@ static int lifetime = 1;
 #endif
 
 /* Remaining energy init JJH*/
-#if RPL_ENERGY_MODE
-uint8_t remaining_energy = INITIAL_ENERGY;
-uint8_t alpha = ALPHA;
-#elif RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
 uint8_t my_weight = 0;
 #endif
 int id_array[MAX_NUM_NODE]={0,};
 uint8_t id_count[BUF_SIZE]={0,};
+//extern uint8_t id_count[BUF_SIZE]={0,};
+
 //struct uip_udp_conn *conn_backup;
 struct uip_udp_conn *client_conn;
 static uip_ipaddr_t server_ipaddr;
@@ -230,7 +229,6 @@ send_packet(void *ptr)
 					(uint32_t)temp_load * (LOAD_SCALE - LOAD_ALPHA)) / LOAD_SCALE;
 		}
 //		printf("load %d avg_est_load %d\n",id_count[latest_id],avg_est_load);
-		parent_update = 1;
 	}
 #endif
   PRINTF("app: DATA id:%04d from:%03d\n",
