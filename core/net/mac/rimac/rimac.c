@@ -891,9 +891,13 @@ send_packet(void)
 #endif
 	// JJH
 #if DUAL_RADIO
-#if LSA_MAC
+/*
+ * #if LSA_MAC
+ */
 	static uint8_t was_short;
-#endif
+/*
+ * #endif
+ */
 #endif
 
   /* Create the X-MAC header for the data packet. */
@@ -987,19 +991,21 @@ send_packet(void)
   /* Send a train of strobes until the receiver answers with an ACK. */
 	/* Always use long preamble in LSA_MAC mode */
 #if DUAL_RADIO
-#if LSA_MAC
-#if LSA_R
-	if (is_broadcast || LSA_SR_preamble == 0)
-	{
-		if (sending_in_LR() == SHORT_RADIO){
-			was_short = 1;
-			dual_radio_switch(LONG_RADIO);
-			target = LONG_RADIO;
-		}	else	{
-			was_short = 0;
-		}
-	}
-#else
+/*
+ * #if LSA_MAC
+ * #if LSA_R
+ *   if (is_broadcast || LSA_SR_preamble == 0)
+ *   {
+ *     if (sending_in_LR() == SHORT_RADIO){
+ *       was_short = 1;
+ *       dual_radio_switch(LONG_RADIO);
+ *       target = LONG_RADIO;
+ *     }	else	{
+ *       was_short = 0;
+ *     }
+ *   }
+ * #else
+ */
 	if (sending_in_LR() == SHORT_RADIO){
 		was_short = 1;
 		target = LONG_RADIO;
@@ -1008,8 +1014,10 @@ send_packet(void)
 		was_short = 0;
 	}
 	dual_radio_switch(target);
-#endif /* LSA_R */
-#endif /* LSA_MAC */
+/*
+ * #endif [> LSA_R <]
+ * #endif [> LSA_MAC <]
+ */
 #endif
 
 	  /* Turn on the radio to listen for the strobe ACK. */
@@ -1048,7 +1056,9 @@ send_packet(void)
 #endif
 			/* for debug */
 #if DUAL_RADIO
-#if LSA_MAC
+/*
+ * #if LSA_MAC
+ */
 #if COOJA
 			if (rimac_is_on == 0 || recv_addr.u8[1] == SERVER_NODE || data_btb)
 #else
@@ -1057,7 +1067,9 @@ send_packet(void)
 			{
 				got_strobe = 1;
 			}
-#endif /* LSA_MAC */
+/*
+ * #endif [> LSA_MAC <]
+ */
 #endif
 			sender_backoff_exponent = 0;
 				/* Strobe wait start time fixed */
@@ -1405,9 +1417,13 @@ input_packet(void)
   int original_datalen;
   uint8_t *original_dataptr;
 #endif
-#if LSA_MAC
+/*
+ * #if LSA_MAC
+ */
 	uint8_t for_short = 1;
-#endif 
+/*
+ * #endif 
+ */
 #if DATA_ACK
 	struct queuebuf *packet;
 #endif
@@ -1567,7 +1583,9 @@ input_packet(void)
 		// Copying original packetbuf
 		packet = queuebuf_new_from_packetbuf();
 #if DUAL_RADIO
-#if LSA_MAC
+/*
+ * #if LSA_MAC
+ */
 		if (radio_received_is_longrange()==LONG_RADIO){
 			target = LONG_RADIO;
 		}	else if (radio_received_is_longrange() == SHORT_RADIO){
@@ -1575,7 +1593,9 @@ input_packet(void)
 		}
 		dual_radio_switch(target);
 
-#endif
+/*
+ * #endif
+ */
 #endif
 		/* JOONKI
 		 * Not sure why this is working */
@@ -1890,16 +1910,20 @@ rimac_init(void)
 #endif
 #if DUAL_RADIO
   dual_duty_cycle_count = 0;
-#if DUAL_ROUTING_CONVERGE
-	long_duty_on = 1;
-	short_duty_on = 1;
-#endif
-#if LSA_R
-	LSA_converge = 0;
-	LSA_SR_preamble = 0;
-	LSA_message_input = 0;
-	LSA_broadcast_count = 1;
-#endif
+/*
+ * #if DUAL_ROUTING_CONVERGE
+ *   long_duty_on = 1;
+ *   short_duty_on = 1;
+ * #endif
+ */
+/*
+ * #if LSA_R
+ *   LSA_converge = 0;
+ *   LSA_SR_preamble = 0;
+ *   LSA_message_input = 0;
+ *   LSA_broadcast_count = 1;
+ * #endif
+ */
 
 #endif
 #if RPL_LIFETIME_MAX_MODE2

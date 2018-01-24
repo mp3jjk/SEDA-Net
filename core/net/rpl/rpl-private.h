@@ -75,11 +75,13 @@
 #define RPL_CODE_DIO_ACK               0x04   /* DIO acknowledgment */
 #endif
 
-#if LSA_R
-#if CONVERGE_MODE == 1
-#define RPL_CODE_LSA                   0x05 	/* LSA_R converge message */
-#endif
-#endif
+/*
+ * #if LSA_R
+ * #if CONVERGE_MODE == 1
+ * #define RPL_CODE_LSA                   0x05 	[> LSA_R converge message <]
+ * #endif
+ * #endif
+ */
 
 #define RPL_CODE_SEC_DIS               0x80   /* Secure DIS */
 #define RPL_CODE_SEC_DIO               0x81   /* Secure DIO */
@@ -319,11 +321,13 @@ void dao_ack_output(rpl_instance_t *, uip_ipaddr_t *, uint8_t, uint8_t);
 void dio_ack_output(rpl_instance_t *, uip_ipaddr_t *uc_addr);
 #endif
 
-#if LSA_R
-#if CONVERGE_MODE == 1
-void LSA_converge_output(uint8_t lr_child);
-#endif 
-#endif
+/*
+ * #if LSA_R
+ * #if CONVERGE_MODE == 1
+ * void LSA_converge_output(uint8_t lr_child);
+ * #endif 
+ * #endif
+ */
 
 void rpl_icmp6_register_handlers(void);
 uip_ds6_nbr_t *rpl_icmp6_update_nbr_table(uip_ipaddr_t *from,
@@ -383,19 +387,23 @@ void rpl_cancel_dio_ack(rpl_instance_t *instance);
 #endif
 void rpl_schedule_probing(rpl_instance_t *instance);
 
-#if DUAL_ROUTING_CONVERGE
-void rpl_convergence_timer(void);
-void rpl_reset_convergence_timer(void);
-#endif
+/*
+ * #if DUAL_ROUTING_CONVERGE
+ * void rpl_convergence_timer(void);
+ * void rpl_reset_convergence_timer(void);
+ * #endif
+ */
 
-#if LSA_R
-#if CONVERGE_MODE == 2
-void simple_rpl_convergence_timer(void);
-#elif CONVERGE_MODE == 1
-void rpl_LSA_convergence_timer(uint8_t);
-void rpl_reset_LSA_convergence_timer(void);
-#endif
-#endif
+/*
+ * #if LSA_R
+ * #if CONVERGE_MODE == 2
+ * void simple_rpl_convergence_timer(void);
+ * #elif CONVERGE_MODE == 1
+ * void rpl_LSA_convergence_timer(uint8_t);
+ * void rpl_reset_LSA_convergence_timer(void);
+ * #endif
+ * #endif
+ */
 #if ROUTING_NO_ENERGY
 void rpl_energy_timer(void);
 #endif
@@ -406,9 +414,11 @@ void rpl_reset_periodic_timer(void);
 /* Route poisoning. */
 void rpl_poison_routes(rpl_dag_t *, rpl_parent_t *);
 
-#if DUAL_ROUTING_CONVERGE
-char rpl_lr_in_neighbor_tree(void);
-#endif /* DUAL_ROUTING_CONVERGENCE */
+/*
+ * #if DUAL_ROUTING_CONVERGE
+ * char rpl_lr_in_neighbor_tree(void);
+ * #endif [> DUAL_ROUTING_CONVERGENCE <]
+ */
 
 
 rpl_instance_t *rpl_get_default_instance(void);

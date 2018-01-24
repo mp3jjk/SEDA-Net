@@ -80,16 +80,20 @@ static void new_dio_interval(rpl_instance_t *instance);
 static void handle_dio_timer(void *ptr);
 
 #if DUAL_RADIO
-#if DUAL_ROUTING_CONVERGE
-static void convergence_radio_off(void);
-#endif
-#if LSA_R
-#if CONVERGE_MODE == 2
-static void simple_convergence_radio_off(void);
-#elif CONVERGE_MODE == 1
-static void LSA_convergence_radio_broadcast(void);
-#endif
-#endif
+/*
+ * #if DUAL_ROUTING_CONVERGE
+ * static void convergence_radio_off(void);
+ * #endif
+ */
+/*
+ * #if LSA_R
+ * #if CONVERGE_MODE == 2
+ * static void simple_convergence_radio_off(void);
+ * #elif CONVERGE_MODE == 1
+ * static void LSA_convergence_radio_broadcast(void);
+ * #endif
+ * #endif
+ */
 #endif
 #if ROUTING_NO_ENERGY
 static void rpl_energy_module_on(void);
@@ -100,103 +104,105 @@ static uint16_t next_dis;
 /* dio_send_ok is true if the node is ready to send DIOs */
 static uint8_t dio_send_ok;
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-#if DUAL_RADIO
-#if DUAL_ROUTING_CONVERGE
-/*---------------------------------------------------------------------------*/
-static struct ctimer timer_conv;
-void
-rpl_convergence_timer(void)
-{
-	ctimer_set(&timer_conv, CONVERGE_TIME, &convergence_radio_off,NULL);
-}
-rpl_reset_convergence_timer(void)
-{
-	ctimer_reset(&timer_conv);
-}
-static void
-convergence_radio_off(void)
-{
-	char rpl_tree;
-	printf("convergence_radio_off\n");
-	rpl_tree = rpl_lr_in_neighbor_tree();
-	switch (rpl_tree){
-		case 1:
-			printf("Converge: LONG RADIO\n");
-			long_duty_on = 1;
-			short_duty_on = 0;
-			break;
-		case 2:
-			printf("Converge: SHORT RADIO\n");
-			long_duty_on = 0;
-			short_duty_on = 1;
-			break;
-		case 3:
-			printf("Converge: BOTH RADIO\n");
-			long_duty_on = 1;
-			short_duty_on = 1;
-			break;
-		default:
-			printf("Converge: Something wrong\n");
-	}
-}
-#endif	/* DUAL_ROUTING_CONVERGE */
-
-#if LSA_R
-#if CONVERGE_MODE == 2
-static struct ctimer converge_timer;
-simple_rpl_convergence_timer(void)
-{
-	// printf("SIMPLE CONVERGE SET\n");
-	ctimer_set(&converge_timer, SIMPLE_CONV_TIME, &simple_convergence_radio_off,NULL);
-}
-static void
-simple_convergence_radio_off(void)
-{
-	// printf("SIMPLE CONVERGE\n");
-	LSA_lr_child = rpl_lr_in_child();
-	simple_convergence = 1;
-}
-#elif CONVERGE_MODE == 1
-static struct ctimer timer_LSA_conv;
-void
-rpl_LSA_convergence_timer(uint8_t mode)
-{
-	if (mode == 1){
-		ctimer_set(&timer_LSA_conv, LSA_CONVERGE_TIME + rand()%(LSA_CONVERGE_TIME/5) , &LSA_convergence_radio_broadcast, NULL);
-	} else if (mode == 2) {
-		ctimer_set(&timer_LSA_conv, LSA_MESSAGE_TIME + rand()%(LSA_MESSAGE_TIME/2) , &LSA_convergence_radio_broadcast, NULL);
-	} else if (mode == 3) {
-		ctimer_set(&timer_LSA_conv, LSA_BROADCAST_TIME + rand()%(LSA_BROADCAST_TIME/2) , &LSA_convergence_radio_broadcast, NULL);
-	}
-}
-rpl_reset_LSA_convergence_timer(void)
-{
-	ctimer_reset(&timer_LSA_conv);
-}
-static void
-LSA_convergence_radio_broadcast(void)
-{
-	printf("LSA_convergence_radio_broadcast: %d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",LSA_broadcast_count);
-	
-	LSA_lr_child = rpl_lr_in_child();
-	printf("LR_CHILD :%d!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",LSA_lr_child);
-
-	if (linkaddr_node_addr.u8[1] == SERVER_NODE) {
-		LSA_converge_broadcast(0);
-	} else {
-		LSA_converge_broadcast(LSA_lr_child);
-	}
-
-	LSA_broadcast_count ++;
-	LSA_converge = 1;
-	if (LSA_broadcast_count <= MAX_LSA_RETRANSMISSION) {
-		rpl_LSA_convergence_timer(3);
-	}
-}
-#endif /* CONVERGENCE_MODE */
-#endif /* LSA_R */
-
-#endif	/* DUAL_RADIO */
+/*
+ * #if DUAL_RADIO
+ * #if DUAL_ROUTING_CONVERGE
+ * [>---------------------------------------------------------------------------<]
+ * static struct ctimer timer_conv;
+ * void
+ * rpl_convergence_timer(void)
+ * {
+ *   ctimer_set(&timer_conv, CONVERGE_TIME, &convergence_radio_off,NULL);
+ * }
+ * rpl_reset_convergence_timer(void)
+ * {
+ *   ctimer_reset(&timer_conv);
+ * }
+ * static void
+ * convergence_radio_off(void)
+ * {
+ *   char rpl_tree;
+ *   printf("convergence_radio_off\n");
+ *   rpl_tree = rpl_lr_in_neighbor_tree();
+ *   switch (rpl_tree){
+ *     case 1:
+ *       printf("Converge: LONG RADIO\n");
+ *       long_duty_on = 1;
+ *       short_duty_on = 0;
+ *       break;
+ *     case 2:
+ *       printf("Converge: SHORT RADIO\n");
+ *       long_duty_on = 0;
+ *       short_duty_on = 1;
+ *       break;
+ *     case 3:
+ *       printf("Converge: BOTH RADIO\n");
+ *       long_duty_on = 1;
+ *       short_duty_on = 1;
+ *       break;
+ *     default:
+ *       printf("Converge: Something wrong\n");
+ *   }
+ * }
+ * #endif	[> DUAL_ROUTING_CONVERGE <]
+ * 
+ * #if LSA_R
+ * #if CONVERGE_MODE == 2
+ * static struct ctimer converge_timer;
+ * simple_rpl_convergence_timer(void)
+ * {
+ *   // printf("SIMPLE CONVERGE SET\n");
+ *   ctimer_set(&converge_timer, SIMPLE_CONV_TIME, &simple_convergence_radio_off,NULL);
+ * }
+ * static void
+ * simple_convergence_radio_off(void)
+ * {
+ *   // printf("SIMPLE CONVERGE\n");
+ *   LSA_lr_child = rpl_lr_in_child();
+ *   simple_convergence = 1;
+ * }
+ * #elif CONVERGE_MODE == 1
+ * static struct ctimer timer_LSA_conv;
+ * void
+ * rpl_LSA_convergence_timer(uint8_t mode)
+ * {
+ *   if (mode == 1){
+ *     ctimer_set(&timer_LSA_conv, LSA_CONVERGE_TIME + rand()%(LSA_CONVERGE_TIME/5) , &LSA_convergence_radio_broadcast, NULL);
+ *   } else if (mode == 2) {
+ *     ctimer_set(&timer_LSA_conv, LSA_MESSAGE_TIME + rand()%(LSA_MESSAGE_TIME/2) , &LSA_convergence_radio_broadcast, NULL);
+ *   } else if (mode == 3) {
+ *     ctimer_set(&timer_LSA_conv, LSA_BROADCAST_TIME + rand()%(LSA_BROADCAST_TIME/2) , &LSA_convergence_radio_broadcast, NULL);
+ *   }
+ * }
+ * rpl_reset_LSA_convergence_timer(void)
+ * {
+ *   ctimer_reset(&timer_LSA_conv);
+ * }
+ * static void
+ * LSA_convergence_radio_broadcast(void)
+ * {
+ *   printf("LSA_convergence_radio_broadcast: %d !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",LSA_broadcast_count);
+ *   
+ *   LSA_lr_child = rpl_lr_in_child();
+ *   printf("LR_CHILD :%d!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n",LSA_lr_child);
+ * 
+ *   if (linkaddr_node_addr.u8[1] == SERVER_NODE) {
+ *     LSA_converge_broadcast(0);
+ *   } else {
+ *     LSA_converge_broadcast(LSA_lr_child);
+ *   }
+ * 
+ *   LSA_broadcast_count ++;
+ *   LSA_converge = 1;
+ *   if (LSA_broadcast_count <= MAX_LSA_RETRANSMISSION) {
+ *     rpl_LSA_convergence_timer(3);
+ *   }
+ * }
+ * #endif [> CONVERGENCE_MODE <]
+ * #endif [> LSA_R <]
+ * 
+ * #endif	[> DUAL_RADIO <]
+ */
 #if ROUTING_NO_ENERGY
 static struct ctimer converge_timer;
 rpl_energy_timer(void)

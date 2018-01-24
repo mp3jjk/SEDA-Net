@@ -672,49 +672,49 @@ cpowercycle(void *ptr)
 
     /* If there were a strobe in the air, turn radio on */
 #if DUAL_RADIO
-#if DUAL_ROUTING_CONVERGE
-		// JOOONKI is working on this	
-		if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
-    {
-    	dual_duty_cycle_count++;
-			if (short_duty_on == 1){
-	      powercycle_dual_turn_radio_on(SHORT_RADIO);
-			}
-    }
-    else
-    {
-    	dual_duty_cycle_count = 0;
-			if (short_duty_on == 1 && long_duty_on == 1) {
-	      powercycle_dual_turn_radio_on(BOTH_RADIO);
-			}	else if (long_duty_on == 1) {
-	      powercycle_dual_turn_radio_on(LONG_RADIO);
-			}	else if (short_duty_on == 1 ) {
-				powercycle_dual_turn_radio_on(SHORT_RADIO);
-			}
-    }
-
-#else /* DUAL_ROUTING_CONVERGE */
-#if LSA_MAC
-#if LSA_R
-#if CONVERGE_MODE == 1
-		if (LSA_converge == 1)
-#elif CONVERGE_MODE == 2
-		if (simple_convergence == 1) 
-#endif /* CONVERGE_MODE */ 
-		{
-			/*
-			 * if (linkaddr_node_addr.u8[1] == 2)
-			 *   LSA_lr_child = 0; // for debug
-			 */
-			if (LSA_lr_child == 1) {
-				powercycle_dual_turn_radio_on(LONG_RADIO);
-			} else {
-				powercycle_dual_turn_radio_on(SHORT_RADIO);
-			}
-		} else {
-			powercycle_dual_turn_radio_on(LONG_RADIO);
-		}
-#elif LSA_ENHANCED
+/*
+ * #if DUAL_ROUTING_CONVERGE
+ *     // JOOONKI is working on this	
+ *     if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
+ *     {
+ *     	dual_duty_cycle_count++;
+ *       if (short_duty_on == 1){
+ *         powercycle_dual_turn_radio_on(SHORT_RADIO);
+ *       }
+ *     }
+ *     else
+ *     {
+ *     	dual_duty_cycle_count = 0;
+ *       if (short_duty_on == 1 && long_duty_on == 1) {
+ *         powercycle_dual_turn_radio_on(BOTH_RADIO);
+ *       }	else if (long_duty_on == 1) {
+ *         powercycle_dual_turn_radio_on(LONG_RADIO);
+ *       }	else if (short_duty_on == 1 ) {
+ *         powercycle_dual_turn_radio_on(SHORT_RADIO);
+ *       }
+ *     }
+ * 
+ * #else [> DUAL_ROUTING_CONVERGE <]
+ */
+/*
+ * #if LSA_MAC
+ * #if LSA_R
+ * #if CONVERGE_MODE == 1
+ *     if (LSA_converge == 1)
+ * #elif CONVERGE_MODE == 2
+ *     if (simple_convergence == 1) 
+ * #endif [> CONVERGE_MODE <] 
+ *     {
+ *       if (LSA_lr_child == 1) {
+ *         powercycle_dual_turn_radio_on(LONG_RADIO);
+ *       } else {
+ *         powercycle_dual_turn_radio_on(SHORT_RADIO);
+ *       }
+ *     } else {
+ *       powercycle_dual_turn_radio_on(LONG_RADIO);
+ *     }
+ */
+#if LSA_ENHANCED
 		if(tree_level == 1) {
 			powercycle_dual_turn_radio_on(BOTH_RADIO);
 		}
@@ -722,22 +722,26 @@ cpowercycle(void *ptr)
 		{
 			powercycle_dual_turn_radio_on(LONG_RADIO);
 		}
-#else /* LSA_R */ 
+#else /* LSA_ENHANCED */ 
 		powercycle_dual_turn_radio_on(LONG_RADIO);
-#endif /* LSA_R */
-#else /* LSA_MAC */
-    if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
-    {
-    	dual_duty_cycle_count++;
-      powercycle_dual_turn_radio_on(SHORT_RADIO);
-    }
-    else
-    {
-    	dual_duty_cycle_count = 0;
-      powercycle_dual_turn_radio_on(BOTH_RADIO);
-    }
-#endif /* LSA_MAC */
-#endif /* DUAL_ROUTING_CONVERGE */
+#endif /* LSA_ENHANCED */
+/*
+ * #else [> LSA_MAC <]
+ *     if(dual_duty_cycle_count <= DUAL_DUTY_RATIO-2)
+ *     {
+ *     	dual_duty_cycle_count++;
+ *       powercycle_dual_turn_radio_on(SHORT_RADIO);
+ *     }
+ *     else
+ *     {
+ *     	dual_duty_cycle_count = 0;
+ *       powercycle_dual_turn_radio_on(BOTH_RADIO);
+ *     }
+ * #endif [> LSA_MAC <]
+ */
+/*
+ * #endif [> DUAL_ROUTING_CONVERGE <]
+ */
 #else	/* DUAL_RADIO */
     powercycle_turn_radio_on();
 #endif /* DUAL_RADIO */
@@ -927,9 +931,13 @@ send_packet(void)
   int cnt_pos;
 #endif
 #if DUAL_RADIO
-#if LSA_MAC
+/*
+ * #if LSA_MAC
+ */
 	static uint8_t was_short;
-#endif
+/*
+ * #endif
+ */
 #endif
 
   /* Create the X-MAC header for the data packet. */
@@ -1097,19 +1105,21 @@ send_packet(void)
   /* Send a train of strobes until the receiver answers with an ACK. */
 	/* Always use long preamble in LSA_MAC mode */
 #if DUAL_RADIO
-#if LSA_MAC
-#if LSA_R
-	if (is_broadcast || LSA_SR_preamble == 0) 
-	{
-		if (sending_in_LR() == SHORT_RADIO){
-			was_short = 1;
-			dual_radio_switch(LONG_RADIO);
-			target = LONG_RADIO;
-		}	else	{
-			was_short = 0;
-		}
-	}
-#elif LSA_ENHANCED
+/*
+ * #if LSA_MAC
+ * #if LSA_R
+ *   if (is_broadcast || LSA_SR_preamble == 0) 
+ *   {
+ *     if (sending_in_LR() == SHORT_RADIO){
+ *       was_short = 1;
+ *       dual_radio_switch(LONG_RADIO);
+ *       target = LONG_RADIO;
+ *     }	else	{
+ *       was_short = 0;
+ *     }
+ *   }
+ */
+#if LSA_ENHANCED
 	if (sending_in_LR() == SHORT_RADIO && (tree_level != 2 || is_broadcast)){
 		was_short = 1;
 		dual_radio_switch(LONG_RADIO);
@@ -1125,10 +1135,12 @@ send_packet(void)
 	}	else	{
 		was_short = 0;
 	}
-#endif /* LSA_R */
-#endif /* LSA_MAC */
+#endif /* LSA_ENHANCED */
+/*
+ * #endif [> LSA_MAC <]
+ */
 
-#endif
+#endif /* DUAL_RADIO*/
 
 	  /* Turn on the radio to listen for the strobe ACK. */
 #if DUAL_RADIO
@@ -1163,11 +1175,15 @@ send_packet(void)
 			/* JOONKI
 			 * short range broadcast skip sending strobed preambles */
 #if DUAL_RADIO
-#if LSA_MAC
+/*
+ * #if LSA_MAC
+ */
 			if (is_broadcast && was_short == 1){
 				break;
 			} 
-#endif /* LSA_MAC */ 
+/*
+ * #endif [> LSA_MAC <] 
+ */
 #endif
 
 
@@ -1344,21 +1360,25 @@ send_packet(void)
 
 	/* Switch the radio back to the original one */
 #if DUAL_RADIO
-#if LSA_MAC
-#if LSA_R
-	if (is_broadcast || LSA_SR_preamble == 0) {  
-		if (was_short == 1)	{
- 				dual_radio_switch(SHORT_RADIO);
-				target = SHORT_RADIO;
-			}
-	}
-#else
+/*
+ * #if LSA_MAC
+ * #if LSA_R
+ *   if (is_broadcast || LSA_SR_preamble == 0) {  
+ *     if (was_short == 1)	{
+ *  				dual_radio_switch(SHORT_RADIO);
+ *         target = SHORT_RADIO;
+ *       }
+ *   }
+ * #else
+ */
 			if (was_short == 1)	{
  				dual_radio_switch(SHORT_RADIO);
 				target = SHORT_RADIO;
 			}
-#endif
-#endif
+/*
+ * #endif
+ * #endif
+ */
 #endif
 
 	got_strobe_ack=1;
@@ -1604,9 +1624,13 @@ input_packet(void)
   int original_datalen;
   uint8_t *original_dataptr;
 #endif
-#if LSA_MAC
+/*
+ * #if LSA_MAC
+ */
 	uint8_t for_short = 1;
-#endif 
+/*
+ * #endif 
+ */
 #if DATA_ACK
 	struct queuebuf *packet;
 #endif
@@ -1658,7 +1682,9 @@ input_packet(void)
 				{
 
 #if DUAL_RADIO
-#if LSA_MAC
+/*
+ * #if LSA_MAC
+ */
 				/* JOONKI
 				 * waiting for incoming short broadcast */
 				if (linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER), &linkaddr_null) && 
@@ -1684,10 +1710,12 @@ input_packet(void)
 					dual_radio_off(BOTH_RADIO);
 					waiting_for_packet = 0;
 				}
-#else		/* LSA_MAC */
-				dual_radio_off(BOTH_RADIO);
-				waiting_for_packet = 0;
-#endif /* LSA_MAC */
+/*
+ * #else		[> LSA_MAC <]
+ *         dual_radio_off(BOTH_RADIO);
+ *         waiting_for_packet = 0;
+ * #endif [> LSA_MAC <]
+ */
 #else
     	  off();
     	  waiting_for_packet = 0;
@@ -1827,13 +1855,17 @@ input_packet(void)
 		// Copying original packetbuf
 		packet = queuebuf_new_from_packetbuf();
 #if DUAL_RADIO
-#if LSA_MAC
+/*
+ * #if LSA_MAC
+ */
 		if (radio_received_is_longrange()==LONG_RADIO){
 			dual_radio_switch(LONG_RADIO);
 		}	else if (radio_received_is_longrange() == SHORT_RADIO){
 			dual_radio_switch(SHORT_RADIO);
 		}
-#endif
+/*
+ * #endif
+ */
 #endif
 		/* JOONKI
 		 * Not sure why this is working */
@@ -1950,13 +1982,17 @@ input_packet(void)
 #endif
 			{	
 #if DUAL_RADIO
-#if LSA_MAC
+/*
+ * #if LSA_MAC
+ */
 				if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),&linkaddr_node_addr) == 1){
 					for_short = 1;
 				} else if(linkaddr_cmp(packetbuf_addr(PACKETBUF_ADDR_RECEIVER),&long_linkaddr_node_addr) == 1) {
 					for_short = 0;
 				}
-#endif
+/*
+ * #endif
+ */
 #endif
 	/* This is a strobe packet for us. */
 
@@ -1987,14 +2023,18 @@ input_packet(void)
 	  waiting_for_packet = 1;
 
 #if DUAL_RADIO
-#if LSA_MAC
+/*
+ * #if LSA_MAC
+ */
 		dual_radio_off(BOTH_RADIO);
 		if (for_short == 1) {
 			target = SHORT_RADIO;
 		} else if (for_short == 0) {
 			target = LONG_RADIO;
 		}
-#endif
+/*
+ * #endif
+ */
 #endif
 
 #if DUAL_RADIO
@@ -2134,21 +2174,23 @@ dualmac_init(void)
 //	printf("dualmac off_time %d\n",DEFAULT_OFF_TIME*10000/RTIMER_ARCH_SECOND);
 //	printf("dualmac strobe_wait_time %d\n",dualmac_config.strobe_wait_time);
 //	printf("dualmac strobe %d\n",dualmac_config.strobe_time);
-#if DUAL_RADIO
-  dual_duty_cycle_count = 0;
-#if DUAL_ROUTING_CONVERGE
-	long_duty_on = 1;
-	short_duty_on = 1;
-#endif
-#if LSA_R
-	LSA_converge = 0;
-	LSA_SR_preamble = 0;
-	LSA_lr_child = 1;
-	LSA_message_input = 0;
-	LSA_broadcast_count = 1;
-#endif
-
-#endif
+/*
+ * #if DUAL_RADIO
+ *   dual_duty_cycle_count = 0;
+ * #if DUAL_ROUTING_CONVERGE
+ *   long_duty_on = 1;
+ *   short_duty_on = 1;
+ * #endif
+ * #if LSA_R
+ *   LSA_converge = 0;
+ *   LSA_SR_preamble = 0;
+ *   LSA_lr_child = 1;
+ *   LSA_message_input = 0;
+ *   LSA_broadcast_count = 1;
+ * #endif
+ * 
+ * #endif
+ */
 #if RPL_LIFETIME_MAX_MODE2
 	tree_level = -1; // Initialize tree_level
 #endif

@@ -333,15 +333,17 @@ noack(struct rdc_buf_list *q, struct neighbor_queue *n, int num_transmissions)
   n->transmissions += num_transmissions;
 
   if(n->transmissions >= metadata->max_transmissions) {
-#if LSA_MAC
-#if LSA_R
-#if CONVERGE_MODE == 2
-//		if (simple_convergence == 1) {
-			LSA_SR_preamble = !LSA_SR_preamble;
-//		}
-#endif 
-#endif
-#endif
+/*
+ * #if LSA_MAC
+ * #if LSA_R
+ * #if CONVERGE_MODE == 2
+ * //		if (simple_convergence == 1) {
+ *       LSA_SR_preamble = !LSA_SR_preamble;
+ * //		}
+ * #endif 
+ * #endif
+ * #endif
+ */
 #if PS_COUNT
 		csma_drop_count++;
 #endif
