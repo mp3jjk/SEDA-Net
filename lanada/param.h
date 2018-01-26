@@ -34,29 +34,17 @@ uint8_t tree_level; // The candidates set of the most loaded node
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
 
-/*
- * [> Dual routing converge <]
- * #define DUAL_ROUTING_CONVERGE 	0
- */
 
 /* Energy consumption X during routing */
 #define ROUTING_NO_ENERGY 0
 #define ENERGY_CONV_TIME (900ul * CLOCK_SECOND)
 
-/* LSA-MAC, implemeted on cxmac
- * Preamble free short broadcast after long broadcast, dual broadcast is included in LSA-MAC
+/* LSA_ENHANCED, implemeted on dualmac
+ * Preamble free short broadcast after long broadcast, dual broadcast is included in LSA_ENHANCED
  * Only long duty cylce, long preamble */
 #if DUAL_RADIO
-/*
- * #define LSA_MAC	1
- * #define LSA_R	0
- */
 #define LSA_ENHANCED 0
 #else	/* DUAL_RADIO */
-/*
- * #define LSA_MAC 0
- * #define LSA_R 0
- */
 #endif /* DUAL_RADIO */
 
 #define SERVER_NODE 1
@@ -71,42 +59,6 @@ uint8_t tree_level; // The candidates set of the most loaded node
 uint8_t dead;
 uint8_t join_instance;
 
-/*
- * #if DUAL_ROUTING_CONVERGE
- * uint8_t long_duty_on;
- * uint8_t short_duty_on;
- * #define CONVERGE_TIME	(100ul * CLOCK_SECOND) // Convergence time in second
- * #endif
- */
-
-/*
- * #if LSA_R
- * uint8_t LSA_converge;
- * uint8_t LSA_SR_preamble;
- * uint8_t LSA_lr_child;
- * uint8_t LSA_message_input;
- * uint8_t LSA_message_flag;
- * uint8_t LSA_broadcast_count;
- * #define CONVERGE_MODE	2
- * 
- * [> CONVERGE_MODE 1 <]
- * #define MAX_LSA_RETRANSMISSION 3
- * #define LSA_CONVERGE_TIME	(900ul * CLOCK_SECOND) // Convergence time in second
- * #define LSA_MESSAGE_TIME	(100ul * CLOCK_SECOND) // Convergence time in second
- * #define LSA_BROADCAST_TIME	(1ul * CLOCK_SECOND) // Convergence time in second
- * 
- * [> CONVERGE_MODE 2 <]
- * uint8_t simple_convergence;
- * #define SIMPLE_CONV_TIME (1800ul * CLOCK_SECOND)
- * 
- * 
- * #ifdef RPL_LIFETIME_MAX_MODE
- * #undef RPL_LIFETIME_MAX_MODE
- * #endif [> RPL_LIFETIME_MAX_MODE <]
- * #define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
- * #define RPL_LIFETIME_MAX_MODE2 0 // Is it fine?
- * #endif [> LSA_R <]
- */
 
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
 #ifdef ZOUL_MOTE
@@ -131,14 +83,12 @@ int count_index;
 int avg_est_load; // Exponentially Weighted Moving Average with est_load
 
 
-//#if LSA_MAC
 #ifdef ZOUL_MOTE
 #define SHORT_SLOT_LEN	(RTIMER_ARCH_SECOND / 160 * 4) // Short on time slot length in rtimer
 #define BEFORE_SHORT_SLOT	(RTIMER_ARCH_SECOND / 160 * 0)
 #else
 #define SHORT_SLOT_LEN	(RTIMER_ARCH_SECOND / 160 * 2) // Short on time slot length in rtimer
 #endif
-//#endif
 
 /*-----------------------------------------------------------------------------------------------*/
 #define DETERMINED_ROUTING_TREE	0

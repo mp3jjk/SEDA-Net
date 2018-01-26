@@ -94,13 +94,6 @@ static void dis_input(void);
 static void dio_input(void);
 static void dao_input(void);
 static void dao_ack_input(void);
-/*
- * #if LSA_R
- * #if CONVERGE_MODE == 1
- * static void LSA_converge_input(void);
- * #endif
- * #endif
- */
 
 static void dao_output_target_seq(rpl_parent_t *parent, uip_ipaddr_t *prefix,
 				  uint8_t lifetime, uint8_t seq_no);
@@ -127,13 +120,6 @@ UIP_ICMP6_HANDLER(dis_handler, ICMP6_RPL, RPL_CODE_DIS, dis_input);
 UIP_ICMP6_HANDLER(dio_handler, ICMP6_RPL, RPL_CODE_DIO, dio_input);
 UIP_ICMP6_HANDLER(dao_handler, ICMP6_RPL, RPL_CODE_DAO, dao_input);
 UIP_ICMP6_HANDLER(dao_ack_handler, ICMP6_RPL, RPL_CODE_DAO_ACK, dao_ack_input);
-/*
- * #if LSA_R
- * #if CONVERGE_MODE == 1
- * UIP_ICMP6_HANDLER(LSA_converge_handler, ICMP6_RPL, RPL_CODE_LSA, LSA_converge_input);
- * #endif
- * #endif
- */
 /*---------------------------------------------------------------------------*/
 
 #if RPL_WITH_DAO_ACK
@@ -1014,79 +1000,6 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
 #endif /* RPL_LEAF_ONLY */
 }
 /*---------------------------------------------------------------------------*/
-
-/*
- * #if LSA_R
- * #if CONVERGE_MODE == 1
- * void
- * LSA_converge_input(void)
- * {
- *   uip_ipaddr_t from;
- *   int pos;
- *   unsigned char * buffer;
- *   uint8_t buffer_length;
- *   uint8_t lr_child;
- *   rpl_parent_t * preferred_parent;
- *   uip_ds6_nbr_t *nbr;
- * 
- *   PRINTF("LSA_converge_input\n");
- *   uip_ipaddr_copy(&from, &UIP_IP_BUF->srcipaddr);
- *   PRINTF("LSA: Received a LSA RI from ");
- *   PRINT6ADDR(&from);
- *   PRINTF("\n");
- *   
- *   buffer_length = uip_len - uip_l3_icmp_hdr_len;
- * 
- *   pos = 0;
- *   buffer = UIP_ICMP_PAYLOAD;
- * 
- *   lr_child = buffer[pos++];
- * 
- *   rpl_parent_t *p = nbr_table_head(rpl_parents);
- *   if (p != NULL) {
- *     preferred_parent = p->dag->preferred_parent;
- *     if(preferred_parent != NULL)
- *     {
- *       nbr = rpl_get_nbr(preferred_parent);
- *     }
- *   }
- * 
- *   if (uip_ip6addr_cmp(&from, &nbr->ipaddr)) {
- *     rpl_LSA_convergence_timer(2);
- *     LSA_SR_preamble = !lr_child;
- *     LSA_message_input = 1;
- *     printf("LSA: LSA_SR_preamble is %d\n",LSA_SR_preamble);
- *   }
- * 
- *   uip_clear_buf();
- * }
- * [>---------------------------------------------------------------------------<]
- * void
- * LSA_converge_output(uint8_t lr_child)
- * {
- *   unsigned char *buffer;
- *   int pos;
- *   uip_ipaddr_t addr;
- * #if PS_COUNT
- *   LSA_count ++;
- * #endif
- * #if RPL_ICMP_ENERGY_LOG
- *   LOG_MESSAGE("LSA_OUTPUT, Energy: %d\n",(int) get_residual_energy()); 
- * #endif
- * 
- *   [> LSA routing information <]
- *   pos = 0;
- *   buffer = UIP_ICMP_PAYLOAD;
- *   buffer[pos++] = lr_child;
- *   
- *   PRINTF("LSA: Sending a LSA routing information\n");
- *   uip_create_linklocal_rplnodes_mcast(&addr);
- *   uip_icmp6_send(&addr, ICMP6_RPL, RPL_CODE_LSA, pos);
- * }
- * #endif [> CONVERGE_MODE <]
- * #endif [> LSA_R <]
- */
-/*---------------------------------------------------------------------------*/
 static void
 dao_input(void)
 {
@@ -1942,13 +1855,6 @@ rpl_icmp6_register_handlers()
   uip_icmp6_register_input_handler(&dio_handler);
   uip_icmp6_register_input_handler(&dao_handler);
   uip_icmp6_register_input_handler(&dao_ack_handler);
-/*
- * #if LSA_R
- * #if CONVERGE_MODE == 1
- *   uip_icmp6_register_input_handler(&LSA_converge_handler);
- * #endif
- * #endif
- */
 }
 /*---------------------------------------------------------------------------*/
 

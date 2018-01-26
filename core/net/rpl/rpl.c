@@ -363,24 +363,6 @@ rpl_init(void)
   // RPL_CONVERGENCE TEMP timer
 #if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
 #if DUAL_RADIO
-/*
- * #if DUAL_ROUTING_CONVERGE
- *   rpl_convergence_timer();
- * #endif
- */
-/*
- * #if LSA_R
- * #if CONVERGE_MODE == 1 
- *   if (linkaddr_node_addr.u8[1] == SERVER_NODE) {
- *     rpl_LSA_convergence_timer(1);
- *   }
- * #elif CONVERGE_MODE == 2
- *   // printf("SIMPLE CONVERGE TIMER\n");
- *   simple_rpl_convergence_timer();
- *   simple_convergence = 0;
- * #endif [> CONVERGE_MODE <]
- * #endif [> LSA_R <]
- */
 
 #endif /* DUAL_RADIO */
 #if ROUTING_NO_ENERGY
