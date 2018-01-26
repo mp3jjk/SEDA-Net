@@ -36,6 +36,10 @@
  *
  * \author Joakim Eriksson <joakime@sics.se>, Nicolas Tsiftes <nvt@sics.se>
  * Contributors: George Oikonomou <oikonomou@users.sourceforge.net> (multicast)
+ *
+ * Modified for Dual-RPL-Recal
+ * Jinhwan Jung <jhjung@lanada.kaist.ac.kr> Joonki Hong <joonki@lanada.kaist.ac.kr>
+ *
  */
 
 /**
@@ -53,7 +57,7 @@
 #include "lib/list.h"
 #include "lib/memb.h"
 #include "sys/ctimer.h"
-#include "../lanada/param.h"
+//#include "../lanada/param.h"
 
 #include <limits.h>
 #include <string.h>
@@ -64,7 +68,6 @@
 #include "net/ip/uip-debug.h"
 
 #include "sys/log_message.h"
-//extern FILE *debugfp;
 
 /* A configurable function called after every RPL parent switch */
 #ifdef RPL_CALLBACK_PARENT_SWITCH
@@ -87,7 +90,7 @@ static rpl_of_t * const objective_functions[] = {&RPL_OF};
 /*---------------------------------------------------------------------------*/
 /* Per-parent RPL information */
 NBR_TABLE_GLOBAL(rpl_parent_t, rpl_parents);
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 NBR_TABLE_GLOBAL(rpl_child_t, rpl_children);
 #endif
 /*---------------------------------------------------------------------------*/
@@ -125,7 +128,7 @@ rpl_print_neighbor_list(void)
     PRINTF("RPL: end of list\n");
   }
 }
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 /*---------------------------------------------------------------------------*/
 void
 rpl_print_child_neighbor_list(void)
@@ -172,7 +175,7 @@ nbr_callback(void *ptr)
 {
   rpl_remove_parent(ptr);
 }
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 /*---------------------------------------------------------------------------*/
 uip_ds6_nbr_t *
 rpl_get_nbr_child(rpl_child_t *child)
@@ -197,7 +200,7 @@ void
 rpl_dag_init(void)
 {
   nbr_table_register(rpl_parents, (nbr_table_callback *)nbr_callback);
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
   nbr_table_register(rpl_children, (nbr_table_callback *)nbr_callback_child);
 #endif
 }
@@ -240,7 +243,7 @@ rpl_get_parent_ipaddr(rpl_parent_t *p)
   return uip_ds6_nbr_ipaddr_from_lladdr((uip_lladdr_t *)lladdr);
 }
 /*---------------------------------------------------------------------------*/
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 uip_ipaddr_t *
 rpl_get_child_ipaddr(rpl_child_t *c)
 {
@@ -484,7 +487,6 @@ rpl_set_root(uint8_t instance_id, uip_ipaddr_t *dag_id)
 
   ANNOTATE("#A root=%u\n", dag->dag_id.u8[sizeof(dag->dag_id) - 1]);
 
-//	printf("joonki1\n");
   rpl_reset_dio_timer(instance);
 
   return dag;
@@ -506,7 +508,6 @@ rpl_repair_root(uint8_t instance_id)
   RPL_LOLLIPOP_INCREMENT(instance->current_dag->version);
   RPL_LOLLIPOP_INCREMENT(instance->dtsn_out);
   PRINTF("RPL: rpl_repair_root initiating global repair with version %d\n", instance->current_dag->version);
-//  printf("joonki2\n");
 	rpl_reset_dio_timer(instance);
   return 1;
 }
@@ -754,10 +755,9 @@ rpl_add_parent(rpl_dag_t *dag, rpl_dio_t *dio, uip_ipaddr_t *addr)
       p->dag = dag;
       p->rank = dio->rank;
       p->dtsn = dio->dtsn;
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
       my_parent_number++;
 #endif
-//      printf("my_parent_number inc: %d\n",my_parent_number);
       /* Check whether we have a neighbor that has not gotten a link metric yet */
       if(nbr != NULL && nbr->link_metric == 0) {
 	nbr->link_metric = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
@@ -789,7 +789,7 @@ rpl_find_parent(rpl_dag_t *dag, uip_ipaddr_t *addr)
   }
 }
 /*---------------------------------------------------------------------------*/
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 rpl_child_t *
 rpl_add_child(uint8_t weight, uip_ipaddr_t *addr)
 {
@@ -955,7 +955,6 @@ rpl_select_dag(rpl_instance_t *instance, rpl_parent_t *p)
       RPL_LOLLIPOP_INCREMENT(instance->dtsn_out);
       rpl_schedule_dao(instance);
     }
-//		printf("joonki3\n");
     rpl_reset_dio_timer(instance);
 //#if DEBUG
     rpl_print_neighbor_list();
@@ -971,8 +970,6 @@ static rpl_parent_t *
 best_parent(rpl_dag_t *dag)
 {
   rpl_parent_t *p, *best, *prev;
-#if RPL_LIFETIME_MAX_MODE2
-#endif
   best = NULL;
 #if DETERMINED_ROUTING_TREE
   uip_ds6_nbr_t *nbr;
@@ -982,9 +979,6 @@ best_parent(rpl_dag_t *dag)
   p = nbr_table_head(rpl_parents);
   prev = dag->preferred_parent;
 	
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-  dag->base_rank = p->rank;
-#endif
   while(p != NULL) {
 #if DETERMINED_ROUTING_TREE
 	  nbr = rpl_get_nbr(p);
@@ -998,12 +992,6 @@ best_parent(rpl_dag_t *dag)
 		}
 
 #endif
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-	  if(p->rank < dag->base_rank)
-	  {
-		  dag->base_rank = p->rank;
-	  }
-#endif
     if(p->dag != dag || p->rank == INFINITE_RANK)
     {
       /* ignore this neighbor */
@@ -1016,11 +1004,10 @@ best_parent(rpl_dag_t *dag)
   }
 
 
-//#if !ZOUL_MOTE
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
   if(best != prev && best != NULL && prev != NULL)
   {
-#if PROB_PARENT_SWITCH
+#if DUAL_RPL_PROB_PARENT_SWITCH
 	  uint8_t load_diff = prev->est_load + prev->parent_sum_weight - (best->est_load + best->parent_sum_weight);
 	  uint8_t random;
 	  if(load_diff > 0) {
@@ -1029,33 +1016,28 @@ best_parent(rpl_dag_t *dag)
 	  else {
 		  random = 0;
 	  }
-//	  uint8_t random = rand() % (prev->est_load + prev->parent_sum_weight - (best->est_load + best->parent_sum_weight));
 #else
 	  uint8_t random = rand() % 2;
-#endif
+#endif /* DUAL_RPL_RECAL_MODE */
 	  prev->parent_sum_weight;
-#if RPL_LIFETIME_MAX_MODE2
-//	  printf("random %d cmp %d p_num %d\n",random, prev->est_load - best->est_load,my_parent_number);
-//	  if(random > (prev->est_load - best->est_load))
+#if DUAL_RPL_RECAL_MODE
 	  if(random == 0)
 	  {
-//		  printf("return prev\n");
+//		  printf("return previous parent\n");
 		  return prev;
 	  }
 //	  printf("parent changed!\n");
-#endif /* RPL_LIFETIME_MAX_MODE2 */
+#endif /* DUAL_RPL_RECAL_MODE */
 
   }
 #endif
-//#endif
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
   if(init_phase && prev != NULL) {
-//	  printf("strange prev %d %d best %d %d\n",rpl_get_nbr(prev)->ipaddr.u8[8],rpl_get_nbr(prev)->ipaddr.u8[9],rpl_get_nbr(best)->ipaddr.u8[8],rpl_get_nbr(best)->ipaddr.u8[9]);
 	  if(prev != best) {
-		  if(prev->rank > best->rank) { // best has small metric
+		  if(prev->rank > best->rank) { // If Best has smaller rank
 			  return best;
 		  }
-		  else { // they have the same metric
+		  else { // Otherwise randomly
 			  uint8_t random = rand() % 2;
 			  return random == 0 ? best : prev;
 		  }
@@ -1063,7 +1045,6 @@ best_parent(rpl_dag_t *dag)
 	  return best;
   }
   else {
-	  //  printf("return best my_parent_number %d\n",my_parent_number);
 	  return best;
   }
 #else
@@ -1093,14 +1074,14 @@ rpl_remove_parent(rpl_parent_t *parent)
   PRINT6ADDR(rpl_get_parent_ipaddr(parent));
   PRINTF("\n");
   rpl_nullify_parent(parent);
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
   my_parent_number--;
 #endif
 //  printf("my_parent_number dec: %d\n",my_parent_number);
   nbr_table_remove(rpl_parents, parent);
 }
 /*---------------------------------------------------------------------------*/
-#if RPL_LIFETIME_MAX_MODE  || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 void
 rpl_remove_child(rpl_child_t *child)
 {
@@ -1261,7 +1242,7 @@ rpl_join_instance(uip_ipaddr_t *from, rpl_dio_t *dio)
     return;
   }
   p->dtsn = dio->dtsn;
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 #if DUAL_RADIO
   p->parent_weight = long_ip_from_lladdr_map(from) == 1 ? LONG_WEIGHT_RATIO : 1;
 #else /* DUAL_RADIO */
@@ -1307,21 +1288,17 @@ rpl_join_instance(uip_ipaddr_t *from, rpl_dio_t *dio)
   /* So far this is the lowest rank we are aware of. */
   dag->min_rank = dag->rank;
 
-#if RPL_LIFETIME_MAX_MODE2
-  	  if(dag->rank == RPL_MIN_HOPRANKINC * 2)
-  	  {
+#if DUAL_RPL_RECAL_MODE
+  /* Calculate tree depth of the node using the rank */
+  	  if(dag->rank == RPL_MIN_HOPRANKINC * 2) {
   		  tree_level = 1;
   	  }
-  	  else if(dag->rank == RPL_MIN_HOPRANKINC * 3)
-  	  {
+  	  else if(dag->rank == RPL_MIN_HOPRANKINC * 3) {
   		  tree_level = 2;
   	  }
-  	  else
-  	  {
+  	  else {
   		  tree_level = 3; // After level 2
   	  }
-//  	  printf("tree_level %d\n",tree_level);
-
 #endif
 
   if(default_instance == NULL) {
@@ -1335,7 +1312,6 @@ rpl_join_instance(uip_ipaddr_t *from, rpl_dio_t *dio)
 
   ANNOTATE("#A join=%u\n", dag->dag_id.u8[sizeof(dag->dag_id) - 1]);
 
-//	printf("joonki4\n");
   rpl_reset_dio_timer(instance);
   rpl_set_default_route(instance, from);
 
@@ -1489,7 +1465,6 @@ rpl_local_repair(rpl_instance_t *instance)
   /* no downward route anymore */
   instance->has_downward_route = 0;
 
-//	printf("joonki5\n");
   rpl_reset_dio_timer(instance);
   /* Request refresh of DAO registrations next DIO */
   RPL_LOLLIPOP_INCREMENT(instance->dtsn_out);
@@ -1609,7 +1584,6 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
         PRINTF("RPL: Root received inconsistent DIO version number (current: %u, received: %u)\n", dag->version, dio->version);
         dag->version = dio->version;
         RPL_LOLLIPOP_INCREMENT(dag->version);
-//				printf("joonki6\n");
         rpl_reset_dio_timer(instance);
       } else {
         PRINTF("RPL: Global repair\n");
@@ -1628,7 +1602,6 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
       /* The DIO sender is on an older version of the DAG. */
       PRINTF("RPL: old version received => inconsistency detected\n");
       if(dag->joined) {
-//				printf("joonki7\n");
         rpl_reset_dio_timer(instance);
         return;
       }
@@ -1639,13 +1612,6 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
     PRINTF("RPL: New instance detected (ID=%u): Joining...\n", dio->instance_id);
     if(add_nbr_from_dio(from, dio)) {
       rpl_join_instance(from, dio);
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-#if MODE_LAST_PARENT
-      rpl_get_default_instance()->last_parent = NULL;
-#endif
-//      rpl_schedule_dio_ack(rpl_get_default_instance()); // Tx dio_ack when joining new instance
-#endif
-//      dio_ack_output(from); // Tx dio_ack when joining new instance
     } else {
       PRINTF("RPL: Not joining since could not add parent\n");
     }
@@ -1681,7 +1647,6 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
            (unsigned)dio->rank);
     return;
   } else if(dio->rank == INFINITE_RANK && dag->joined) {
-//		printf("joonki8\n");
     rpl_reset_dio_timer(instance);
   }
 
@@ -1748,55 +1713,42 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
     }
   }
   p->rank = dio->rank;
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-  if(p->parent_weight == 0)
-  {
+#if DUAL_RPL_RECAL_MODE
+  if(p->parent_weight == 0) {
 #if DUAL_RADIO
       p->parent_weight = long_ip_from_lladdr_map(from) == 1 ? LONG_WEIGHT_RATIO : 1;
 #else
       p->parent_weight = 1;
 #endif
   }
-#if RPL_LIFETIME_MAX_MODE2
   p->MLS_id = dio->MLS_id;
   p->est_load = dio->est_load;
   p->rem_energy = dio->rem_energy;
-#endif
-//  printf("rpl-dag ip: %d, sum_weight: %d\n",from->u8[15],p->parent_sum_weight);
   rpl_parent_t *p_temp;
   uip_ipaddr_t *ip_temp;
   p->parent_sum_weight = dio->dio_weight;
-/* Short and Long parent should share weight */
+/* Short and Long parents should share the same weight */
   ip_temp = from;
-  if(ip_temp->u8[8] == 0x82)
-  {
+  if(ip_temp->u8[8] == 0x82) {
 	  ip_temp->u8[8] = 0x2;
   }
-  else
-  {
+  else {
 	  ip_temp->u8[8] = 0x82;
   }
   p_temp = rpl_find_parent(dag,ip_temp);
-  if(p_temp != NULL)
-  {
+  if(p_temp != NULL) {
 	  p_temp->parent_sum_weight = dio->dio_weight;
 	  p_temp->rank = p->rank;
-#if RPL_LIFETIME_MAX_MODE2
 	  p_temp->MLS_id = p->MLS_id;
 	  p_temp->est_load = p->est_load;
-#endif
-//	  printf("rpl-dag ip2: %d, sum_weight: %d\n",rpl_get_nbr(p_temp)->ipaddr.u8[15],p_temp->parent_sum_weight);
   }
   /* Recover addr */
-  if(ip_temp->u8[8] == 0x82)
-  {
+  if(ip_temp->u8[8] == 0x82) {
 	  ip_temp->u8[8] = 0x2;
   }
-  else
-  {
+  else {
 	  ip_temp->u8[8] = 0x82;
   }
-
 #endif
   /* Parent info has been updated, trigger rank recalculation */
   p->flags |= RPL_PARENT_FLAG_UPDATED;
@@ -1817,20 +1769,16 @@ rpl_process_dio(uip_ipaddr_t *from, rpl_dio_t *dio)
     PRINTF("RPL: The candidate parent is rejected\n");
     return;
   }
-#if RPL_LIFETIME_MAX_MODE2
-  	  if(dag->rank == RPL_MIN_HOPRANKINC * 2)
-  	  {
+#if DUAL_RPL_RECAL_MODE
+  	  if(dag->rank == RPL_MIN_HOPRANKINC * 2) {
   		  tree_level = 1;
   	  }
-  	  else if(dag->rank == RPL_MIN_HOPRANKINC * 3)
-  	  {
+  	  else if(dag->rank == RPL_MIN_HOPRANKINC * 3) {
   		  tree_level = 2;
   	  }
-  	  else
-  	  {
+  	  else {
   		  tree_level = 3; // After level 2
   	  }
-//  	  printf("tree_level_updated %d\n",tree_level);
 #endif
   /* We don't use route control, so we can have only one official parent. */
   if(dag->joined && p == dag->preferred_parent) {

@@ -389,11 +389,10 @@ dio_input(void)
 
   dio.dtsn = buffer[i++];
   /* two reserved bytes */
-  /* One byte for remaining energy JJH*/
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-//  dio.parent_weight = buffer[i++];
+  /* One byte for remaining energy */
+  /* One byte for weight information */
+#if DUAL_RPL_RECAL_MODE
   dio.rem_energy = buffer[i++];
-//  PRINTF("recv dio p's weight %d\n",dio.parent_weight);
   PRINTF("recv dio rem_e %d\n",dio.rem_energy);
   dio.dio_weight = buffer[i++];
   PRINTF("recv dio degree %d\n",dio.dio_weight);
@@ -507,17 +506,13 @@ dio_input(void)
              dio.default_lifetime, dio.lifetime_unit);
       break;
     case RPL_OPTION_PREFIX_INFO:
-#if RPL_LIFETIME_MAX_MODE
-//    	if(len != 48) {
-   		if(len != 34) {
-#elif RPL_LIFETIME_MAX_MODE2
-//    	if(len != 50) {
+#if DUAL_RPL_RECAL_MODE
     	if(len != 37) {
 #else
     	if(len != 32) {
 #endif
         PRINTF("RPL: Invalid DAG prefix info, len != 48 or 50 or 32\n");
-	RPL_STAT(rpl_stats.malformed_msgs++);
+        RPL_STAT(rpl_stats.malformed_msgs++);
         goto discard;
       }
       dio.prefix_info.length = buffer[i + 2];
@@ -528,29 +523,16 @@ dio_input(void)
       /* 32-bit reserved at i + 12 */
       PRINTF("RPL: Copying prefix information\n");
       memcpy(&dio.prefix_info.prefix, &buffer[i + 16], 16);
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-//      memcpy(&dio.parent_addr,&buffer[i + 32],16);
+#if DUAL_RPL_RECAL_MODE
       dio.parent_id = buffer[i + 32];
       dio.parent_long = buffer[i + 33];
-//      PRINTF("recv dio addr: ");
       PRINTF("recv dio parent_id: %x %d\n",dio.parent_long,dio.parent_id);
-//      PRINT6ADDR(&dio.parent_addr);
-//      PRINTF("\n");
-#endif
-#if RPL_LIFETIME_MAX_MODE2
-//      dio.MLS_id = buffer[i+48];
       dio.MLS_id = buffer[i+34];
       PRINTF("recv dio MLS_id %d\n",dio.MLS_id);
-//      printf("recv dio MLS_id %d\n",dio.MLS_id);
-//      dio.est_load = buffer[i+49];
       dio.est_load = buffer[i+35];
       PRINTF("recv dio Est_load %d\n",dio.est_load);
-//      printf("recv dio Est_load %d\n",dio.est_load);
-//      printf("recv dio Est_load %d\n",dio.est_load);
       dio.latest_id = buffer[i+36];
       PRINTF("recv dio data_id %d\n",dio.latest_id);
-//      printf("recv dio data_id %d\n",dio.latest_id);
-/*//      printf("recv dio data_id %d\n",dio.latest_id);*/
 #endif
       break;
     default:
@@ -564,13 +546,7 @@ dio_input(void)
 #endif
 
   rpl_process_dio(&from, &dio);
-/*  PRINTF("before add_nbr\n");
-  if(!add_nbr_from_dio(&from, &dio)) {
-    PRINTF("RPL: Could not add parent based on DIO in icmp6\n");
-    return;
-  }
-  PRINTF("after add_nbr\n");*/
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
   // Check 1. sender is my child or not, 2. dio-> parent is me or not
   rpl_child_t *c;
 #if DUAL_RADIO
@@ -583,40 +559,18 @@ dio_input(void)
   PRINT6ADDR(&from);
   c = rpl_find_child(&from);
   PRINTF(" c: %d\n",c == NULL);
-  if(c != NULL)
-  {
-//	  PRINTF("after child cmp\n");
-//	  PRINT6ADDR(&dio.parent_addr);
-//	  PRINTF("\n");
+  if(c != NULL) {
 #if DUAL_RADIO
-/*
-	  if((is_longrange == LONG_RADIO
-			  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
-			  || (is_longrange == SHORT_RADIO
-					  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)))
-*/
 	  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == dio.parent_id &&
 			  ((is_longrange && dio.parent_long==0x82) || (!is_longrange && dio.parent_long==0x02)))
-//	  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)
-//		   || uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
 #else
-//		  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr))
 		  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == dio.parent_id)
 #endif
 	    {
 		  PRINTF("it's me\n");
-		  // weight update
-/*		  if(c->weight != dio.parent_weight)
-		  {
-			  my_weight -= c->weight;
-			  c->weight = dio.parent_weight;
-			  my_weight += c->weight;
-			  PRINTF("my_weight update in dio %d\n",my_weight);
-		  }*/
 	    }
-	  else
-	    {
-//	      my_weight -= c->weight;
+		  else
+		  {
 		  my_weight--;
 	      rpl_remove_child(c);
 	      PRINTF("my_weight deduct in dio %d\n",my_weight);
@@ -625,22 +579,14 @@ dio_input(void)
 	      // In my child list but I'm not the parent any more, so remove child
 	    }
   }
-  else
-  {
+  else {
 #if DUAL_RADIO
-/*	  if((is_longrange == LONG_RADIO
-			  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_long_get_link_local(-1)->ipaddr))
-			  || (is_longrange == SHORT_RADIO
-					  && uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr)))*/
 	  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == dio.parent_id &&
 			  ((is_longrange && dio.parent_long==0x82) || (!is_longrange && dio.parent_long==0x02)))
 #else
-//		  if(uip_ipaddr_cmp(&dio.parent_addr, &uip_ds6_get_link_local(-1)->ipaddr))
-			  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == dio.parent_id)
+	  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == dio.parent_id)
 #endif
 	  {
-
-//		  c = rpl_add_child(dio.parent_weight, &from);
 		  c = rpl_add_child(1, &from);
 		  if(c == NULL)
 		  {
@@ -656,12 +602,6 @@ dio_input(void)
 		  // Not included in child list but I'm the parent maybe due to the DIO_ACK loss
 	  }
   }
-/*  if(prev_weight != my_weight)
-  {
-	  PRINTF("DIO Reset in DIO\n");
-//		printf("joonki12\n");
-	  rpl_reset_dio_timer(rpl_get_default_instance());
-  }*/
   PRINTF("DIO INPUT my_weight %d\n",my_weight);
 #endif
 
@@ -728,35 +668,11 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     RPL_LOLLIPOP_INCREMENT(instance->dtsn_out);
   }
 
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-/*  if(dag->preferred_parent != NULL)
-  {
-	  if(dag->preferred_parent->parent_weight == 0)
-	  {
-#if DUAL_RADIO
-		  PRINTF("send dio weight %d %d default\n",sending_in_LR()==LONG_RADIO ? LONG_WEIGHT_RATIO : 1,sending_in_LR());
-		  buffer[pos++] = sending_in_LR()==LONG_RADIO ? LONG_WEIGHT_RATIO : 1;  parent's weight default
-#else	 DUAL_RADIO
-			PRINTF("send dio weight %d default\n",1);
-		  buffer[pos++] = 1;  parent's weight default
-#endif	 DUAL_RADIO
-	  }
-	  else
-	  {
-		  PRINTF("send dio weight %d\n",dag->preferred_parent->parent_weight);
-		  buffer[pos++] = dag->preferred_parent->parent_weight;  parent's weight
-	  }
-  }
-  else
-  {
-	  buffer[pos++] = 0;
-  }*/
-  buffer[pos++] = (char)((get_residual_energy()/(double)RESIDUAL_ENERGY_MAX)*100); /* remaining energy percent JJH */
-//  buffer[pos++] = 0; /* reserved */
+#if DUAL_RPL_RECAL_MODE
+  buffer[pos++] = (char)((get_residual_energy()/(double)RESIDUAL_ENERGY_MAX)*100); /* remaining energy information */
 #if SINK_INFINITE_ENERGY
   /* For sink node, set weight 0 */
-//  printf("I'am who? %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
-  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == SERVER_NODE) // Need to test both cases
+  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == SERVER_NODE)
   {
 	  PRINTF("send my weight sink %d but 0\n",my_weight);
 	  buffer[pos++] = 0;
@@ -826,11 +742,7 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   /* Check if we have a prefix to send also. */
   if(dag->prefix_info.length > 0) {
     buffer[pos++] = RPL_OPTION_PREFIX_INFO;
-#if RPL_LIFETIME_MAX_MODE
-//    buffer[pos++] = 46; /* always 30 bytes + 2 long + 16 bytes addr JJH */
-    buffer[pos++] = 32; /* always 30 bytes + 2 long + 1 byte parent_id JJH */
-#elif RPL_LIFETIME_MAX_MODE2
-//    buffer[pos++] = 48; /* always 30 bytes + 2 long + 16 bytes addr + MLS_id + Est_load JJH */
+#if DUAL_RPL_RECAL_MODE
     buffer[pos++] = 35; /* always 30 bytes + 2 long + 1 byte parent_id + MLS_id + Est_load + data_id JJH */
 #else
     buffer[pos++] = 30; /* always 30 bytes + 2 long */
@@ -852,38 +764,24 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     PRINTF("RPL: No prefix to announce (len %d)\n",
            dag->prefix_info.length);
   }
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
     if(dag->preferred_parent != NULL)
     {
     	PRINTF("send dio parent id: %x %d\n",rpl_get_parent_ipaddr(dag->preferred_parent)->u8[8], rpl_get_parent_ipaddr(dag->preferred_parent)->u8[15]);
-//    	PRINT6ADDR(rpl_get_parent_ipaddr(dag->preferred_parent));
-//    	PRINTF("\n");
-//    	memcpy(&buffer[pos],rpl_get_parent_ipaddr(dag->preferred_parent),16);
     	buffer[pos++] = rpl_get_parent_ipaddr(dag->preferred_parent)->u8[15];
     	buffer[pos++] = rpl_get_parent_ipaddr(dag->preferred_parent)->u8[8];
-//    	pos += 16;
     }
     else
     {
-//    	memset(&buffer[pos],0,16);
     	buffer[pos++] = 0;
     	buffer[pos++] = 0;
-//    	pos += 16;
     }
 #endif
-#ifdef RPL_LIFETIME_MAX_MODE
-#if RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 #if SINK_INFINITE_ENERGY
     if(tree_level == 2) { // I'm in the most loaded node set
-//        PRINTF("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
-//    	printf("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
-    //		memcpy(&buffer[pos++],uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
     	buffer[pos++] = uip_ds6_get_link_local(-1)->ipaddr.u8[15];
-//    	PRINTF("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
-//    	printf("MLS Est_load: %d id: %d\n",id_count[latest_id],latest_id);
-    //		memcpy(&buffer[pos++],id_count[latest_id]);
     	buffer[pos++] = id_count[latest_id];
-    //		buffer[pos++] = avg_est_load / 256;
     	buffer[pos++] = latest_id;
     }
     else if(tree_level == 1 || tree_level == -1) { // do nothing (send 0)
@@ -893,9 +791,6 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     }
     else { // relay
     	if(dag->preferred_parent != NULL) {
-//    		printf("relay MLS id: %d\n",dag->preferred_parent->MLS_id);
-//    		printf("relay load: %d\n",dag->preferred_parent->est_load);
-//    		printf("relay id: %d\n",dag->preferred_parent->latest_id);
     		buffer[pos++] = dag->preferred_parent->MLS_id; // MLS ID relay
         	buffer[pos++] = dag->preferred_parent->est_load;
         	buffer[pos++] = dag->preferred_parent->latest_id;
@@ -908,15 +803,8 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     }
 #else
     if(tree_level == 1) { // I'm in the most loaded node set
-        PRINTF("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
-    //		printf("MLS node id: %d\n",uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
-    //		memcpy(&buffer[pos++],uip_ds6_get_link_local(-1)->ipaddr.u8[15]);
     	buffer[pos++] = uip_ds6_get_link_local(-1)->ipaddr.u8[15];
-    	PRINTF("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
-    //		printf("Est_load: %d id: %d\n",avg_est_load/256,latest_id);
-    //		memcpy(&buffer[pos++],id_count[latest_id]);
     	buffer[pos++] = id_count[latest_id];
-    //		buffer[pos++] = avg_est_load / 256;
     	buffer[pos++] = latest_id;
     }
     else if(tree_level == -1) { // do nothing (send 0)
@@ -936,7 +824,6 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
     		buffer[pos++] = 0;
     	}
     }
-#endif
 #endif
 #endif
 #if RPL_LEAF_ONLY
@@ -1029,7 +916,7 @@ dao_input(void)
 	int is_root;
 	uip_ipaddr_t tmp_addr;
 	uip_ipaddr_t tmp_addr_2;
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 	rpl_child_t *c = NULL;
 	uint8_t weight;
 #endif
@@ -1272,15 +1159,8 @@ dao_input(void)
 #if RPL_CONF_MULTICAST
 fwd_dao:
 #endif
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 	uint8_t prev_weight = my_weight;
-  /* Add child as receiving DAO */
-/*  if(!add_nbr_from_dao(&dao_sender_addr, weight))
-  {
-	  PRINTF("fail to add nbr with dao\n");
-  }
-  PRINTF("DAO_sender:");
-  PRINT6ADDR(&dao_sender_addr);*/
   c = rpl_find_child(&dao_sender_addr);
 
 #if DUAL_RADIO
@@ -1291,7 +1171,6 @@ fwd_dao:
 #endif
   if (c == NULL)
   {
-//	  c = rpl_add_child(weight,&dao_sender_addr);
 	  c = rpl_add_child(1,&dao_sender_addr);
 	  if(c == NULL)
 	  {
@@ -1305,16 +1184,6 @@ fwd_dao:
 	  PRINTF("child list in dao input\n");
 	  rpl_print_child_neighbor_list();
   }
-/*  else
-  {
-	  if(c->weight != weight)
-	  {
-		  my_weight -= c->weight;
-		  c->weight = weight;
-		  my_weight += c->weight;
-		  PRINTF("my_weight update in dao %d\n",my_weight);
-	  }
-  }*/
 #endif
   if(learned_from == RPL_ROUTE_FROM_UNICAST_DAO) {
     int should_ack = 0;
@@ -1401,14 +1270,6 @@ fwd_dao:
                      RPL_DAO_ACK_UNCONDITIONAL_ACCEPT);
     }
   }
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-/*  if(prev_weight != my_weight)
-  {
-	  PRINTF("DIO Reset in DAO\n");
-//		printf("joonki13\n");
-	  rpl_reset_dio_timer(instance);
-  }*/
-#endif
 
  discard:
   uip_clear_buf();

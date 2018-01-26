@@ -33,6 +33,8 @@
  * \author
  *	Joakim Eriksson <joakime@sics.se> & Nicolas Tsiftes <nvt@sics.se>
  *
+ *	Modified for Dual-Net (Dual-RPL-Recal)
+ *	Jinhwan Jung <jhjung@lanada.kaist.ac.kr> & Joonki Hong <joonki@lanada.kaist.ac.kr>
  */
 
 #ifndef RPL_H
@@ -45,7 +47,6 @@
 #include "net/ipv6/uip-ds6.h"
 #include "sys/ctimer.h"
 
-#include "../lanada/param.h" //JJH
 /*---------------------------------------------------------------------------*/
 typedef uint16_t rpl_rank_t;
 typedef uint16_t rpl_ocp_t;
@@ -83,6 +84,12 @@ typedef uint16_t rpl_ocp_t;
 #define RPL_DAG_MC_ENERGY_TYPE_BATTERY		1
 #define RPL_DAG_MC_ENERGY_TYPE_SCAVENGING	2
 
+/* Dual-Net: Dual-RPL-Recal.
+ * The flag enables the lifetime maximation of Dual-RPL */
+#define DUAL_RPL_RECAL_MODE	1
+
+#define DUAL_RPL_PROB_PARENT_SWITCH	0
+
 struct rpl_metric_object_energy {
   uint8_t flags;
   uint8_t energy_est;
@@ -117,12 +124,10 @@ struct rpl_parent {
   clock_time_t last_tx_time;
   uint8_t dtsn;
   uint8_t flags;
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
   uint8_t parent_weight; /* The parent's weight */
   uint8_t parent_sum_weight; /* The parent's sum of chilren's weight  JJH */
   uint8_t rem_energy;
-#endif
-#if RPL_LIFETIME_MAX_MODE2
   uint8_t MLS_id;
   uint8_t est_load;
   uint8_t latest_id;
@@ -131,8 +136,8 @@ struct rpl_parent {
 typedef struct rpl_parent rpl_parent_t;
 
 /*---------------------------------------------------------------------------*/
-/* To store children information for LIFETIME_MAX_MODE JJH */
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+/* To store children information for DUAL_RPL_RECAL */
+#if DUAL_RPL_RECAL_MODE
 struct rpl_child {
 	uint8_t weight;
 };
@@ -168,9 +173,6 @@ struct rpl_dag {
   struct rpl_instance *instance;
   rpl_prefix_t prefix_info;
   uint32_t lifetime;
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-  rpl_rank_t base_rank; /* For rank regularization */
-#endif
 };
 typedef struct rpl_dag rpl_dag_t;
 typedef struct rpl_instance rpl_instance_t;
@@ -278,9 +280,6 @@ struct rpl_instance {
 #if RPL_WITH_DAO_ACK
   struct ctimer dao_retransmit_timer;
 #endif /* RPL_WITH_DAO_ACK */
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-  struct ctimer dio_ack_timer;
-#endif
 };
 
 /*---------------------------------------------------------------------------*/
@@ -300,7 +299,7 @@ void rpl_insert_header(void);
 void rpl_remove_header(void);
 uint8_t rpl_invert_header(void);
 uip_ipaddr_t *rpl_get_parent_ipaddr(rpl_parent_t *nbr);
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 uip_ipaddr_t *rpl_get_child_ipaddr(rpl_child_t *nbr);
 #endif
 rpl_parent_t *rpl_get_parent(uip_lladdr_t *addr);
@@ -308,11 +307,11 @@ rpl_rank_t rpl_get_parent_rank(uip_lladdr_t *addr);
 uint16_t rpl_get_parent_link_metric(const uip_lladdr_t *addr);
 void rpl_dag_init(void);
 uip_ds6_nbr_t *rpl_get_nbr(rpl_parent_t *parent);
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 uip_ds6_nbr_t *rpl_get_nbr_child(rpl_child_t *child);
 #endif
 void rpl_print_neighbor_list(void);
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 void rpl_print_child_neighbor_list(void);
 #endif
 /* Per-parent RPL information */

@@ -87,7 +87,7 @@ static uint16_t next_dis;
 
 /* dio_send_ok is true if the node is ready to send DIOs */
 static uint8_t dio_send_ok;
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 #if ROUTING_NO_ENERGY
 static struct ctimer converge_timer;
 rpl_energy_timer(void)
@@ -101,7 +101,7 @@ rpl_energy_module_on(void)
 	energy_restore = RESIDUAL_ENERGY_MAX - get_residual_energy();
 }
 #endif
-#endif	/* RPL_LIFETIME_MAX_MODE */
+#endif	/* DUAL_RPL_RECAL_MODE */
 /*---------------------------------------------------------------------------*/
 static void
 handle_periodic_timer(void *ptr)
@@ -115,13 +115,9 @@ handle_periodic_timer(void *ptr)
   next_dis++;
   if(rpl_get_any_dag() == NULL && next_dis >= RPL_DIS_INTERVAL) {
     next_dis = 0;
-		PRINTF("handle_periodic_timer\n");
-/*JOONKI*/
+    PRINTF("handle_periodic_timer\n");
 #if DUAL_RADIO
-		dis_broadcast();
-
-		// dual_radio_switch(SHORT_RADIO);
-		// dis_output(NULL);
+	dis_broadcast();
 #else
     dis_output(NULL);
 #endif
@@ -204,11 +200,8 @@ handle_dio_timer(void *ptr)
 #if RPL_CONF_STATS
       instance->dio_totsend++;
 #endif /* RPL_CONF_STATS */
-			/*JOONKI*/
 #if DUAL_RADIO
 			dio_broadcast(instance);
-			//dual_radio_switch(SHORT_RADIO);
-			//dio_output(instance, NULL);
 #else
 			dio_output(instance, NULL);
 #endif
@@ -262,9 +255,6 @@ rpl_reset_dio_timer(rpl_instance_t *instance)
 }
 /*---------------------------------------------------------------------------*/
 static void handle_dao_timer(void *ptr);
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-static void handle_dio_ack_timer(void *ptr);
-#endif
 static void
 set_dao_lifetime_timer(rpl_instance_t *instance)
 {
@@ -396,78 +386,6 @@ rpl_cancel_dao(rpl_instance_t *instance)
   ctimer_stop(&instance->dao_timer);
   ctimer_stop(&instance->dao_lifetime_timer);
 }
-/*---------------------------------------------------------------------------*/
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-static void
-handle_dio_ack_timer(void *ptr)
-{
-  rpl_instance_t *instance;
-
-  instance = (rpl_instance_t *)ptr;
-
-  if(!dio_send_ok && uip_ds6_get_link_local(ADDR_PREFERRED) == NULL) {
-    PRINTF("RPL: Postpone DIO_ACK transmission\n");
-    ctimer_set(&instance->dio_ack_timer, CLOCK_SECOND, handle_dio_ack_timer, instance);
-    return;
-  }
-
-  /* Send the DIO_ACK to the DIO_ACK parent set -- the preferred parent in our case. */
-  if(instance->current_dag->preferred_parent != NULL) {
-    PRINTF("RPL: handle_dio_ack timer - sending DIO_ACK\n");
-    /* Set the route lifetime to the default value. */
-    dio_ack_broadcast(instance);
-/*    if(instance->last_parent != NULL)
-    {
-    	dio_ack_output(rpl_get_parent_ipaddr(instance->last_parent));
-    }*/
-  } else {
-    PRINTF("RPL: No suitable DIO_ACK parent\n");
-  }
-
-  ctimer_stop(&instance->dio_ack_timer);
-}
-/*---------------------------------------------------------------------------*/
-static void
-schedule_dio_ack(rpl_instance_t *instance, clock_time_t latency)
-{
-  clock_time_t expiration_time;
-
-  expiration_time = etimer_expiration_time(&instance->dio_ack_timer.etimer);
-
-  if(!etimer_expired(&instance->dio_ack_timer.etimer)) {
-    PRINTF("RPL: DIO_ACK timer already scheduled\n");
-  } else {
-    if(latency != 0) {
-      expiration_time = latency / 2 +
-        (random_rand() % (latency));
-    } else {
-      expiration_time = 0;
-    }
-    PRINTF("RPL: Scheduling DIO_ACK timer %u ticks in the future\n",
-           (unsigned)expiration_time);
-    ctimer_set(&instance->dio_ack_timer, expiration_time,
-               handle_dio_ack_timer, instance);
-  }
-}
-/*---------------------------------------------------------------------------*/
-void
-rpl_schedule_dio_ack(rpl_instance_t *instance)
-{
-  schedule_dio_ack(instance, RPL_DIO_ACK_DELAY);
-}
-/*---------------------------------------------------------------------------*/
-void
-rpl_schedule_dio_ack_immediately(rpl_instance_t *instance)
-{
-  schedule_dio_ack(instance, 0);
-}
-/*---------------------------------------------------------------------------*/
-void
-rpl_cancel_dio_ack(rpl_instance_t *instance)
-{
-  ctimer_stop(&instance->dio_ack_timer);
-}
-#endif
 /*---------------------------------------------------------------------------*/
 static void
 handle_unicast_dio_timer(void *ptr)

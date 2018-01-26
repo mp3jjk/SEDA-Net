@@ -360,15 +360,11 @@ rpl_init(void)
   rpl_reset_periodic_timer();
   rpl_icmp6_register_handlers();
 
-  // RPL_CONVERGENCE TEMP timer
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-#if DUAL_RADIO
-
-#endif /* DUAL_RADIO */
+#if DUAL_RPL_RECAL_MODE
 #if ROUTING_NO_ENERGY
 	rpl_energy_timer();
 #endif
-#endif /* RPL_LIFETIME_MAX_MODE2 */
+#endif /* DUAL_RPL_RECAL_MODE */
 
   /* add rpl multicast address */
   uip_create_linklocal_rplnodes_mcast(&rplmaddr);

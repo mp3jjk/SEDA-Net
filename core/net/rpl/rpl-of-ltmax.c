@@ -32,13 +32,13 @@
 
 /**
  * \file
- *         The Minimum Rank with Hysteresis Objective Function (MRHOF)
+ * 		   The LifeTime MAXimization Objective Function (LTMAX-OF)
  *
- *         This implementation uses the estimated number of
- *         transmissions (ETX) as the additive routing metric,
- *         and also provides stubs for the energy metric.
+ *		   This OF is designed to maximize the network lifetime
+ *		   by balancing traffic loads more evenly using global and local loads
+ *		   with dual-radio
  *
- * \author Joakim Eriksson <joakime@sics.se>, Nicolas Tsiftes <nvt@sics.se>
+ * \author Jinhwan Jung <jhjung@lanada.kaist.ac.kr>, Joonki Hong <joonki@lanada.kaist.ac.kr>
  */
 
 /**
@@ -49,11 +49,10 @@
 #include "net/nbr-table.h"
 
 #include "rpl_debug.h"
-#define DEBUG DEBUG_RPL_LTMAX_OF
+#define DEBUG DEBUG_RPL_LTMAX2_OF
 #include "net/ip/uip-debug.h"
 #include "sys/log_message.h"
 
-/* JOONKI */
 #if DUAL_RADIO
 #ifdef ZOLERTIA_Z1
 #include	"../platform/z1/dual_radio.h"
@@ -63,10 +62,9 @@
 #include "../platform/zoul/dual_radio.h"
 #endif /* ZOLERTIA_Z1 */
 #endif /* DUAL_RADIO */
-/* JJH */
-#include "../lanada/param.h"
+//#include "../lanada/param.h"
 
-#if RPL_LIFETIME_MAX_MODE
+#if DUAL_RPL_RECAL_MODE
 static void reset(rpl_dag_t *);
 static void neighbor_link_callback(rpl_parent_t *, int, int);
 #if RPL_WITH_DAO_ACK
@@ -123,16 +121,25 @@ calculate_path_metric(rpl_parent_t *p)
   }
 #if RPL_DAG_MC == RPL_DAG_MC_NONE
   {
-#if RPL_LIFETIME_MAX_MODE
-//	  PRINTF("rank, base_rank %d %d\n",p->rank,rpl_get_any_dag()->base_rank);
-//	  rank_rate = p->rank - rpl_get_any_dag()->base_rank < 0 ? 0 : p->rank - rpl_get_any_dag()->base_rank;
-//	  PRINTF("weight: %d rank_rate: %d\n",p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR, rank_rate);
-//	  ret_metric = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR + ALPHA * rank_rate;
-
-	  ret_metric = p->rank * ALPHA + (p->parent_sum_weight + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;
+	  if(init_phase) {
+		  ret_metric = p->rank + p->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
+	  }
+	  else {
+#if RPL_ETX_WEIGHT
+		  ret_metric = p->rank + p->parent_weight * (p->parent_sum_weight * ALPHA / ALPHA_DIV + p->est_load) * RPL_DAG_MC_ETX_DIVISOR;
 #else
-	  ret_metric = p->rank + (uint16_t)nbr->link_metric;
+		  if(tree_level == 2)
+		  {
+			  ret_metric = (p->parent_sum_weight + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;
+		  }
+		  else if(tree_level == 1) {
+			  ret_metric = p->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
+		  }
+		  else {
+			  ret_metric = (p->parent_sum_weight * ALPHA / ALPHA_DIV + p->est_load + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;//(uint16_t)nbr->link_metric;
+		  }
 #endif
+	  }
 //	  printf("ip:%d %c weight:%d rank:%d ret_metric:%d %d\n",nbr->ipaddr.u8[15], nbr->ipaddr.u8[8]==0x82 ? 'L' : 'S',
 //			  p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR, p->rank, ret_metric, rpl_get_any_dag()->preferred_parent == p);
 	  return ret_metric;
@@ -177,9 +184,13 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
   uint16_t recorded_ett = 0;
   uint16_t packet_ett = numtx * RPL_DAG_MC_ETX_DIVISOR;
   uint16_t new_ett;
+  if(numtx == 0)
+  {
+	  return;
+  }
   uip_ds6_nbr_t *nbr = NULL;
 #if DUAL_RADIO
-  uint8_t is_longrange;
+  uint8_t is_longrange = 0;
 #endif
 
   nbr = rpl_get_nbr(p);
@@ -206,33 +217,20 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
       p->flags |= RPL_PARENT_FLAG_LINK_METRIC_VALID;
     }
 
-    PRINTF("RPL_LTMAX_OF: ETT changed from %u to %u (packet ETT = %u)\n",
+    PRINTF("RPL_LTMAX_OF: ip:%d %c ETT changed from %u to %u (packet ETT = %u)\n",
+    	rpl_get_nbr(p)->ipaddr.u8[15],rpl_get_nbr(p)->ipaddr.u8[8]>128? 'L':'S',
         (unsigned)(recorded_ett / RPL_DAG_MC_ETX_DIVISOR),
         (unsigned)(new_ett  / RPL_DAG_MC_ETX_DIVISOR),
         (unsigned)(packet_ett / RPL_DAG_MC_ETX_DIVISOR));
     /* update the link metric for this nbr */
     nbr->link_metric = new_ett;
+#ifdef ZOUL_MOTE
     LOG_MESSAGE("LTMAX_OF link_metric %d IP: %d %c\n",nbr->link_metric, nbr->ipaddr.u8[15],
 			nbr->ipaddr.u8[8]>128? 'L':'S');
+#endif
 
-/*	char *log_buf = (char*) malloc(sizeof(char)*100);
-	sprintf(log_buf,"LTMAX_OF link_metric %d IP: %d %c\n",nbr->link_metric, nbr->ipaddr.u8[15],
-			nbr->ipaddr.u8[8]>128? 'L':'S');
-
-	LOG_MESSAGE(log_buf);
-	free(log_buf);*/
-
-#if RPL_LIFETIME_MAX_MODE
 #if DUAL_RADIO
-/*    if(radio_received_is_longrange() == LONG_RADIO)
-    {
-    	is_longrange = 1;
-    }
-    else
-    {
-    	is_longrange = 0;
-    }*/
-	is_longrange = long_ip_from_lladdr_map(&(nbr->ipaddr)) == 1 ? 1 : 0;
+    is_longrange = long_ip_from_lladdr_map(&(nbr->ipaddr)) == 1 ? 1 : 0;
 
 #if RPL_ETX_WEIGHT
 	if(nbr->link_metric == 0)
@@ -244,8 +242,7 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
 		p->parent_weight = nbr->link_metric/RPL_DAG_MC_ETX_DIVISOR * (is_longrange ? LONG_WEIGHT_RATIO : 1); // Tx cost using DIO_ACK
 	}
 #else
-	p->parent_weight = 1 * (is_longrange ? LONG_WEIGHT_RATIO : 1);
-
+	p->parent_weight = 1 * (is_longrange ? 2 : 1);
 #endif
 
 //	printf("LTMAX_OF id:%d 8th:%d %d parent_weight %d\n",rpl_get_nbr(p)->ipaddr.u8[15],rpl_get_nbr(p)->ipaddr.u8[8],is_longrange,p->parent_weight);
@@ -266,7 +263,6 @@ neighbor_link_callback(rpl_parent_t *p, int status, int numtx)
 
 #endif
   }
-#endif
 }
 
 static rpl_rank_t
@@ -278,39 +274,24 @@ calculate_rank(rpl_parent_t *p, rpl_rank_t base_rank)
 
   if(p == NULL || (nbr = rpl_get_nbr(p)) == NULL) {
     if(base_rank == 0) {
-    	PRINTF("null inf rank\n");
       return INFINITE_RANK;
     }
     rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
   } else {
-	  if(p->parent_sum_weight == 0)
-	  {
-#if DUAL_RADIO
-		  rank_increase = (long_ip_from_lladdr_map(&(nbr->ipaddr)) == 1 ? LONG_WEIGHT_RATIO : 1) * RPL_DAG_MC_ETX_DIVISOR;
-#else
-		  rank_increase = RPL_DAG_MC_ETX_DIVISOR;
-#endif
-	  }
-	  else
-	  {
-		  rank_increase = p->parent_sum_weight * RPL_DAG_MC_ETX_DIVISOR;
-	  }
-    if(base_rank == 0) {
+	  rank_increase = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
+	  if(base_rank == 0) {
       base_rank = p->rank;
     }
   }
 
   if(INFINITE_RANK - base_rank < rank_increase) {
     /* Reached the maximum rank. */
-	  PRINTF("reach max rank\n");
     new_rank = INFINITE_RANK;
   } else {
    /* Calculate the rank based on the new rank information from DIO or
       stored otherwise. */
-    //	PRINTF("RPL_JKOF: P's rem_energy %d\n",p->rem_energy); // need to check NULL
     new_rank = base_rank + rank_increase;
   }
- 	/* JOONKI */
 	PRINTF("RPL_LTMAX_OF: rank calculation with parent");
 	PRINTLLADDR(uip_ds6_nbr_get_ll(nbr));
 	PRINTF("\n");
@@ -340,97 +321,159 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
   rpl_dag_t *dag;
   rpl_path_metric_t p1_metric;
   rpl_path_metric_t p2_metric;
-#if RPL_LIFETIME_MAX_MODE
   uip_ds6_nbr_t *nbr1 = NULL;
   uip_ds6_nbr_t *nbr2 = NULL;
   nbr1 = rpl_get_nbr(p1);
   nbr2 = rpl_get_nbr(p2);
-#endif
-#if DUAL_RADIO
-//  uint8_t is_longrange1;
-//  uint8_t is_longrange2;
-#endif
+
 
   dag = p1->dag; /* Both parents are in the same DAG. */
 
-#if OF_MWHOF
-  rpl_path_metric_t min_diff;
-  min_diff = RPL_DAG_MC_ETX_DIVISOR /
-             PARENT_SWITCH_THRESHOLD_DIV;
-#endif
-
   p1_metric = calculate_path_metric(p1);
   p2_metric = calculate_path_metric(p2);
-#if RPL_LIFETIME_MAX_MODE
-//#if DUAL_RADIO
-  if(p1 == dag->preferred_parent)
+/*  if(0)
   {
-//	  is_longrange1 = nbr1->ipaddr.u8[8]==0x82;
-//	  p1_metric += (is_longrange1 ? LONG_WEIGHT_RATIO : 1) * RPL_DAG_MC_ETX_DIVISOR;
-	  if(p1->parent_sum_weight != 0 && p1_metric - p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR > 0)
-	  {
-		  p1_metric -= p1->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
-	  }
-  }
-  else if(p2 == dag->preferred_parent)
-  {
-//	  is_longrange2 = nbr2->ipaddr.u8[8]==0x82;
-//	  p2_metric += (is_longrange2 ? LONG_WEIGHT_RATIO : 1) * RPL_DAG_MC_ETX_DIVISOR;
-	  if(p2->parent_sum_weight != 0 && p2_metric - p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR > 0)
-	  {
-		  p2_metric -= p2->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
-	  }
-  }
-/*#else	 DUAL_RADIO
-  if(p1 != dag->preferred_parent)
-  {
-	  p1_metric += RPL_DAG_MC_ETX_DIVISOR;
-  }
-  if(p2 != dag->preferred_parent)
-  {
-	  p2_metric += RPL_DAG_MC_ETX_DIVISOR;
+	  printf("Cmp %d %c p1: %d load: %d sum_weight: %d weight: %d rank: %d %c\n", nbr1->ipaddr.u8[15], nbr1->ipaddr.u8[8]==0x82 ? 'L' : 'S',
+			  p1_metric,p1->est_load,p1->parent_sum_weight, p1->parent_weight, p1->rank,p1 == dag->preferred_parent ? 'P':'X');
+	  printf("Cmp %d %c p2: %d load: %d sum_weight: %d weight: %d rank: %d %c\n", nbr2->ipaddr.u8[15], nbr2->ipaddr.u8[8]==0x82 ? 'L' : 'S',
+			  p2_metric,p2->est_load,p2->parent_sum_weight, p2->parent_weight, p2->rank,p2 == dag->preferred_parent ? 'P':'X');
   }*/
-//#endif	/* DUAL_RADIO */
-
-#endif	/* RPL_LIFETIME_MAX_MODE */
-
-/*	char *log_buf = (char*) malloc(sizeof(char)*100);
-  sprintf(log_buf,"Comparing %d %c p1: %d\n", nbr1->ipaddr.u8[15], nbr1->ipaddr.u8[8]==0x82 ? 'L' : 'S', p1_metric);
-	LOG_MESSAGE(log_buf);
-  sprintf(log_buf,"Comparing %d %c p2: %d\n", nbr2->ipaddr.u8[15], nbr2->ipaddr.u8[8]==0x82 ? 'L' : 'S', p2_metric);
-	LOG_MESSAGE(log_buf);
-	free(log_buf);*/
-
-#if OF_MWHOF
-  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent)
-  {
-	  if(p1_metric < p2_metric + min_diff &&
-			  p1_metric > p2_metric - min_diff)
-	  {
-		  return dag->preferred_parent;
+  if(init_phase) {
+	  if(p1_metric == p2_metric && p1 != NULL && p2 != NULL) {
+		  if(p1 == dag->preferred_parent) {
+			  return p2;
+		  }
+		  else if(p2 == dag->preferred_parent) {
+			  return p1;
+		  }
+		  else {
+			  return p1; // or p2? randomly
+		  }
+	  }
+	  else {
+		  return p1_metric <= p2_metric ? p1 : p2;
 	  }
   }
-  return p1_metric <= p2_metric ? p1 : p2;
 
-#else
-  if(p1_metric == p2_metric)
-  {
-	  if(p1->rank < p2->rank)
-	  {
-		  return p1;
-	  }
-	  else if(p1->rank > p2->rank)
-	  {
-		  return p2;
-	  }
-	  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent)
-	  {
-		  return dag->preferred_parent;
-	  }
-//	  return p1->rank <= p2->rank ? p1 : p2;
+
+#if RPL_ETX_WEIGHT
+  		if(nbr1->link_metric >= (MAX_LINK_METRIC - 1) * RPL_DAG_MC_ETX_DIVISOR && nbr2->link_metric >= (MAX_LINK_METRIC -1) * RPL_DAG_MC_ETX_DIVISOR) {
+  		  uint8_t random = rand() % 2;
+  		  return random == 0 ? p1 : p2;
+  		}
+  		else if(nbr1->link_metric >= (MAX_LINK_METRIC - 1) * RPL_DAG_MC_ETX_DIVISOR) {
+  			return p2;
+  		}
+  		else if(nbr2->link_metric >= (MAX_LINK_METRIC - 1) * RPL_DAG_MC_ETX_DIVISOR) {
+  			return p1;
+  		}
+
+  		if(p1->rank < p2->rank) {
+  			return p1;
+  		}
+  		else if(p1->rank > p2->rank) {
+  			return p2;
+  		}
+  		else { // p1 & p2 have the same rank
+  			if(tree_level == 1) {
+  				return p1_metric <= p2_metric ? p1 : p2;
+  			}
+  			else if(tree_level == 2) { // Locally load balancing
+  				if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+  					if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
+  							p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
+  						PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+  								p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+								p1_metric,
+								p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+  						return dag->preferred_parent;
+  					}
+  				}
+  				return p1_metric <= p2_metric ? p1 : p2;
+  			}
+  			else { // Local and Global load balancing
+  				if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+  					if((p1_metric <= p2_metric + (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR &&
+  							p1_metric >= p2_metric - (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR))
+  					{
+  						PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+  								p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+								p1_metric,
+								p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+  						return dag->preferred_parent;
+  					}
+  				}
+  				return p1_metric <= p2_metric ? p1 : p2;
+  			}
+  		}
+  		return p1_metric <= p2_metric ? p1 : p2;
+
+#else /* RPL_ETX_WEIGHT */
+  if(nbr1->ipaddr.u8[15] == 1 || nbr2->ipaddr.u8[15] == 1) {
+  	if(nbr1->ipaddr.u8[15] == 1 && nbr2->ipaddr.u8[15] == 1) {
+  		return p1_metric <= p2_metric ? p1 : p2;
+  	}
+  	else {
+  		return nbr1->ipaddr.u8[15] == 1 ? p1 : p2;
+  	}
   }
+  else {
+  	  if(p1->rank < p2->rank) {
+  		  return p1;
+  	  }
+  	  else if(p1->rank > p2->rank) {
+  		  return p2;
+  	  }
+  	  else { // p1 & p2 have the same rank
+  		  if(tree_level == 1) {
+  			  return p1_metric <= p2_metric ? p1 : p2;
+  		  }
+  		  else if(tree_level == 2) { // Locally load balancing
+  			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+  				  if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
+  						  p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
+  					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+  							  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+  							  p1_metric,
+  							  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+  					  return dag->preferred_parent;
+  				  }
+  			  }
+  			  return p1_metric <= p2_metric ? p1 : p2;
+  		  }
+  		  else { // Local and Global load balancing
+  			  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+  				  if((p1_metric <= p2_metric + (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR &&
+  						  p1_metric >= p2_metric - (id_count[latest_id] + 1)*RPL_DAG_MC_ETX_DIVISOR))
+  				  {
+  					  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+  							  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+  							  p1_metric,
+  							  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+  					  return dag->preferred_parent;
+  				  }
+  			  }
+  			  return p1_metric <= p2_metric ? p1 : p2;
+  		  }
+  	  }
+  }
+
+
+
+#endif /* RPL_ETX_WEIGHT */
+
+/*	  if(p1 == dag->preferred_parent || p2 == dag->preferred_parent) {
+		  if(p1_metric <= p2_metric + RPL_DAG_MC_ETX_DIVISOR &&
+				  p1_metric >= p2_metric - RPL_DAG_MC_ETX_DIVISOR) {
+			  PRINTF("RPL: MRHOF hysteresis: %u <= %u <= %u\n",
+					  p2_metric - RPL_DAG_MC_ETX_DIVISOR,
+					  p1_metric,
+					  p2_metric + RPL_DAG_MC_ETX_DIVISOR);
+			  return dag->preferred_parent;
+		  }
+	  }*/
   return p1_metric <= p2_metric ? p1 : p2;
-#endif
+//  }
 }
 
 #if RPL_DAG_MC == RPL_DAG_MC_NONE

@@ -71,9 +71,6 @@
 #define RPL_CODE_DIO                   0x01   /* DAG Information Option */
 #define RPL_CODE_DAO                   0x02   /* Destination Advertisement Option */
 #define RPL_CODE_DAO_ACK               0x03   /* DAO acknowledgment */
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-#define RPL_CODE_DIO_ACK               0x04   /* DIO acknowledgment */
-#endif
 
 
 #define RPL_CODE_SEC_DIS               0x80   /* Secure DIS */
@@ -122,9 +119,6 @@
 #else /* RPL_CONF_DAO_DELAY */
 #define RPL_DAO_DELAY                 (CLOCK_SECOND * 4)
 #endif /* RPL_CONF_DAO_DELAY */
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-#define RPL_DIO_ACK_DELAY		      (CLOCK_SECOND * 4)
-#endif
 
 /* Delay between reception of a no-path DAO and actual route removal */
 #ifdef RPL_CONF_NOPATH_REMOVAL_DELAY
@@ -257,14 +251,11 @@ struct rpl_dio {
   rpl_prefix_t destination_prefix;
   rpl_prefix_t prefix_info;
   struct rpl_metric_container mc;
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
   uint8_t parent_id;
   uint8_t parent_long;
-//  uint8_t parent_weight; /* dio parent's weight info. JJH */
   uint8_t rem_energy;
   uint8_t dio_weight; /* dio sender's total weight JJH */
-#endif
-#if RPL_LIFETIME_MAX_MODE2
   uint8_t MLS_id; /* MLS node id */
   uint8_t est_load; /* Estimated load */
   uint8_t latest_id; /* latest data_id */
@@ -310,10 +301,6 @@ void dio_output(rpl_instance_t *, uip_ipaddr_t *uc_addr);
 void dao_output(rpl_parent_t *, uint8_t lifetime);
 void dao_output_target(rpl_parent_t *, uip_ipaddr_t *, uint8_t lifetime);
 void dao_ack_output(rpl_instance_t *, uip_ipaddr_t *, uint8_t, uint8_t);
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-void dio_ack_output(rpl_instance_t *, uip_ipaddr_t *uc_addr);
-#endif
-
 
 void rpl_icmp6_register_handlers(void);
 uip_ds6_nbr_t *rpl_icmp6_update_nbr_table(uip_ipaddr_t *from,
@@ -337,13 +324,13 @@ void rpl_purge_dags(void);
 rpl_parent_t *rpl_add_parent(rpl_dag_t *, rpl_dio_t *dio, uip_ipaddr_t *);
 rpl_parent_t *rpl_find_parent(rpl_dag_t *, uip_ipaddr_t *);
 rpl_parent_t *rpl_find_parent_any_dag(rpl_instance_t *instance, uip_ipaddr_t *addr);
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 rpl_child_t *rpl_add_child(uint8_t weight, uip_ipaddr_t *);
 rpl_child_t *rpl_find_child(uip_ipaddr_t *);
 #endif
 void rpl_nullify_parent(rpl_parent_t *);
 void rpl_remove_parent(rpl_parent_t *);
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
+#if DUAL_RPL_RECAL_MODE
 void rpl_remove_child(rpl_child_t *);
 #endif
 void rpl_move_parent(rpl_dag_t *dag_src, rpl_dag_t *dag_dst, rpl_parent_t *parent);
@@ -366,11 +353,6 @@ void rpl_schedule_dao(rpl_instance_t *);
 void rpl_schedule_dao_immediately(rpl_instance_t *);
 void rpl_schedule_unicast_dio_immediately(rpl_instance_t *instance);
 void rpl_cancel_dao(rpl_instance_t *instance);
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-void rpl_schedule_dio_ack(rpl_instance_t *);
-void rpl_schedule_dio_ack_immediately(rpl_instance_t *);
-void rpl_cancel_dio_ack(rpl_instance_t *instance);
-#endif
 void rpl_schedule_probing(rpl_instance_t *instance);
 
 #if ROUTING_NO_ENERGY
