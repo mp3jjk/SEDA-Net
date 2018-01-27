@@ -2,6 +2,8 @@
 #include "log_message.h"
 #include "lanada/param.h"
 #include "sys/residual.h"
+#include "net/rpl/rpl.h"
+#include "net/mac/dualmac/dualmac.h"
 
 #ifdef COOJA
 #include "net/linkaddr.h"
@@ -35,7 +37,7 @@ void log_initialization(void){
 
 #if SIMULATION_SETTING
 	printf("\n\nDUAL_RADIO: %d\nADDR_MAP: %d\nRPL_LIFETIME_MAX_MODE: %d\nLONG_WEIGHT_RATIO: %d\nSTROBE_CNT_MODE: %d\n", \
-			DUAL_RADIO, ADDR_MAP, RPL_LIFETIME_MAX_MODE2, \
+			DUAL_RADIO, ADDR_MAP, DUAL_RPL_RECAL_MODE, \
 			LONG_WEIGHT_RATIO, STROBE_CNT_MODE);
 	printf("DETERMINED_ROUTING_TREE: %d\nRESIDUAL_ENERGY_MAX: %d\n", \
 			DETERMINED_ROUTING_TREE, RESIDUAL_ENERGY_MAX);

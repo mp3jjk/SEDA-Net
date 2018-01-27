@@ -755,9 +755,6 @@ rpl_add_parent(rpl_dag_t *dag, rpl_dio_t *dio, uip_ipaddr_t *addr)
       p->dag = dag;
       p->rank = dio->rank;
       p->dtsn = dio->dtsn;
-#if DUAL_RPL_RECAL_MODE
-      my_parent_number++;
-#endif
       /* Check whether we have a neighbor that has not gotten a link metric yet */
       if(nbr != NULL && nbr->link_metric == 0) {
 	nbr->link_metric = RPL_INIT_LINK_METRIC * RPL_DAG_MC_ETX_DIVISOR;
@@ -1074,10 +1071,6 @@ rpl_remove_parent(rpl_parent_t *parent)
   PRINT6ADDR(rpl_get_parent_ipaddr(parent));
   PRINTF("\n");
   rpl_nullify_parent(parent);
-#if DUAL_RPL_RECAL_MODE
-  my_parent_number--;
-#endif
-//  printf("my_parent_number dec: %d\n",my_parent_number);
   nbr_table_remove(rpl_parents, parent);
 }
 /*---------------------------------------------------------------------------*/

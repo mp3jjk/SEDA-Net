@@ -1,53 +1,9 @@
-#define RPL_ENERGY_MODE 0
-#define RPL_LIFETIME_MAX_MODE 0	// Child information is saved in each node
-#define RPL_LIFETIME_MAX_MODE2 1 // Improving LT MAX MODE
-
-#define PROB_PARENT_SWITCH 0
-
-/* Weight ratio between long and short*/
-#define LONG_WEIGHT_RATIO 1
-
-/* Weight ratio between rank and parent's degree */
-#define ALPHA	1
-#define ALPHA_DIV	1
 
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
 #define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
 
-/* Sink's infinite energy */
-#define SINK_INFINITE_ENERGY	1
-#if RPL_LIFETIME_MAX_MODE2
-uint8_t tree_level; // The candidates set of the most loaded node
-#endif
-
-/* Using strobe cnt, reducing idle listening while Tx preamble */
-#ifdef ZOUL_MOTE
-#define STROBE_CNT_MODE 0
-#else
-#define STROBE_CNT_MODE		0
-#endif
-
-/* Enabling Data ACK */
-#define DATA_ACK      1
-#define ACK_WEIGHT_INCLUDED		1
-
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
-
-
-/* Energy consumption X during routing */
-#define ROUTING_NO_ENERGY 0
-#define ENERGY_CONV_TIME (900ul * CLOCK_SECOND)
-
-/* LSA_ENHANCED, implemeted on dualmac
- * Preamble free short broadcast after long broadcast, dual broadcast is included in LSA_ENHANCED
- * Only long duty cylce, long preamble */
-#if DUAL_RADIO
-#define LSA_ENHANCED 0
-#else	/* DUAL_RADIO */
-#endif /* DUAL_RADIO */
-
-#define SERVER_NODE 1
 
 #define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
@@ -57,38 +13,6 @@ uint8_t tree_level; // The candidates set of the most loaded node
 #endif
 
 uint8_t dead;
-uint8_t join_instance;
-
-
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-#ifdef ZOUL_MOTE
-#define RPL_ETX_WEIGHT 	1
-#else
-#define RPL_ETX_WEIGHT 	1
-#endif
-uint8_t my_weight;
-uint8_t my_sink_reachability;
-uint8_t my_parent_number;
-uint8_t init_phase; // It is in init_phase while it is 1
-#define LOAD_SCALE 	100
-#define LOAD_ALPHA	90
-uint8_t parent_update; /* Update parent only once for each data_id */
-#endif /* RPL_ENERGY_MODE */
-#define MAX_NUM_NODE 50
-#define BUF_SIZE 5000
-extern int id_array[MAX_NUM_NODE];
-extern uint8_t id_count[BUF_SIZE];
-int latest_id;
-int count_index;
-int avg_est_load; // Exponentially Weighted Moving Average with est_load
-
-
-#ifdef ZOUL_MOTE
-#define SHORT_SLOT_LEN	(RTIMER_ARCH_SECOND / 160 * 4) // Short on time slot length in rtimer
-#define BEFORE_SHORT_SLOT	(RTIMER_ARCH_SECOND / 160 * 0)
-#else
-#define SHORT_SLOT_LEN	(RTIMER_ARCH_SECOND / 160 * 2) // Short on time slot length in rtimer
-#endif
 
 /*-----------------------------------------------------------------------------------------------*/
 #define DETERMINED_ROUTING_TREE	0

@@ -32,9 +32,10 @@
 
 /**
  * \file
- *         A simple power saving MAC protocol based on X-MAC [SenSys 2006]
+ *         Dual-MAC protocol for supporting dual-radio networks
+ *         with asynchronous duty-cycling based on cxmac
  * \author
- *         Adam Dunkels <adam@sics.se>
+ *         Jinhwan Jung <jhjung@lanada.kaist.ac.kr>, Joonki Hong <joonki@lanada.kaist.ac.kr>
  */
 
 #ifndef DUALMAC_H_
@@ -59,5 +60,19 @@ struct dualmac_config {
 
 extern const struct rdc_driver dualmac_driver;
 
+/* Dual-MAC configuration parameters */
+
+/* Using strobe cnt, reducing idle listening while Tx preamble */
+#define STROBE_CNT_MODE 0
+
+/* Enabling Data ACK */
+#define DATA_ACK      1
+#define ACK_WEIGHT_INCLUDED		1
+
+#ifdef ZOUL_MOTE
+#define SHORT_SLOT_LEN	(RTIMER_ARCH_SECOND / 160 * 4) // Short on time slot length in rtimer
+#else
+#define SHORT_SLOT_LEN	(RTIMER_ARCH_SECOND / 160 * 2) // Short on time slot length in rtimer
+#endif
 
 #endif /* DUALMAC_H_ */

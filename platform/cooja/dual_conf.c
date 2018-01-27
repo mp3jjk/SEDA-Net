@@ -15,14 +15,10 @@
 #endif
 PROCESS(dual_dio_broadcast, "dio_broadcast");
 PROCESS(dual_dis_broadcast, "dis_broadcast");
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-PROCESS(dual_dio_ack_broadcast, "dio_ack_broadcast");
-#endif
 
 int long_range_radio = 0;
 int radio_received = SHORT_RADIO;
 static rpl_instance_t *temp_instance;
-static uint8_t temp_lr_child;
 
 int dual_radio_switch(int radio)
 {
@@ -115,14 +111,6 @@ PROCESS_THREAD(dual_dio_broadcast, ev, data)
 	static uint8_t long_duty_on_local = 1;
 	static uint8_t short_duty_on_local = 1;
 
-/*
-#if LSA_ENHANCED
-	if(MLS == 2)
-	{
-		long_duty_on_local = 0;
-	}
-#endif
-*/
 	PROCESS_BEGIN();
 //	dual_radio_switch(SHORT_RADIO);
 	dual_radio_switch(LONG_RADIO);
@@ -174,33 +162,6 @@ PROCESS_THREAD(dual_dis_broadcast, ev, data)
 	PROCESS_END();
 }
 	
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-PROCESS_THREAD(dual_dio_ack_broadcast, ev, data)
-{
-	static struct etimer et;
-	static uint8_t long_duty_on_local = 1;
-	static uint8_t short_duty_on_local = 1;
-
-
-	PROCESS_BEGIN();
-	dual_radio_switch(LONG_RADIO);
-
-	if (long_duty_on_local == 1) {
-		dio_ack_output(temp_instance, NULL);
-	}
-	etimer_set(&et, 1);
-
-	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
-	RADIO("############################################### DIO_ACK_BROADCAST: Process stopped for a while ####################\n");
-	dual_radio_switch(SHORT_RADIO);
-
-	if (short_duty_on_local == 1) {
-		dio_ack_output(temp_instance, NULL);
-	}
-	PROCESS_END();
-}
-#endif
-
 int dio_broadcast(rpl_instance_t * instance)
 {
 	temp_instance = instance;
@@ -213,13 +174,4 @@ int dis_broadcast(void)
 	process_start(&dual_dis_broadcast, NULL);
 	return 1;
 }
-
-#if RPL_LIFETIME_MAX_MODE_DIO_ACK
-int dio_ack_broadcast(rpl_instance_t * instance)
-{
-	temp_instance = instance;
-	process_start(&dual_dio_ack_broadcast, NULL);
-	return 1;
-}
-#endif
 

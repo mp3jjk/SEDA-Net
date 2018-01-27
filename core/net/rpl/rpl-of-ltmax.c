@@ -126,7 +126,7 @@ calculate_path_metric(rpl_parent_t *p)
 	  }
 	  else {
 #if RPL_ETX_WEIGHT
-		  ret_metric = p->rank + p->parent_weight * (p->parent_sum_weight * ALPHA / ALPHA_DIV + p->est_load) * RPL_DAG_MC_ETX_DIVISOR;
+		  ret_metric = p->rank + p->parent_weight * (p->parent_sum_weight * BETA / BETA_DIV + p->est_load) * RPL_DAG_MC_ETX_DIVISOR;
 #else
 		  if(tree_level == 2)
 		  {
@@ -136,7 +136,7 @@ calculate_path_metric(rpl_parent_t *p)
 			  ret_metric = p->parent_weight * RPL_DAG_MC_ETX_DIVISOR;
 		  }
 		  else {
-			  ret_metric = (p->parent_sum_weight * ALPHA / ALPHA_DIV + p->est_load + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;//(uint16_t)nbr->link_metric;
+			  ret_metric = (p->parent_sum_weight * BETA / BETA_DIV + p->est_load + p->parent_weight) * RPL_DAG_MC_ETX_DIVISOR;//(uint16_t)nbr->link_metric;
 		  }
 #endif
 	  }

@@ -38,6 +38,9 @@
  * Contributors: Niclas Finne <nfi@sics.se>, Joel Hoglund <joel@sics.se>,
  *               Mathieu Pouillot <m.pouillot@watteco.com>
  *               George Oikonomou <oikonomou@users.sourceforge.net> (multicast)
+ *
+ *         Modified for Dual-RPL-Recal
+ *		   Jinhwan Jung <jhjung@lanada.kaist.ac.kr> Joonki Hong <joonki@lanada.kaist.ac.kr>
  */
 
 /**
@@ -378,7 +381,7 @@ dio_input(void)
          (unsigned)dio.version,
          (unsigned)dio.rank);
 
-#if LSA_ENHANCED
+#if CROSS_OPT_VERSION1
   if(dio.rank == 512 && from.u8[8] == 0x82) {
 	  goto discard;
   }
@@ -553,7 +556,6 @@ dio_input(void)
   uint8_t is_longrange = radio_received_is_longrange();
   PRINTF("before child cmp %d\n",is_longrange);
 #endif
-  uint8_t prev_weight = my_weight;
 
   PRINTF("DIO_from:");
   PRINT6ADDR(&from);
@@ -564,20 +566,20 @@ dio_input(void)
 	  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == dio.parent_id &&
 			  ((is_longrange && dio.parent_long==0x82) || (!is_longrange && dio.parent_long==0x02)))
 #else
-		  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == dio.parent_id)
+	  if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == dio.parent_id)
 #endif
-	    {
+	  {
 		  PRINTF("it's me\n");
-	    }
-		  else
-		  {
-		  my_weight--;
-	      rpl_remove_child(c);
-	      PRINTF("my_weight deduct in dio %d\n",my_weight);
+	  }
+	  else
+	  {
+		  my_degree--;
+		  rpl_remove_child(c);
+		  PRINTF("my_degree deduct in dio %d\n",my_degree);
 		  PRINTF("child list in dio input\n");
 		  rpl_print_child_neighbor_list();
-	      // In my child list but I'm not the parent any more, so remove child
-	    }
+		  // In my child list but I'm not the parent any more, so remove child
+	  }
   }
   else {
 #if DUAL_RADIO
@@ -594,15 +596,15 @@ dio_input(void)
 		  }
 		  else
 		  {
-			  my_weight += c->weight;
-			  PRINTF("my_weight add child in dio %d\n",my_weight);
+			  my_degree += c->weight;
+			  PRINTF("my_degree add child in dio %d\n",my_degree);
 		  }
 		  PRINTF("child list in dio input\n");
 		  rpl_print_child_neighbor_list();
 		  // Not included in child list but I'm the parent maybe due to the DIO_ACK loss
 	  }
   }
-  PRINTF("DIO INPUT my_weight %d\n",my_weight);
+  PRINTF("DIO INPUT my_degree %d\n",my_degree);
 #endif
 
  discard:
@@ -674,16 +676,16 @@ dio_output(rpl_instance_t *instance, uip_ipaddr_t *uc_addr)
   /* For sink node, set weight 0 */
   if(uip_ds6_get_link_local(-1)->ipaddr.u8[15] == SERVER_NODE)
   {
-	  PRINTF("send my weight sink %d but 0\n",my_weight);
+	  PRINTF("send my_degree sink %d but 0\n",my_degree);
 	  buffer[pos++] = 0;
   }
   else
   {
-	  PRINTF("send my weight %d\n",my_weight);
-	  buffer[pos++] = my_weight;
+	  PRINTF("send my_degree %d\n",my_degree);
+	  buffer[pos++] = my_degree;
   }
 #else
-  buffer[pos++] = my_weight;
+  buffer[pos++] = my_degree;
 #endif
 #else
   /* reserved 2 bytes */
@@ -1160,7 +1162,6 @@ dao_input(void)
 fwd_dao:
 #endif
 #if DUAL_RPL_RECAL_MODE
-	uint8_t prev_weight = my_weight;
   c = rpl_find_child(&dao_sender_addr);
 
 #if DUAL_RADIO
@@ -1178,8 +1179,8 @@ fwd_dao:
 	  }
 	  else
 	  {
-		  my_weight += c->weight;
-		  PRINTF("my_weight in dao %d\n",my_weight);
+		  my_degree += c->weight;
+		  PRINTF("my_degree in dao %d\n",my_degree);
 	  }
 	  PRINTF("child list in dao input\n");
 	  rpl_print_child_neighbor_list();

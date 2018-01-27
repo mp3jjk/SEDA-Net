@@ -29,9 +29,6 @@ int dual_radio_turn_off(char targetRadio);
 /* Process */
 int dio_broadcast(rpl_instance_t* instance);
 int dis_broadcast(void);
-#if RPL_LIFETIME_MAX_MODE || RPL_LIFETIME_MAX_MODE2
-int dio_ack_broadcast(rpl_instance_t* instance);
-#endif
 
 /* Global variable for Dual radio tcpip */
 uint8_t packet_forwarding;

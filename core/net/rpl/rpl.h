@@ -84,11 +84,69 @@ typedef uint16_t rpl_ocp_t;
 #define RPL_DAG_MC_ENERGY_TYPE_BATTERY		1
 #define RPL_DAG_MC_ENERGY_TYPE_SCAVENGING	2
 
+/*---------------------------------------------------------------------------*/
 /* Dual-Net: Dual-RPL-Recal.
  * The flag enables the lifetime maximation of Dual-RPL */
 #define DUAL_RPL_RECAL_MODE	1
 
+/* To avoid herd effect, Dual-RPL switches its parent
+ * with certain probability */
 #define DUAL_RPL_PROB_PARENT_SWITCH	0
+
+/* To reflect different characteristics of LR */
+#define LONG_WEIGHT_RATIO 1
+
+/* Applying ETX value to link weight for DEBUG */
+#define RPL_ETX_WEIGHT 	1
+
+/* loc_load related variables */
+/* A node's degree */
+uint8_t my_degree;
+/* Control parameter determines loc_load from the degree in the paper */
+#define BETA	1
+#define BETA_DIV	1
+
+/* glob_load related variables */
+/* EWMA's weight */
+#define ALPHA_SCALE 	100
+#define ALPHA	90
+/* To measure glob_load */
+#define BUF_SIZE 5000
+uint8_t id_count[BUF_SIZE];
+int latest_id;
+int count_index;
+int avg_est_load; // glob_load in the paper
+
+/* To store the number of data packets at the base station */
+#define MAX_NUM_NODE 50
+int id_array[MAX_NUM_NODE];
+
+/* Cross-Opt version1 enabled */
+#define CROSS_OPT_VERSION1	0
+
+/* Flag to denote whether it is in Dual-RPL-Init or Dual-RPL-Recal */
+uint8_t init_phase;
+
+/* The node's depth in the routing tree */
+uint8_t tree_level;
+
+/* When the base station is equipped by power */
+#define SINK_INFINITE_ENERGY	1
+/* ID of base station */
+#define SERVER_NODE 1
+
+/* Flag to denote the node is in the instance
+ * used in App layer */
+uint8_t join_instance;
+
+
+/* Used to excluding the energy consumption
+ * during the routing process */
+#define ROUTING_NO_ENERGY 0
+#define ENERGY_CONV_TIME (900ul * CLOCK_SECOND)
+
+/*---------------------------------------------------------------------------*/
+
 
 struct rpl_metric_object_energy {
   uint8_t flags;
