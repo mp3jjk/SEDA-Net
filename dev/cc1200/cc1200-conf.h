@@ -99,7 +99,7 @@
 #ifdef CC1200_CONF_802154G_WHITENING
 #define CC1200_802154G_WHITENING        CC1200_CONF_802154G_WHITENING
 #else
-#define CC1200_802154G_WHITENING       	1 
+#define CC1200_802154G_WHITENING       	1
 #endif
 /*---------------------------------------------------------------------------*/
 /*
@@ -111,7 +111,7 @@
 #define CC1200_802154G_CRC16            CC1200_CONF_802154G_CRC16
 #else
 /* Use FCS type 0: CRC32 */
-#define CC1200_802154G_CRC16           	1 
+#define CC1200_802154G_CRC16           	1
 #endif
 /*---------------------------------------------------------------------------*/
 /* The RF configuration to be used. */
@@ -119,6 +119,7 @@
 #define CC1200_RF_CFG                   CC1200_CONF_RF_CFG
 #else
 #define CC1200_RF_CFG                   cc1200_802154g_863_870_fsk_50kbps
+// #define CC1200_RF_CFG                   cc1200_802154g_868_fsk_sniff_38kbps
 #endif
 /*---------------------------------------------------------------------------*/
 /*

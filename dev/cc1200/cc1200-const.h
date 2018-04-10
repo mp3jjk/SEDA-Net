@@ -289,6 +289,7 @@
 #define CC1200_SRX                      0x34
 #define CC1200_STX                      0x35
 #define CC1200_SIDLE                    0x36
+#define CC1200_SWOR                     0x38
 #define CC1200_SPWD                     0x39
 #define CC1200_SFRX                     0x3A
 #define CC1200_SFTX                     0x3B

@@ -469,6 +469,8 @@ static radio_result_t set_value(radio_param_t param, radio_value_t value);
 static radio_result_t get_object(radio_param_t param, void *dest, size_t size);
 /* Set a radio parameter object. */
 static radio_result_t set_object(radio_param_t param, const void *src, size_t size);
+static void calibrateRCOsc(void);
+
 /*---------------------------------------------------------------------------*/
 /* The radio driver exported to contiki */
 /*---------------------------------------------------------------------------*/
@@ -632,6 +634,7 @@ pollhandler(void)
   if((rf_flags & (RF_ON + RF_POLL_RX_INTERRUPT)) ==
      (RF_ON + RF_POLL_RX_INTERRUPT)) {
     cc1200_rx_interrupt();
+
   }
 
   if(rf_flags & RF_UPDATE_CHANNEL) {
@@ -663,6 +666,9 @@ pollhandler(void)
     }
 
   }
+#if CC1200_LANADA_SNIFFER
+    strobe(CC1200_SWOR);
+#endif
 
 }
 /*---------------------------------------------------------------------------*/
@@ -685,21 +691,28 @@ cc1200_init(void)
     LOCK_SPI();
     /* Perform low level initialization */
     cc1200_arch_init();
-		printf("cc1200_arch initialization finished!!\n");
+    printf("cc1200_arch initialization finished!!\n");
 
     /* Configure GPIO interrupts */
     SETUP_GPIO_INTERRUPTS();
-		printf("Interrupt initialization finished!!\n");
+    printf("Interrupt initialization finished!!\n");
 
     /* Write initial configuration */
     cc1200_configure();
 		
-		printf("CC1200 configure finish!!!!\n");
+    printf("CC1200 configure finish!!!!\n");
+
+#if CC1200_LANADA_SNIFFER
+    /* Disable address filtering and auto ack */
+    rx_mode_value = 0;
+    /* Disable CCA when TX */
+    tx_mode_value = 0;
+#else
     /* Enable address filtering + auto ack */
     rx_mode_value = (RADIO_RX_MODE_AUTOACK | RADIO_RX_MODE_ADDRESS_FILTER);
-
     /* Enable CCA */
     tx_mode_value = (RADIO_TX_MODE_SEND_ON_CCA);
+#endif
 
     /* Set output power */
     // new_txpower = CC1200_RF_CFG.max_txpower;
@@ -788,16 +801,16 @@ transmit(unsigned short transmit_len)
   }
 
   if(tx_mode_value & RADIO_TX_MODE_SEND_ON_CCA) {
-    /* Perform clear channel assessment */
-    if(!channel_clear()) {
-      /* Channel occupied */
-      RIMESTATS_ADD(contentiondrop);
-      if(was_off) {
-        off();
-      }
-      rf_flags &= ~RF_TX_ACTIVE;
-      return RADIO_TX_COLLISION;
-    }
+//     Perform clear channel assessment
+     if(!channel_clear()) {
+//       /\* Channel occupied *\/
+       RIMESTATS_ADD(contentiondrop);
+       if(was_off) {
+         off();
+       }
+       rf_flags &= ~RF_TX_ACTIVE;
+       return RADIO_TX_COLLISION;
+     }
   }
 
   /*
@@ -959,7 +972,7 @@ read(void *buf, unsigned short buf_len)
 static int
 channel_clear(void)
 {
-
+ 
   uint8_t cca, was_off = 0;
 
   if(SPI_IS_LOCKED()) {
@@ -974,7 +987,7 @@ channel_clear(void)
   }
 
 
-//  clock_delay(100);
+  //  clock_delay(100);
   LOCK_SPI();
   RF_ASSERT(state() == STATE_RX);
 
@@ -1707,6 +1720,7 @@ cc1200_configure(void)
   single_write(CC1200_FIFO_CFG, FIFO_THRESHOLD);
 #endif
 
+
 }
 /*---------------------------------------------------------------------------*/
 /* Return the radio's state. */
@@ -1747,6 +1761,10 @@ calibrate(void)
 
 #if CC1200_CAL_TIMEOUT_SECONDS
   cal_timer = clock_seconds();
+#endif
+
+#if CC1200_LANADA_SNIFFER
+  calibrateRCOsc();
 #endif
 
 }
@@ -1797,12 +1815,16 @@ idle_calibrate_rx(void)
 #if !CC1200_AUTOCAL
   calibrate();
 #endif
-
   rf_flags &= ~RF_RX_PROCESSING_PKT;
   strobe(CC1200_SFRX);
+#if CC1200_LANADA_SNIFFER
+  strobe(CC1200_SWOR);
+#else
   strobe(CC1200_SRX);
   BUSYWAIT_UNTIL_STATE(STATE_RX, RTIMER_SECOND / 100);
 	ERROR("Busywait: idle_calibrate_rx 4\n");
+#endif
+
   ENABLE_GPIO_INTERRUPTS();
 #if DUAL_RADIO
   ENERGEST_ON(ENERGEST_TYPE_LISTEN_LR);
@@ -1886,7 +1908,7 @@ idle_tx_rx(const uint8_t *payload, uint16_t payload_len)
   /* Flush TX FIFO */
   strobe(CC1200_SFTX);
 
-#if USE_SFSTXON
+#if USE_SFSTXON && 0
   /*
    * Enable synthesizer. Saves us a few µs especially if it takes
    * long enough to fill the FIFO. This strobe must not be
@@ -1930,7 +1952,7 @@ idle_tx_rx(const uint8_t *payload, uint16_t payload_len)
   burst_write(CC1200_TXFIFO, payload, payload_len);
 #endif
 
-#if USE_SFSTXON
+#if USE_SFSTXON && 0
   /* Wait for synthesizer to be ready */
   BUSYWAIT_UNTIL_STATE(STATE_FSTXON, RTIMER_SECOND / 100);
 	ERROR("Busywait: idle_tx_rx 7\n");
@@ -2205,6 +2227,31 @@ is_broadcast_addr(uint8_t mode, uint8_t *addr)
 
 }
 #endif /* CC12100_SNIFFER */
+
+#if CC1200_LANADA_SNIFFER
+static void
+calibrateRCOsc(void) {
+  uint8_t temp;
+
+  // Read current register value
+  temp = single_read(CC1200_WOR_CFG0);
+  
+  // Mask register bit fields and write new values
+  temp = (temp & 0xF9) | (0x02 << 1);
+
+  // Write new register value
+  single_write(CC1200_WOR_CFG0, temp);
+
+  // Strobe IDLE to calibrate the RCOSC
+  strobe(CC1200_SIDLE);
+
+  // Disable RC calibration
+  temp = (temp & 0xF9) | (0x00 << 1);
+  single_write(CC1200_WOR_CFG0, temp);
+
+}
+#endif
+
 /*---------------------------------------------------------------------------*/
 /* Validate address and send ACK if requested. */
 #if CC1200_SNIFFER
@@ -2487,7 +2534,6 @@ cc1200_rx_interrupt(void)
       WARNING("RF: RX length mismatch %d %d %d!\n", num_rxbytes,
               bytes_read,
               payload_len);
-
 			ERROR("RX call: 5\n"); 
       rx_rx();
       RELEASE_SPI();

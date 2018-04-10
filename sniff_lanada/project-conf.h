@@ -1,0 +1,1 @@
+#define CC1200_LANADA_SNIFFER 0
