@@ -122,7 +122,9 @@ int avg_est_load; // glob_load in the paper
 int id_array[MAX_NUM_NODE];
 
 /* Cross-Opt version1 enabled */
+#ifndef CROSS_OPT_VERSION1
 #define CROSS_OPT_VERSION1	0
+#endif
 
 /* Flag to denote whether it is in Dual-RPL-Init or Dual-RPL-Recal */
 uint8_t init_phase;

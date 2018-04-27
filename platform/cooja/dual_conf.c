@@ -64,14 +64,14 @@ int dual_radio_received(int radio)
 	{
 		radio_received = LONG_RADIO;
 		RADIO("$$$$$$$$$$$$$$$$$$  INTERRUPT!! long-range radio\n");
-//		RADIO("HwOnLR: %d, HwOn: %d\n", simRadioHWOnLR, simRadioHWOn);
+		//		RADIO("HwOnLR: %d, HwOn: %d\n", simRadioHWOnLR, simRadioHWOn);
 		return 1;
 	}
 	else if(radio == SHORT_RADIO)
 	{
 		radio_received = SHORT_RADIO;	
 		RADIO("$$$$$$$$$$$$$$$$$$  INTERRUPT!! short-range radio\n");
-//		RADIO("HwOnLR: %d, HwOn: %d\n", simRadioHWOnLR, simRadioHWOn);
+		//		RADIO("HwOnLR: %d, HwOn: %d\n", simRadioHWOnLR, simRadioHWOn);
 		return 1;
 	}
 	return 0;
@@ -108,26 +108,20 @@ int dual_radio_turn_off(char targetRadio)
 PROCESS_THREAD(dual_dio_broadcast, ev, data)
 {
 	static struct etimer et;
-	static uint8_t long_duty_on_local = 1;
-	static uint8_t short_duty_on_local = 1;
 
 	PROCESS_BEGIN();
-//	dual_radio_switch(SHORT_RADIO);
+#if WAKEUP_RADIO == 0
 	dual_radio_switch(LONG_RADIO);
-	if (long_duty_on_local == 1) {
-		dio_output(temp_instance, NULL);
-	}
+	dio_output(temp_instance, NULL);
+#endif /* WAKEUP_RADIO == 0 */
 #if ONLY_LONG == 0
 	etimer_set(&et, 1);
 
 	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 	RADIO("############################################### DIO_BROADCAST: Process stopped for a while ####################\n");
-//	dual_radio_switch(LONG_RADIO);
-		dual_radio_switch(SHORT_RADIO);
-	if (short_duty_on_local == 1) {
-		dio_output(temp_instance, NULL);
-	}
-#endif
+	dual_radio_switch(SHORT_RADIO);
+	dio_output(temp_instance, NULL);
+#endif /* ONLY_LONG == 0 */
 	PROCESS_END();
 }
 
@@ -135,29 +129,22 @@ PROCESS_THREAD(dual_dis_broadcast, ev, data)
 {
 	static struct etimer et;
 
-	static uint8_t long_duty_on_local = 1;
-	static uint8_t short_duty_on_local = 1;
 
 
 	PROCESS_BEGIN();
-//	dual_radio_switch(SHORT_RADIO);
+#if WAKEUP_RADIO == 0
 	dual_radio_switch(LONG_RADIO);
-	
-	if (long_duty_on_local == 1) {
-		dis_output(NULL);
-	}
+	dis_output(NULL);
+#endif /* WAKEUP_RADIO == 0 */
 #if ONLY_LONG == 0
 	etimer_set(&et, 1);
-	
+
 	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 	RADIO("##############################################  DIS_BROADCAST: Process stopped for a while ####################\n");
-//	dual_radio_switch(LONG_RADIO);
 	dual_radio_switch(SHORT_RADIO);
-	
-	if (short_duty_on_local == 1) {
-		dis_output(NULL);
-	}
-#endif
+
+	dis_output(NULL);
+#endif /* ONLY_LONG == 0 */
 	
 	PROCESS_END();
 }

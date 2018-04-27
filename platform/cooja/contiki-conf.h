@@ -40,7 +40,14 @@
 #define DUAL_RADIO 1
 #if DUAL_RADIO == 1
 #define ONLY_LONG 0
-#endif
+#if ONLY_LONG == 0 && DUAL_RADIO == 1
+#define WAKEUP_RADIO 1 /* Make sure CROSS_OPT_VERSION1 == 0 */
+#if WAKEUP_RADIO == 1
+#undef CROSS_OPT_VERSION1
+#define CROSS_OPT_VERSION1 0
+#endif /* WAKEUP_RADIO == 1 */
+#endif /* ONLY_LONG == 0 */
+#endif /* DUAL_RADIO == 1 */
 #define ADDR_MAP DUAL_RADIO
 
 #define NETSTACK_DUAL_RADIO 0  /* JOONKI, don't change this variable */

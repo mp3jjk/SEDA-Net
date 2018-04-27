@@ -1076,10 +1076,12 @@ send_packet(void)
 			/* JOONKI
 			 * short range broadcast skip sending strobed preambles */
 #if DUAL_RADIO
+#if WAKEUP_RADIO == 0
 			if (is_broadcast && was_short == 1){
 				break;
 			} 
-#endif
+#endif /* WAKEUP_RADIO == 0 */
+#endif /* DUAL_RADIO == 0 */
 
 
 
@@ -1811,6 +1813,12 @@ input_packet(void)
 	   case, we turn on the radio and wait for the incoming
 	   broadcast packet. */
     	  waiting_for_packet = 1;
+
+#if WAKEUP_RADIO == 1
+				dual_radio_off(LONG_RADIO);
+				dual_radio_on(SHORT_RADIO);
+#endif /* WAKEUP_RADIO == 1 */
+
 #if STROBE_CNT_MODE
     	  uint8_t cnt = hdr->dispatch >> 2;
 #if DUAL_RADIO
