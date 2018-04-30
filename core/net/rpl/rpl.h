@@ -94,17 +94,36 @@ typedef uint16_t rpl_ocp_t;
 #define DUAL_RPL_PROB_PARENT_SWITCH	0
 
 /* To reflect different characteristics of LR */
+#ifdef RPL_CONF_LONG_WEIGHT_RATIO
+#define LONG_WEIGHT_RATIO RPL_CONF_LONG_WEIGHT_RATIO
+#else
 #define LONG_WEIGHT_RATIO 1
+#endif
 
 /* Applying ETX value to link weight for DEBUG */
-#define RPL_ETX_WEIGHT 	1
+
+#ifdef RPL_CONF_ETX_WEIGHT
+#define RPL_ETX_WEIGHT RPL_CONF_ETX_WEIGHT
+#else
+#define RPL_ETX_WEIGHT 1
+#endif
 
 /* loc_load related variables */
 /* A node's degree */
 uint8_t my_degree;
 /* Control parameter determines loc_load from the degree in the paper */
-#define BETA	1
-#define BETA_DIV	1
+
+#ifdef RPL_CONF_BETA
+#define BETA RPL_CONF_BETA
+#else
+#define BETA 1
+#endif
+
+#ifdef RPL_CONF_BETA_DIV
+#define BETA_DIV RPL_CONF_BETA_DIV
+#else
+#define BETA_DIV 1
+#endif
 
 /* glob_load related variables */
 /* EWMA's weight */
@@ -122,8 +141,10 @@ int avg_est_load; // glob_load in the paper
 int id_array[MAX_NUM_NODE];
 
 /* Cross-Opt version1 enabled */
-#ifndef CROSS_OPT_VERSION1
-#define CROSS_OPT_VERSION1	0
+#ifdef RPL_CONF_CROSS_OPT_VERSION1
+#define CROSS_OPT_VERSION1	RPL_CONF_CROSS_OPT_VERSION1
+#else
+#define CROSS_OPT_VERSION1  0
 #endif
 
 /* Flag to denote whether it is in Dual-RPL-Init or Dual-RPL-Recal */

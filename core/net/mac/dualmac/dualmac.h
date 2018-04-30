@@ -63,7 +63,11 @@ extern const struct rdc_driver dualmac_driver;
 /* Dual-MAC configuration parameters */
 
 /* Using strobe cnt, reducing idle listening while Tx preamble */
+#ifdef MAC_CONF_STROBE_CNT_MODE
+#define STROBE_CNT_MODE MAC_CONF_STROBE_CNT_MODE
+#else
 #define STROBE_CNT_MODE 0
+#endif
 
 /* Enabling Data ACK */
 #define DATA_ACK      1

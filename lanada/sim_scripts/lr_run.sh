@@ -2,12 +2,11 @@
 
 JOONKI=0
 
-
 if [ $JOONKI -eq 0 ]
 then
-    CONTIKI=/media/user/Harddisk/Double-MAC
+    CONTIKI=/media/user/Harddisk/Developing-Dual-Net
 else
-    CONTIKI=~/Desktop/Double-MAC
+    CONTIKI=~/Desktop/Developing-Dual-Net
 fi
 
 echo "Long range simulation"
@@ -15,27 +14,28 @@ sed -i 's/\#define DUAL_RADIO 0/\#define DUAL_RADIO 1/g' $CONTIKI/platform/cooja
 sed -i 's/\#define TCPIP_CONF_ANNOTATE_TRANSMISSIONS 1/\#define TCPIP_CONF_ANNOTATE_TRANSMISSIONS 0/g' $CONTIKI/platform/cooja/contiki-conf.h
 
 topology=$1
+
 TRAFFIC_MODEL=$2
 PERIOD=$3
 ARRIVAL_RATE=$4
-ALPHA=$5
-STROBE_CNT=$6
-LONG_WEIGHT=$7
-LSA_R=$8
-LR_range=$9
-PARENT_REDUCTION=${10}
-REDUCTION_RATIO=${11}
-DATE=${12}
-DATA_ACK=${13}
-LSA_MAC=${14}
-ALPHA_DIV=${15}
-CHECK=${16}
-LSA_ENHANCED=${17}
-ROUTING_NO_ENERGY=${18}
-ONLY_LONG=${19}
-SEED_NUMBER=${20}
-MRM=${21}
-LT_PERCENT=${22}
+
+LR_range=$5
+LONG_WEIGHT=$6
+ETX_WEIGHT=$7
+BETA=$8
+BETA_DIV=$9
+CROSS_OPT=${10}
+
+STROBE_CNT=${11}
+CHECK=${12}
+
+DATE=${13}
+
+ONLY_LONG=${14}
+WAKE_UP=${15}
+SEED_NUMBER=${16}
+MRM=${17}
+LT_PERCENT=${18}
 
 sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
 
@@ -50,39 +50,39 @@ then
     sed -i "1072s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc
 fi
 
-#DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_mrm$MRM\_seed$SEED_NUMBER
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
-    DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
+    DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_beta$BETA\_$BETA_DIV\_seed$SEED_NUMBER
 else
-    DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
+    DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_beta$BETA\_$BETA_DIV\_seed$SEED_NUMBER
 fi
 
-#    cd $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
 mkdir $DIR
 cd $DIR
-#    mkdir $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
-#    cd $DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_alpha$ALPHA\_$ALPHA_DIV\_seed$SEED_NUMBER
 
 if [ $ONLY_LONG -eq 0 ]
 then
     sed -i 's/\#define ONLY_LONG 1/\#define ONLY_LONG 0/g' $CONTIKI/platform/cooja/contiki-conf.h
 else
     sed -i 's/\#define ONLY_LONG 0/\#define ONLY_LONG 1/g' $CONTIKI/platform/cooja/contiki-conf.h
-    LSA_ENHANCED=0
-fi 
+fi
 
+if [ $WAKE_UP -eq 0 ]
+then
+    sed -i 's/\#define WAKEUP_RADIO 1/\#define WAKEUP_RADIO 0/g' $CONTIKI/platform/cooja/contiki-conf.h
+else
+    sed -i 's/\#define WAKEUP_RADIO 0/\#define WAKEUP_RADIO 1/g' $CONTIKI/platform/cooja/contiki-conf.h
+fi
 
-../param.sh $LONG_WEIGHT $ALPHA $STROBE_CNT $LSA_R $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $PARENT_REDUCTION $REDUCTION_RATIO $DATA_ACK $LSA_MAC $ALPHA_DIV $CHECK $LSA_ENHANCED $ROUTING_NO_ENERGY
+../param.sh $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $LONG_WEIGHT $ETX_WEIGHT $BETA $BETA_DIV $CROSS_OPT $STROBE_CNT $CHECK
 
-IN_DIR=lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_check$CHECK\_strobe$STROBE_CNT\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY\_LT$LT_PERCENT
+IN_DIR=lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_WAKE$WAKE_UP\_check$CHECK\_strobe$STROBE_CNT\_LT$LT_PERCENT
 if [ ! -e $IN_DIR ]
 then
     mkdir $IN_DIR
-#    mkdir lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY
 fi
 cd $IN_DIR
-#cd lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_check$CHECK\_strobe$STROBE_CNT\_lsa$LSA_R\_lsa_mac$LSA_MAC\_lsa_en$LSA_ENHANCED\_rou$ROUTING_NO_ENERGY
+
 echo "#########################  We are in $PWD  ########################"
 
 HERE=$PWD
