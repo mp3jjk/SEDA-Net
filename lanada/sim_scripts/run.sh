@@ -1,13 +1,13 @@
 #!/bin/bash
 
-SR=1 # Decide whether SR simulation runs or not
-LR=0 # For LR case
+SR=0 # Decide whether SR simulation runs or not
+LR=1 # For LR case
 ONLY_LONG=0 # SR = 1 with only Long
-WAKE_UP=0 # LR = 1 with Wake-up radio
+WAKE_UP=1 # LR = 1 with Wake-up radio
 TRAFFIC=0 # 0 = periodic, 1 = poisson
-VAR_PERIOD=(15)
+VAR_PERIOD=(5 15 30 60)
 VAR_ARRIVAL=(10)
-VAR_TOPOLOGY=("36grid_mrm2")
+VAR_TOPOLOGY=("36grid_mrm2_cnt")
 VAR_LR_RANGE=("2X")
 
 VAR_LR_WEIGHT=(1)
@@ -19,7 +19,7 @@ VAR_CROSS_OPT=0
 VAR_STROBE_CNT=0
 VAR_CHECK_RATE=(8)
 
-DATE="test"
+DATE="G1"
 SEED_NUMBER=("1")
 MRM=1
 VAR_PERCENT=("1")
@@ -99,18 +99,15 @@ then
 		    do
 			for weight in "${VAR_LR_WEIGHT[@]}"
 			do
-			    for ratio in $VAR_REDUCTION_RATIO
+			    for beta in "${VAR_BETA[@]}"
 			    do
-				for beta in "${VAR_BETA[@]}"
+				for beta_div in "${VAR_BETA_DIV[@]}"
 				do
-				    for beta_div in "${VAR_BETA_DIV[@]}"
+				    for percent in "${VAR_PERCENT[@]}"
 				    do
-					for percent in "${VAR_PERCENT[@]}"
+					for check in "${VAR_CHECK_RATE[@]}"
 					do
-					    for check in "${VAR_CHECK_RATE[@]}"
-					    do
-						./lr_run.sh $topology $TRAFFIC $period 0 $range $weight $VAR_ETX_WEIGHT $beta $beta_div $VAR_CROSS_OPT $VAR_STROBE_CNT $check "${DATE}" $ONLY_LONG $WAKE_UP $seed $MRM $percent
-					    done
+					    ./lr_run.sh $topology $TRAFFIC $period 0 $range $weight $VAR_ETX_WEIGHT $beta $beta_div $VAR_CROSS_OPT $VAR_STROBE_CNT $check "${DATE}" $ONLY_LONG $WAKE_UP $seed $MRM $percent
 					done
 				    done
 				done
@@ -131,18 +128,15 @@ then
 		    do
 			for weight in "${VAR_LR_WEIGHT[@]}"
 			do
-			    for ratio in $VAR_REDUCTION_RATIO
+			    for beta in "${VAR_BETA[@]}"
 			    do
-				for beta in "${VAR_BETA[@]}"
+				for beta_div in "${VAR_BETA_DIV[@]}"
 				do
-				    for beta_div in "${VAR_BETA_DIV[@]}"
+				    for percent in "${VAR_PERCENT[@]}"
 				    do
-					for percent in "${VAR_PERCENT[@]}"
+					for check in "${VAR_CHECK_RATE[@]}"
 					do
-					    for check in "${VAR_CHECK_RATE[@]}"
-					    do
-						./lr_run.sh $topology $TRAFFIC 0 $arrival $range $weight $VAR_ETX_WEIGHT $beta $beta_div $VAR_CROSS_OPT $VAR_STROBE_CNT $check "${DATE}" $ONLY_LONG $WAKE_UP $seed $MRM $percent
-					    done
+					    ./lr_run.sh $topology $TRAFFIC 0 $arrival $range $weight $VAR_ETX_WEIGHT $beta $beta_div $VAR_CROSS_OPT $VAR_STROBE_CNT $check "${DATE}" $ONLY_LONG $WAKE_UP $seed $MRM $percent
 					done
 				    done
 				done

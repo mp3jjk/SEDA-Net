@@ -1,15 +1,12 @@
 #ifndef RESIDUAL_H__
 #define RESIDUAL_H__
 
-//#define RESIDUAL_ENERGY_MAX 1000000000
-
 // #define RESIDUAL_ENERGY_MAX 3000000
-#define RESIDUAL_ENERGY_MAX 1000000000
-// #define RESIDUAL_ENERGY_MAX 10000000
-// #define RESIDUAL_ENERGY_MAX 1000000000
-// #define RESIDUAL_ENERGY_MAX 1000000
-// #define RESIDUAL_ENERGY_MAX 100000
-// #define RESIDUAL_ENERGY_MAX 1000
+#ifdef CONF_RESIDUAL_ENERGY_MAX
+#define RESIDUAL_ENERGY_MAX CONF_RESIDUAL_ENERGY_MAX
+#else
+#define RESIDUAL_ENERGY_MAX 4000000
+#endif
 
 #include <stdio.h>
 #include <stdint.h>
@@ -34,7 +31,7 @@ energy_t energy_restore;
 #ifdef ZOLERTIA_Z1
 #include "energest.h"
 #endif
-
+ 
 #ifdef ZOUL_MOTE
 #include "energest.h"
 #endif

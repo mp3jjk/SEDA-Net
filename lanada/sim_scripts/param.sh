@@ -35,6 +35,8 @@ uint8_t dead;
 #define CONF_ONLY_LONG ${12}
 #define CONF_WAKEUP_RADIO ${13}
 
+#define CONF_RESIDUAL_ENERGY_MAX 4000000
+
 /*-----------------------------------------------------------------------------------------------*/
 #define DETERMINED_ROUTING_TREE	0
 
