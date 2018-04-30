@@ -37,11 +37,23 @@
 #include "subplatform-conf.h"
 #endif /* INCLUDE_SUBPLATFORM_CONF */
 
+#ifdef CONF_DUAL_RADIO
+#define DUAL_RADIO CONF_DUAL_RADIO
+#else
 #define DUAL_RADIO 1
+#endif
 #if DUAL_RADIO == 1
+#ifdef CONF_ONLY_LONG
+#define ONLY_LONG CONF_ONLY_LONG
+#else
 #define ONLY_LONG 0
+#endif
 #if ONLY_LONG == 0 && DUAL_RADIO == 1
+#ifdef CONF_WAKEUP_RADIO
+#define WAKEUP_RADIO CONF_WAKEUP_RADIO
+#else
 #define WAKEUP_RADIO 1 /* Make sure CROSS_OPT_VERSION1 == 0 */
+#endif
 #if WAKEUP_RADIO == 1
 #undef CROSS_OPT_VERSION1
 #define CROSS_OPT_VERSION1 0
@@ -94,9 +106,7 @@
 /* Network setup for IPv6 */
 #define NETSTACK_CONF_NETWORK       sicslowpan_driver
 /* JOONKI */ 
-//#define NETSTACK_CONF_MAC           csma_driver
 #define NETSTACK_CONF_MAC           nullmac_driver
-// #define NETSTACK_CONF_RDC           contikimac_driver
 #define NETSTACK_CONF_RDC           nullrdc_driver
 #define NETSTACK_CONF_RADIO         cooja_radio_driver
 #define NETSTACK_CONF_FRAMER        framer_802154
@@ -117,8 +127,7 @@
 /* Network setup for Rime */
 #define NETSTACK_CONF_NETWORK rime_driver
 #define NETSTACK_CONF_MAC nullmac_driver
-//#define NETSTACK_CONF_RDC nullrdc_driver
-#define NETSTACK_CONF_RDC rimac_driver
+#define NETSTACK_CONF_RDC nullrdc_driver
 #define NETSTACK_CONF_RADIO cooja_radio_driver
 /*#define NETSTACK_CONF_FRAMER framer_nullmac*/
 
@@ -136,10 +145,8 @@
 
 /* Network setup for IPv6 */
 #define NETSTACK_CONF_NETWORK       sicslowpan_driver
-// #define NETSTACK_CONF_MAC           csma_driver
 #define NETSTACK_CONF_MAC           nullmac_driver
 #define NETSTACK_CONF_RDC           nullrdc_driver
-// #define NETSTACK_CONF_RDC           contikimac_driver
 #define NETSTACK_CONF_RADIO         cooja_radio_driver
 #define NETSTACK_CONF_FRAMER        framer_802154
 #define NETSTACK_CONF_WITH_IPV6               1

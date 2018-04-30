@@ -87,11 +87,21 @@ typedef uint16_t rpl_ocp_t;
 /*---------------------------------------------------------------------------*/
 /* Dual-Net: Dual-RPL-Recal.
  * The flag enables the lifetime maximation of Dual-RPL */
+#ifdef RPL_CONF_DUAL_RPL_RECAL_MODE
+#define DUAL_RPL_RECAL_MODE	RPL_CONF_DUAL_RPL_RECAL_MODE
+#else
 #define DUAL_RPL_RECAL_MODE	1
+#endif
 
 /* To avoid herd effect, Dual-RPL switches its parent
  * with certain probability */
+
+
+#ifdef RPL_CONF_DUAL_RPL_PROB_PARENT_SWITCH
+#define DUAL_RPL_PROB_PARENT_SWITCH	RPL_CONF_DUAL_RPL_PROB_PARENT_SWITCH
+#else
 #define DUAL_RPL_PROB_PARENT_SWITCH	0
+#endif
 
 /* To reflect different characteristics of LR */
 #ifdef RPL_CONF_LONG_WEIGHT_RATIO

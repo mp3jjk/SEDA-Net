@@ -760,25 +760,25 @@ uip_ds6_select_src(uip_ipaddr_t *src, uip_ipaddr_t *dst)
   	  /* find longest match */
     	for(locaddr = long_uip_ds6_if.addr_list;
       	  locaddr < long_uip_ds6_if.addr_list + UIP_DS6_ADDR_NB; locaddr++) {
- printf(" In SELECT SOURCE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-	printf("Locaddr: ");
-	printf(" %x", locaddr->ipaddr.u8[0]);
-	printf(" %x", locaddr->ipaddr.u8[1]);
-	printf(" %x", locaddr->ipaddr.u8[2]);
-	printf(" %x", locaddr->ipaddr.u8[3]);
-	printf(" %x", locaddr->ipaddr.u8[4]);
-	printf(" %x", locaddr->ipaddr.u8[5]);
-	printf(" %x", locaddr->ipaddr.u8[6]);
-	printf(" %x", locaddr->ipaddr.u8[7]);
-	printf(" %x", locaddr->ipaddr.u8[8]);
-	printf(" %x", locaddr->ipaddr.u8[9]);
-	printf(" %x", locaddr->ipaddr.u8[10]);
-	printf(" %x", locaddr->ipaddr.u8[11]);
-	printf(" %x", locaddr->ipaddr.u8[12]);
-	printf(" %x", locaddr->ipaddr.u8[13]);
-	printf(" %x", locaddr->ipaddr.u8[14]);
-	printf(" %x", locaddr->ipaddr.u8[15]);
-	printf("\n");
+ /* printf(" In SELECT SOURCE @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@\n"); */
+ /* 	printf("Locaddr: "); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[0]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[1]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[2]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[3]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[4]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[5]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[6]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[7]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[8]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[9]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[10]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[11]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[12]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[13]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[14]); */
+ /* 	printf(" %x", locaddr->ipaddr.u8[15]); */
+ /* 	printf("\n"); */
 
 
 	      /* Only preferred global (not link-local) addresses */

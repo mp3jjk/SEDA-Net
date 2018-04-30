@@ -7,7 +7,7 @@ WAKE_UP=1 # LR = 1 with Wake-up radio
 TRAFFIC=0 # 0 = periodic, 1 = poisson
 VAR_PERIOD=(15)
 VAR_ARRIVAL=(10)
-VAR_TOPOLOGY=("36grid_mrm2")
+VAR_TOPOLOGY=("36grid_mrm2_cnt")
 VAR_LR_RANGE=("2X")
 
 VAR_LR_WEIGHT=(1)
@@ -21,7 +21,7 @@ VAR_CHECK_RATE=(8)
 
 DATE="test"
 SEED_NUMBER=("1")
-MRM=1
+MRM=2
 VAR_PERCENT=("1")
 
 # SR_RANGE simulation
