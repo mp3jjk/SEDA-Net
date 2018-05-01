@@ -11,7 +11,7 @@
 uint8_t dead;
 
 /* RPL Configuration */
-#define RPL_CONF_OF rpl_of0
+#define RPL_CONF_OF rpl_ltmax_of
 // rpl_ltmax_of, rpl_of0
 
 #define RPL_CONF_LONG_WEIGHT_RATIO	1
@@ -19,7 +19,7 @@ uint8_t dead;
 #define RPL_CONF_BETA	1
 #define RPL_CONF_BETA_DIV	1
 #define RPL_CONF_CROSS_OPT_VERSION1	0
-#define RPL_CONF_DUAL_RPL_RECAL_MODE 0
+#define RPL_CONF_DUAL_RPL_RECAL_MODE 1
 #define RPL_CONF_DUAL_RPL_PROB_PARENT_SWITCH 0
 
 /* MAC Configuration */
@@ -32,7 +32,7 @@ uint8_t dead;
 /* DUAL_RADAIO Configuration */
 #define CONF_DUAL_RADIO 1
 #define CONF_ONLY_LONG 0
-#define CONF_WAKEUP_RADIO 1
+#define CONF_WAKEUP_RADIO 0
 
 #define CONF_RESIDUAL_ENERGY_MAX 4000000
 
