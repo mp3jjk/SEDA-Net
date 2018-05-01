@@ -1,11 +1,11 @@
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
 
-#define TRAFFIC_MODEL 1 // 0: Periodic, 1: Poisson
+#define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
-#define PERIOD 0
+#define PERIOD 15
 #elif TRAFFIC_MODEL == 1
-#define ARRIVAL_RATE 10 // Mean value, 1/lambda
+#define ARRIVAL_RATE 0 // Mean value, 1/lambda
 #endif
 
 uint8_t dead;
@@ -26,13 +26,8 @@ uint8_t dead;
 #define MAC_CONF_STROBE_CNT_MODE	0
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
 #define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE 8
-#define NETSTACK_CONF_MAC csma_driver
-#define NETSTACK_CONF_RDC dualmac_driver
 
 /* DUAL_RADAIO Configuration */
-#define CONF_DUAL_RADIO 1
-#define CONF_ONLY_LONG 0
-#define CONF_WAKEUP_RADIO 1
 
 #define CONF_RESIDUAL_ENERGY_MAX 4000000
 

@@ -1,11 +1,11 @@
 #!/bin/bash
 
-SR=0 # Decide whether SR simulation runs or not
-LR=1 # For LR case
+SR=1 # Decide whether SR simulation runs or not
+LR=0 # For LR case
 ONLY_LONG=0 # SR = 1 with only Long
-WAKE_UP=1 # LR = 1 with Wake-up radio
-TRAFFIC=1 # 0 = periodic, 1 = poisson
-VAR_PERIOD=(5)
+WAKE_UP=0 # LR = 1 with Wake-up radio
+TRAFFIC=0 # 0 = periodic, 1 = poisson
+VAR_PERIOD=(15)
 VAR_ARRIVAL=(10)
 VAR_TOPOLOGY=("50random_mrm2_cnt")
 VAR_LR_RANGE=("2X")
@@ -19,8 +19,9 @@ VAR_CROSS_OPT=0
 VAR_STROBE_CNT=0
 VAR_CHECK_RATE=(8)
 
-DATE="G2"
-SEED_NUMBER=("1" "2" "3" "4" "5")
+DATE="test"
+#SEED_NUMBER=("1" "2" "3" "4" "5")
+SEED_NUMBER=("1")
 MRM=1
 VAR_PERCENT=("1")
 

@@ -31,7 +31,6 @@ obj_cooja/rpl-icmp6.o: ..//core/net/rpl/rpl-icmp6.c \
  ..//core/./net/rpl/rpl-icmp6.h ..//core/./net/rpl/rpl-private.h \
  ..//core/./net/rpl/rpl.h ..//core/./net/rpl/rpl-conf.h ../lanada/param.h \
  ..//core/net/rpl/rpl_debug.h ..//core/./net/ip/uip-debug.h \
- ../platform/cooja/dual_conf.h ../platform/cooja/dev/cooja-radio.h \
  ..//core/./sys/log_message.h ..//core/./cfs/cfs.h \
  ..//core/./sys/residual.h
 ..//core/net/rpl/rpl-icmp6.c :
@@ -67,6 +66,5 @@ obj_cooja/rpl-icmp6.o: ..//core/net/rpl/rpl-icmp6.c \
  ..//core/./net/rpl/rpl-icmp6.h ..//core/./net/rpl/rpl-private.h :
  ..//core/./net/rpl/rpl.h ..//core/./net/rpl/rpl-conf.h ../lanada/param.h :
  ..//core/net/rpl/rpl_debug.h ..//core/./net/ip/uip-debug.h :
- ../platform/cooja/dual_conf.h ../platform/cooja/dev/cooja-radio.h :
  ..//core/./sys/log_message.h ..//core/./cfs/cfs.h :
  ..//core/./sys/residual.h :

@@ -1,5 +1,5 @@
 #!/bin/bash
-APP=${14}
+APP=${11}
 echo "/* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
 
@@ -28,13 +28,8 @@ uint8_t dead;
 #define MAC_CONF_STROBE_CNT_MODE	$9
 #undef NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE
 #define NETSTACK_CONF_RDC_CHANNEL_CHECK_RATE ${10}
-#define NETSTACK_CONF_MAC csma_driver
-#define NETSTACK_CONF_RDC dualmac_driver
 
 /* DUAL_RADAIO Configuration */
-#define CONF_DUAL_RADIO ${11}
-#define CONF_ONLY_LONG ${12}
-#define CONF_WAKEUP_RADIO ${13}
 
 #define CONF_RESIDUAL_ENERGY_MAX 4000000
 

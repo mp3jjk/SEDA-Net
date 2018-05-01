@@ -16,19 +16,7 @@ obj_cooja/nbr-table.o: ..//core/net/nbr-table.c ..//core/./contiki.h \
  ..//core/./dev/radio.h ..//core/./net/mac/rdc.h \
  ..//core/./net/llsec/llsec802154.h ..//core/./net/mac/frame802154.h \
  ..//core/./net/ip/uip.h ..//core/./net/ip/uipopt.h \
- ..//core/./net/ip/tcpip.h ..//core/./net/mac/framer.h \
- ../platform/cooja/dual_conf.h ../platform/cooja/dev/cooja-radio.h \
- ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h \
- ..//core/./net/rpl/rpl-conf.h ..//core/./net/ipv6/uip-ds6.h \
- ..//core/./sys/stimer.h ..//core/./net/ipv6/uip-nd6.h \
- ..//core/./net/ipv6/uip-ds6-route.h ..//core/./net/ipv6/uip-ds6-nbr.h \
- ..//core/./net/ip/uip-packetqueue.h ..//core/./sys/ctimer.h \
- ..//core/./net/ipv6/multicast/uip-mcast6.h \
- ..//core/./net/ipv6/multicast/uip-mcast6-engines.h \
- ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
- ..//core/./net/ipv6/multicast/smrf.h \
- ..//core/./net/ipv6/multicast/roll-tm.h \
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h
+ ..//core/./net/ip/tcpip.h ..//core/./net/mac/framer.h
 ..//core/net/nbr-table.c ..//core/./contiki.h :
  ..//core/./contiki-version.h ..//platform/cooja/./contiki-conf.h :
  project-conf.h ..//core/./contiki-default-conf.h :
@@ -48,15 +36,3 @@ obj_cooja/nbr-table.o: ..//core/net/nbr-table.c ..//core/./contiki.h \
  ..//core/./net/llsec/llsec802154.h ..//core/./net/mac/frame802154.h :
  ..//core/./net/ip/uip.h ..//core/./net/ip/uipopt.h :
  ..//core/./net/ip/tcpip.h ..//core/./net/mac/framer.h :
- ../platform/cooja/dual_conf.h ../platform/cooja/dev/cooja-radio.h :
- ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h :
- ..//core/./net/rpl/rpl-conf.h ..//core/./net/ipv6/uip-ds6.h :
- ..//core/./sys/stimer.h ..//core/./net/ipv6/uip-nd6.h :
- ..//core/./net/ipv6/uip-ds6-route.h ..//core/./net/ipv6/uip-ds6-nbr.h :
- ..//core/./net/ip/uip-packetqueue.h ..//core/./sys/ctimer.h :
- ..//core/./net/ipv6/multicast/uip-mcast6.h :
- ..//core/./net/ipv6/multicast/uip-mcast6-engines.h :
- ..//core/./net/ipv6/multicast/uip-mcast6-route.h :
- ..//core/./net/ipv6/multicast/smrf.h :
- ..//core/./net/ipv6/multicast/roll-tm.h :
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h :

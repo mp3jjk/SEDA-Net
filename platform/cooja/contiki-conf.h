@@ -37,36 +37,12 @@
 #include "subplatform-conf.h"
 #endif /* INCLUDE_SUBPLATFORM_CONF */
 
-/*
-#ifdef CONF_DUAL_RADIO
-#define DUAL_RADIO CONF_DUAL_RADIO
-#else
 #define DUAL_RADIO 0
-#endif
-*/
-#define DUAL_RADIO 1
-
-
 #if DUAL_RADIO == 1
-/*
-#ifdef CONF_ONLY_LONG
-#define ONLY_LONG CONF_ONLY_LONG
-#else
 #define ONLY_LONG 0
-#endif
-*/
-#define ONLY_LONG 0
-
 #if ONLY_LONG == 0 && DUAL_RADIO == 1
-/*
-#ifdef CONF_WAKEUP_RADIO
-#define WAKEUP_RADIO CONF_WAKEUP_RADIO
-#else
-#define WAKEUP_RADIO 1  Make sure CROSS_OPT_VERSION1 == 0
-#endif
-*/
-#define WAKEUP_RADIO 0
-#if WAKEUP_RADIO == 0
+#define WAKEUP_RADIO 1  /* Make sure CROSS_OPT_VERSION1 == 0 */
+#if WAKEUP_RADIO == 1
 #undef CROSS_OPT_VERSION1
 #define CROSS_OPT_VERSION1 0
 #endif /* WAKEUP_RADIO == 1 */
@@ -178,7 +154,7 @@
 #define UIP_CONF_MAX_ROUTES   300
 #endif /* UIP_CONF_MAX_ROUTES */
 
-#define TCPIP_CONF_ANNOTATE_TRANSMISSIONS 1
+#define TCPIP_CONF_ANNOTATE_TRANSMISSIONS 0
 
 #ifndef UIP_CONF_ND6_SEND_RA
 #define UIP_CONF_ND6_SEND_RA		0

@@ -1,16 +1,16 @@
 #!/bin/bash
 
-JOONKI=0
+JOONKI=1
 
 if [ $JOONKI -eq 0 ]
 then
     CONTIKI=/media/user/Harddisk/Developing-Dual-Net
 else
-    CONTIKI=~/Desktop/Developing-Dual-Net
+    CONTIKI=~/Developing-Dual-Net
 fi
 
 echo "Long range simulation"
-#sed -i 's/\#define DUAL_RADIO 0/\#define DUAL_RADIO 1/g' $CONTIKI/platform/cooja/contiki-conf.h
+sed -i 's/\#define DUAL_RADIO 0/\#define DUAL_RADIO 1/g' $CONTIKI/platform/cooja/contiki-conf.h
 sed -i 's/\#define TCPIP_CONF_ANNOTATE_TRANSMISSIONS 1/\#define TCPIP_CONF_ANNOTATE_TRANSMISSIONS 0/g' $CONTIKI/platform/cooja/contiki-conf.h
 
 topology=$1
@@ -68,21 +68,21 @@ fi
 mkdir $DIR
 cd $DIR
 
-# if [ $ONLY_LONG -eq 0 ]
-# then
-#     sed -i 's/\#define ONLY_LONG 1/\#define ONLY_LONG 0/g' $CONTIKI/platform/cooja/contiki-conf.h
-# else
-#     sed -i 's/\#define ONLY_LONG 0/\#define ONLY_LONG 1/g' $CONTIKI/platform/cooja/contiki-conf.h
-# fi
+if [ $ONLY_LONG -eq 0 ]
+then
+    sed -i 's/\#define ONLY_LONG 1/\#define ONLY_LONG 0/g' $CONTIKI/platform/cooja/contiki-conf.h
+else
+    sed -i 's/\#define ONLY_LONG 0/\#define ONLY_LONG 1/g' $CONTIKI/platform/cooja/contiki-conf.h
+fi
 
-# if [ $WAKE_UP -eq 0 ]
-# then
-#     sed -i 's/\#define WAKEUP_RADIO 1/\#define WAKEUP_RADIO 0/g' $CONTIKI/platform/cooja/contiki-conf.h
-# else
-#     sed -i 's/\#define WAKEUP_RADIO 0/\#define WAKEUP_RADIO 1/g' $CONTIKI/platform/cooja/contiki-conf.h
-# fi
+if [ $WAKE_UP -eq 0 ]
+then
+    sed -i 's/\#define WAKEUP_RADIO 1/\#define WAKEUP_RADIO 0/g' $CONTIKI/platform/cooja/contiki-conf.h
+else
+    sed -i 's/\#define WAKEUP_RADIO 0/\#define WAKEUP_RADIO 1/g' $CONTIKI/platform/cooja/contiki-conf.h
+fi
 
-../param.sh $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $LONG_WEIGHT $ETX_WEIGHT $BETA $BETA_DIV $CROSS_OPT $STROBE_CNT $CHECK 1 $ONLY_LONG $WAKE_UP $MRM
+../param.sh $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $LONG_WEIGHT $ETX_WEIGHT $BETA $BETA_DIV $CROSS_OPT $STROBE_CNT $CHECK $MRM
 
 IN_DIR=lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_WAKE$WAKE_UP\_check$CHECK\_strobe$STROBE_CNT\_LT$LT_PERCENT
 if [ ! -e $IN_DIR ]
