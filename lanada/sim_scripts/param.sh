@@ -1,4 +1,5 @@
 #!/bin/bash
+APP=${14}
 echo "/* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
 
@@ -12,7 +13,7 @@ echo "/* Energy log */
 uint8_t dead;
 
 /* RPL Configuration */
-#define RPL_CONF_OF rpl_ltmax_of
+#define RPL_CONF_OF rpl_of0
 // rpl_ltmax_of, rpl_of0
 
 #define RPL_CONF_LONG_WEIGHT_RATIO	$4
@@ -20,7 +21,7 @@ uint8_t dead;
 #define RPL_CONF_BETA	$6
 #define RPL_CONF_BETA_DIV	$7
 #define RPL_CONF_CROSS_OPT_VERSION1	$8
-#define RPL_CONF_DUAL_RPL_RECAL_MODE 1
+#define RPL_CONF_DUAL_RPL_RECAL_MODE 0
 #define RPL_CONF_DUAL_RPL_PROB_PARENT_SWITCH 0
 
 /* MAC Configuration */
@@ -43,4 +44,4 @@ uint8_t dead;
 #if DETERMINED_ROUTING_TREE
 #define MAX_NODE_NUMBER 30
 
-#endif /* ROUTING_TREE */" > ../../param.h
+#endif /* ROUTING_TREE */" > ../../../lanada_$APP/param.h

@@ -37,20 +37,25 @@ SEED_NUMBER=${16}
 MRM=${17}
 LT_PERCENT=${18}
 
-sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
+if [ $WAKE_UP -eq 0 ]
+then
+    sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc 
+else
+    sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\_$MRM\.csc 
+fi
 
 if [ $topology == "36grid_mrm2_cnt" ]
 then
-    sed -i "1124s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
-    sed -i "1124s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\.csc 
+    sed -i "1124s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc 
+    sed -i "1124s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\_$MRM\.csc 
 elif [ $topology == "50random_mrm2_cnt" ]
 then
-    sed -i "1488s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
-    sed -i "1488s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\.csc 
+    sed -i "1488s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc 
+    sed -i "1488s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\_$MRM\.csc 
 elif [ $topology == "34cluster_mrm2_cnt" ]
 then
-    sed -i "1072s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc
-    sed -i "1072s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\.csc
+    sed -i "1072s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc
+    sed -i "1072s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\_$MRM\.csc
 fi
 
 if [ $TRAFFIC_MODEL -eq 0 ]
@@ -77,7 +82,7 @@ cd $DIR
 #     sed -i 's/\#define WAKEUP_RADIO 0/\#define WAKEUP_RADIO 1/g' $CONTIKI/platform/cooja/contiki-conf.h
 # fi
 
-../param.sh $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $LONG_WEIGHT $ETX_WEIGHT $BETA $BETA_DIV $CROSS_OPT $STROBE_CNT $CHECK 1 $ONLY_LONG $WAKE_UP
+../param.sh $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $LONG_WEIGHT $ETX_WEIGHT $BETA $BETA_DIV $CROSS_OPT $STROBE_CNT $CHECK 1 $ONLY_LONG $WAKE_UP $MRM
 
 IN_DIR=lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_WAKE$WAKE_UP\_check$CHECK\_strobe$STROBE_CNT\_LT$LT_PERCENT
 if [ ! -e $IN_DIR ]
@@ -108,9 +113,9 @@ else
 		cd $CONTIKI/tools/cooja_mrm$MRM
 		if [ $WAKE_UP -eq 0 ]
 		then
-		    ant run_nogui -Dargs=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc
+		    ant run_nogui -Dargs=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc
 		else
-		    ant run_nogui -Dargs=$CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\.csc
+		    ant run_nogui -Dargs=$CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\_$MRM\.csc
 		fi
 		mv build/COOJA.testlog $HERE
 		cd $HERE
