@@ -8,14 +8,14 @@
   <project EXPORT="discard">[APPS_DIR]/powertracker</project>
   <simulation>
     <title>My simulation</title>
-    <randomseed>5</randomseed>
+    <randomseed>3</randomseed>
     <motedelay_us>1000000</motedelay_us>
     <radiomedium>
       org.contikios.mrm.MRM
-      <rx_sensitivityLR value="-81.0" />
+      <rx_sensitivityLR value="-84.0" />
       <rx_sensitivity value="-84.0" />
       <obstacles />
-      <rx_sensitivityLR value="-81.0" />
+      <rx_sensitivityLR value="-84.0" />
       <rx_sensitivity value="-84.0" />
       <obstacles />
     </radiomedium>
@@ -26,7 +26,7 @@
       org.contikios.cooja.contikimote.ContikiMoteType
       <identifier>mtype439</identifier>
       <description>Cooja Mote Type #1</description>
-      <source>[CONTIKI_DIR]/lanada/udp-server.c</source>
+      <source>[CONTIKI_DIR]/lanada_4/udp-server.c</source>
       <commands>make udp-server.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -53,7 +53,7 @@
       org.contikios.cooja.contikimote.ContikiMoteType
       <identifier>mtype422</identifier>
       <description>Cooja Mote Type #2</description>
-      <source>[CONTIKI_DIR]/lanada/udp-client.c</source>
+      <source>[CONTIKI_DIR]/lanada_4/udp-client.c</source>
       <commands>make udp-client.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
