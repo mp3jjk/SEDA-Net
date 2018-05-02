@@ -28,7 +28,8 @@ obj_cooja/rpl-timers.o: ..//core/net/rpl/rpl-timers.c ..//core/./sys/pt.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h \
  ..//core/./lib/random.h ..//core/net/rpl/rpl_debug.h \
- ..//core/./net/ip/uip-debug.h
+ ..//core/./net/ip/uip-debug.h ../platform/cooja/dual_conf.h \
+ ../platform/cooja/dev/cooja-radio.h
 ..//core/net/rpl/rpl-timers.c ..//core/./sys/pt.h :
  ..//core/./sys/lc.h ..//core/./sys/lc-switch.h ..//core/./sys/process.h :
  ..//core/./sys/cc.h ..//platform/cooja/./contiki-conf.h project-conf.h :
@@ -59,4 +60,5 @@ obj_cooja/rpl-timers.o: ..//core/net/rpl/rpl-timers.c ..//core/./sys/pt.h \
  ..//core/./net/ipv6/multicast/roll-tm.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h :
  ..//core/./lib/random.h ..//core/net/rpl/rpl_debug.h :
- ..//core/./net/ip/uip-debug.h :
+ ..//core/./net/ip/uip-debug.h ../platform/cooja/dual_conf.h :
+ ../platform/cooja/dev/cooja-radio.h :

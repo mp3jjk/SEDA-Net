@@ -57,7 +57,8 @@ obj_cooja/rpl-dag-root.o: ..//core/net/rpl/rpl-dag-root.c \
  ..//core/./net/ipv6/multicast/roll-tm.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h \
  ..//core/./net/rpl/rpl-dag-root.h ..//core/net/rpl/rpl_debug.h \
- ..//core/./net/ip/uip-debug.h
+ ..//core/./net/ip/uip-debug.h ../platform/cooja/dual_conf.h \
+ ../platform/cooja/dev/cooja-radio.h
 ..//core/net/rpl/rpl-dag-root.c :
  ..//core/./contiki.h ..//core/./contiki-version.h :
  ..//platform/cooja/./contiki-conf.h project-conf.h :
@@ -117,4 +118,5 @@ obj_cooja/rpl-dag-root.o: ..//core/net/rpl/rpl-dag-root.c \
  ..//core/./net/ipv6/multicast/roll-tm.h :
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h :
  ..//core/./net/rpl/rpl-dag-root.h ..//core/net/rpl/rpl_debug.h :
- ..//core/./net/ip/uip-debug.h :
+ ..//core/./net/ip/uip-debug.h ../platform/cooja/dual_conf.h :
+ ../platform/cooja/dev/cooja-radio.h :

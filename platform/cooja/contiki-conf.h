@@ -37,11 +37,11 @@
 #include "subplatform-conf.h"
 #endif /* INCLUDE_SUBPLATFORM_CONF */
 
-#define DUAL_RADIO 0
+#define DUAL_RADIO 1
 #if DUAL_RADIO == 1
 #define ONLY_LONG 0
 #if ONLY_LONG == 0 && DUAL_RADIO == 1
-#define WAKEUP_RADIO 1  /* Make sure CROSS_OPT_VERSION1 == 0 */
+#define WAKEUP_RADIO 0  /* Make sure CROSS_OPT_VERSION1 == 0 */
 #if WAKEUP_RADIO == 1
 #undef CROSS_OPT_VERSION1
 #define CROSS_OPT_VERSION1 0
@@ -51,6 +51,8 @@
 #define ADDR_MAP DUAL_RADIO
 
 #define NETSTACK_DUAL_RADIO 0  /* JOONKI, don't change this variable */
+
+#define RPL_CONF_OF rpl_of0
 
 #define PROFILE_CONF_ON 0
 #define ENERGEST_CONF_ON 0

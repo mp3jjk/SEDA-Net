@@ -11,8 +11,6 @@
 uint8_t dead;
 
 /* RPL Configuration */
-#define RPL_CONF_OF rpl_ltmax_of
-// rpl_ltmax_of, rpl_of0
 
 #define RPL_CONF_LONG_WEIGHT_RATIO	1
 #define RPL_CONF_ETX_WEIGHT	1

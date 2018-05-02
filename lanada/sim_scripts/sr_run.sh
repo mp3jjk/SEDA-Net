@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JOONKI=1
+JOONKI=0
 
 if [ $JOONKI -eq 0 ]
 then
@@ -35,6 +35,7 @@ ONLY_LONG=0
 SEED_NUMBER=${12}
 MRM=${13}
 LT_PERCENT=${14}
+LTMAX=${15}
 
 sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc 
 
@@ -49,18 +50,24 @@ then
     sed -i "1072s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc
 fi
 
-#DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_alpha$ALPHA\_$ALPHA_DIV\_mrm$MRM\_seed$SEED_NUMBER
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
-    DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_beta$BETA\_$BETA_DIV\_seed$SEED_NUMBER
+    DIR=$DATE\_$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_LTMAX$LTMAX\_beta$BETA\_$BETA_DIV\_seed$SEED_NUMBER
 else
-    DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_beta$BETA\_$BETA_DIV\_seed$SEED_NUMBER
+    DIR=$DATE\_$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_LTMAX$LTMAX\_beta$BETA\_$BETA_DIV\_seed$SEED_NUMBER
 fi
 
 mkdir $DIR
 cd $DIR
 
-../param.sh $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $LONG_WEIGHT $ETX_WEIGHT $BETA $BETA_DIV $CROSS_OPT $STROBE_CNT $CHECK $MRM
+if [ $LTMAX -eq 0 ]
+then
+    sed -i 's/\#define RPL_CONF_OF rpl_ltmax_of/\#define RPL_CONF_OF rpl_of0/g' $CONTIKI/platform/cooja/contiki-conf.h
+else
+    sed -i 's/\#define RPL_CONF_OF rpl_of0/\#define RPL_CONF_OF rpl_ltmax_of/g' $CONTIKI/platform/cooja/contiki-conf.h
+fi
+
+../param.sh $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $LONG_WEIGHT $ETX_WEIGHT $BETA $BETA_DIV $CROSS_OPT $STROBE_CNT $CHECK $MRM $LTMAX
 
 IN_DIR=sr\_strobe$STROBE_CNT\_$LR_range\_$CHECK\_LT$LT_PERCENT
 if [ ! -e $IN_DIR ]

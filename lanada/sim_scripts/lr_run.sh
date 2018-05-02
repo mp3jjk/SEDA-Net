@@ -1,6 +1,6 @@
 #!/bin/bash
 
-JOONKI=1
+JOONKI=0
 
 if [ $JOONKI -eq 0 ]
 then
@@ -36,6 +36,7 @@ WAKE_UP=${15}
 SEED_NUMBER=${16}
 MRM=${17}
 LT_PERCENT=${18}
+LTMAX=${19}
 
 if [ $WAKE_UP -eq 0 ]
 then
@@ -60,9 +61,9 @@ fi
 
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
-    DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_beta$BETA\_$BETA_DIV\_seed$SEED_NUMBER
+    DIR=$DATE\_$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_LTMAX$LTMAX\_beta$BETA\_$BETA_DIV\_seed$SEED_NUMBER
 else
-    DIR=$DATE\_topo$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_beta$BETA\_$BETA_DIV\_seed$SEED_NUMBER
+    DIR=$DATE\_$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_LTMAX$LTMAX\_beta$BETA\_$BETA_DIV\_seed$SEED_NUMBER
 fi
 
 mkdir $DIR
@@ -82,7 +83,14 @@ else
     sed -i 's/\#define WAKEUP_RADIO 0/\#define WAKEUP_RADIO 1/g' $CONTIKI/platform/cooja/contiki-conf.h
 fi
 
-../param.sh $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $LONG_WEIGHT $ETX_WEIGHT $BETA $BETA_DIV $CROSS_OPT $STROBE_CNT $CHECK $MRM
+if [ $LTMAX -eq 0 ]
+then
+    sed -i 's/\#define RPL_CONF_OF rpl_ltmax_of/\#define RPL_CONF_OF rpl_of0/g' $CONTIKI/platform/cooja/contiki-conf.h
+else
+    sed -i 's/\#define RPL_CONF_OF rpl_of0/\#define RPL_CONF_OF rpl_ltmax_of/g' $CONTIKI/platform/cooja/contiki-conf.h
+fi
+
+../param.sh $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $LONG_WEIGHT $ETX_WEIGHT $BETA $BETA_DIV $CROSS_OPT $STROBE_CNT $CHECK $MRM $LTMAX
 
 IN_DIR=lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_WAKE$WAKE_UP\_check$CHECK\_strobe$STROBE_CNT\_LT$LT_PERCENT
 if [ ! -e $IN_DIR ]
