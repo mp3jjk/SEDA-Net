@@ -53,6 +53,9 @@ import org.contikios.mrm.ChannelModel.Parameter;
 import org.contikios.mrm.ChannelModel.RadioPair;
 import org.contikios.mrm.ChannelModel.TxPair;
 import org.contikios.mrm.ChannelModelLR;
+// import org.contikios.mrm.ChannelModelLR.Parameter;
+// import org.contikios.mrm.ChannelModelLR.RadioPair;
+// import org.contikios.mrm.ChannelModelLR.TxPair;
 
 /**
  * Multi-path Ray-tracing radio medium (MRM).
@@ -186,22 +189,41 @@ public class MRM extends AbstractRadioMedium {
           sender.getChannel() != recv.getChannel()) {
         newConnection.addInterfered(recv);
         continue;
-      }
-      final Radio recvFinal = recv;
+					}
+			final Radio recvFinal = recv;
 
-      /* Calculate receive probability */
-      TxPair txPair = new RadioPair() {
-        public Radio getFromRadio() {
-          return sender;
-        }
-        public Radio getToRadio() {
-          return recvFinal;
-        }
-      };
-      double[] probData = currentChannelModel.getProbability(
-          txPair,
-          -Double.MAX_VALUE /* TODO Include interference */
-      );
+			/* Calculate receive probability */
+			ChannelModelLR.TxPair txPairLR = new ChannelModelLR.RadioPair() {
+				public Radio getFromRadio() {
+					return sender;
+				}
+				public Radio getToRadio() {
+					return recvFinal;
+				}
+			};
+
+
+			TxPair txPair = new RadioPair() {
+				public Radio getFromRadio() {
+					return sender;
+				}
+				public Radio getToRadio() {
+					return recvFinal;
+				}
+			};
+
+			double[] probData;
+			if (isForLongRange){
+				probData = currentChannelModelLR.getProbability(
+						txPairLR,
+						-Double.MAX_VALUE /* TODO Include interference */
+						);
+			} else {
+				probData = currentChannelModel.getProbability(
+						txPair,
+						-Double.MAX_VALUE /* TODO Include interference */
+						);
+			}
 
       double recvProb = probData[0];
       double recvSignalStrength = probData[1];
