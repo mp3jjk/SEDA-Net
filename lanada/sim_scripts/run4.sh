@@ -4,11 +4,12 @@ SR=0 # Decide whether SR simulation runs or not
 LR=1 # For LR case
 ONLY_LONG=0 # SR = 1 with only Long
 WAKE_UP=1 # LR = 1 with Wake-up radio
-TRAFFIC=0 # 0 = periodic, 1 = poisson
-VAR_PERIOD=(60)
-VAR_ARRIVAL=(10)
-VAR_TOPOLOGY=("36grid_mrm2_cnt")
+TRAFFIC=1 # 0 = periodic, 1 = poisson
+VAR_PERIOD=(5 15 30 60)
+VAR_ARRIVAL=(10 30 60)
+VAR_TOPOLOGY=("50random_mrm2_cnt")
 VAR_LR_RANGE=("2X")
+VAR_LTMAX=("0")
 
 VAR_LR_WEIGHT=(1)
 VAR_ETX_WEIGHT=1
@@ -19,9 +20,10 @@ VAR_CROSS_OPT=0
 VAR_STROBE_CNT=0
 VAR_CHECK_RATE=(8)
 
-DATE="G1"
-SEED_NUMBER=("1" "2" "3" "4" "5")
-MRM=4
+DATE="G2_OF0"
+#SEED_NUMBER=("1" "2" "3" "4" "5")
+SEED_NUMBER=("1")
+MRM=1
 VAR_PERCENT=("1")
 
 # SR_RANGE simulation
@@ -46,7 +48,10 @@ then
 				do
 				    for check in "${VAR_CHECK_RATE[@]}"
 				    do
-					./sr_run.sh $topology $TRAFFIC $period 0 $VAR_ETX_WEIGHT $beta $beta_div $VAR_CROSS_OPT $VAR_STROBE_CNT $check "${DATE}" $seed $MRM $percent
+					for ltmax in "${VAR_LTMAX[@]}"
+					do
+					    ./sr_run.sh $topology $TRAFFIC $period 0 $VAR_ETX_WEIGHT $beta $beta_div $VAR_CROSS_OPT $VAR_STROBE_CNT $check "${DATE}" $seed $MRM $percent $ltmax
+					done
 				    done
 				done
 			    done
@@ -72,7 +77,10 @@ then
 				do
 				    for check in "${VAR_CHECK_RATE[@]}"
 				    do
-					./sr_run.sh $topology $TRAFFIC 0 $arrival $VAR_ETX_WEIGHT $beta $beta_div $VAR_CROSS_OPT $VAR_STROBE_CNT $check "${DATE}" $seed $MRM $percent
+					for ltmax in "${VAR_LTMAX[@]}"
+					do
+					./sr_run.sh $topology $TRAFFIC 0 $arrival $VAR_ETX_WEIGHT $beta $beta_div $VAR_CROSS_OPT $VAR_STROBE_CNT $check "${DATE}" $seed $MRM $percent $ltmax
+					done
 				    done
 				done
 			    done
@@ -107,7 +115,10 @@ then
 				    do
 					for check in "${VAR_CHECK_RATE[@]}"
 					do
-					    ./lr_run.sh $topology $TRAFFIC $period 0 $range $weight $VAR_ETX_WEIGHT $beta $beta_div $VAR_CROSS_OPT $VAR_STROBE_CNT $check "${DATE}" $ONLY_LONG $WAKE_UP $seed $MRM $percent
+					    for ltmax in "${VAR_LTMAX[@]}"
+					    do
+						./lr_run.sh $topology $TRAFFIC $period 0 $range $weight $VAR_ETX_WEIGHT $beta $beta_div $VAR_CROSS_OPT $VAR_STROBE_CNT $check "${DATE}" $ONLY_LONG $WAKE_UP $seed $MRM $percent $ltmax
+					    done
 					done
 				    done
 				done
@@ -136,7 +147,10 @@ then
 				    do
 					for check in "${VAR_CHECK_RATE[@]}"
 					do
-					    ./lr_run.sh $topology $TRAFFIC 0 $arrival $range $weight $VAR_ETX_WEIGHT $beta $beta_div $VAR_CROSS_OPT $VAR_STROBE_CNT $check "${DATE}" $ONLY_LONG $WAKE_UP $seed $MRM $percent
+					    for ltmax in "${VAR_LTMAX[@]}"
+					    do
+						./lr_run.sh $topology $TRAFFIC 0 $arrival $range $weight $VAR_ETX_WEIGHT $beta $beta_div $VAR_CROSS_OPT $VAR_STROBE_CNT $check "${DATE}" $ONLY_LONG $WAKE_UP $seed $MRM $percent $ltmax
+					    done
 					done
 				    done
 				done
