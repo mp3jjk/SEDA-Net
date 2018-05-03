@@ -12,10 +12,10 @@
     <motedelay_us>1000000</motedelay_us>
     <radiomedium>
       org.contikios.mrm.MRM
-      <rx_sensitivityLR value="-84.0" />
+      <rx_sensitivityLR value="-76.0" />
       <rx_sensitivity value="-84.0" />
       <obstacles />
-      <rx_sensitivityLR value="-84.0" />
+      <rx_sensitivityLR value="-76.0" />
       <rx_sensitivity value="-84.0" />
       <obstacles />
     </radiomedium>
