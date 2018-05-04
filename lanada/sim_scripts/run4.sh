@@ -4,12 +4,12 @@ SR=0 # Decide whether SR simulation runs or not
 LR=1 # For LR case
 ONLY_LONG=0 # SR = 1 with only Long
 WAKE_UP=1 # LR = 1 with Wake-up radio
-TRAFFIC=1 # 0 = periodic, 1 = poisson
-VAR_PERIOD=(5 15 30 60)
+TRAFFIC=0 # 0 = periodic, 1 = poisson
+VAR_PERIOD=(60)
 VAR_ARRIVAL=(10 30 60)
-VAR_TOPOLOGY=("50random_mrm2_cnt")
+VAR_TOPOLOGY=("36grid_mrm2_cnt")
 VAR_LR_RANGE=("2X")
-VAR_LTMAX=("0")
+VAR_LTMAX=("1")
 
 VAR_LR_WEIGHT=(1)
 VAR_ETX_WEIGHT=1
@@ -20,10 +20,10 @@ VAR_CROSS_OPT=0
 VAR_STROBE_CNT=0
 VAR_CHECK_RATE=(8)
 
-DATE="G2_OF0"
+DATE="G1"
 #SEED_NUMBER=("1" "2" "3" "4" "5")
 SEED_NUMBER=("1")
-MRM=1
+MRM=4
 VAR_PERCENT=("1")
 
 # SR_RANGE simulation
