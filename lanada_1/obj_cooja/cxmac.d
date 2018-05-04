@@ -1,5 +1,5 @@
 obj_cooja/cxmac.o: ..//core/net/mac/cxmac/cxmac.c ..//core/./dev/leds.h \
- ..//platform/cooja/./contiki-conf.h project-conf.h param.h \
+ ..//platform/cooja/./contiki-conf.h project-conf.h \
  ..//core/./dev/radio.h ..//core/./dev/watchdog.h \
  ..//core/./net/netstack.h ..//core/./net/llsec/llsec.h \
  ..//core/./net/mac/mac.h ..//core/./net/mac/rdc.h \
@@ -36,7 +36,7 @@ obj_cooja/cxmac.o: ..//core/net/mac/cxmac/cxmac.c ..//core/./dev/leds.h \
  ..//core/./net/rime/rucb.h ..//core/./net/rime/timesynch.h \
  ..//core/./net/rime/trickle.h ..//core/./sys/compower.h
 ..//core/net/mac/cxmac/cxmac.c ..//core/./dev/leds.h :
- ..//platform/cooja/./contiki-conf.h project-conf.h param.h :
+ ..//platform/cooja/./contiki-conf.h project-conf.h :
  ..//core/./dev/radio.h ..//core/./dev/watchdog.h :
  ..//core/./net/netstack.h ..//core/./net/llsec/llsec.h :
  ..//core/./net/mac/mac.h ..//core/./net/mac/rdc.h :

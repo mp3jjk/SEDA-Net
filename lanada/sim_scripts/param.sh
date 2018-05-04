@@ -1,6 +1,10 @@
 #!/bin/bash
 APP=${11}
-echo "/* Energy log */
+
+echo "#ifndef PROJECT_CONF_H_
+#define PROJECT_CONF_H_
+
+/* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
 
 uint8_t dead;
@@ -30,12 +34,7 @@ uint8_t dead;
 #if DETERMINED_ROUTING_TREE
 #define MAX_NODE_NUMBER 30
 
-#endif /* ROUTING_TREE */" > ../../../lanada_$APP/param.h
-
-echo "#ifndef PROJECT_CONF_H_
-#define PROJECT_CONF_H_
-
-#include \"param.h\"
+#endif /* ROUTING_TREE */
 
 #undef NBR_TABLE_CONF_MAX_NEIGHBORS
 #undef UIP_CONF_MAX_ROUTES

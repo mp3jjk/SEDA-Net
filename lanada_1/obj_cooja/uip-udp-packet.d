@@ -1,5 +1,5 @@
 obj_cooja/uip-udp-packet.o: ..//core/net/ip/uip-udp-packet.c \
- ..//platform/cooja/./contiki-conf.h project-conf.h param.h \
+ ..//platform/cooja/./contiki-conf.h project-conf.h \
  ..//core/./net/ip/uip-udp-packet.h ..//core/./net/ip/uip.h \
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h \
  ..//core/./contiki.h ..//core/./contiki-version.h \
@@ -19,7 +19,7 @@ obj_cooja/uip-udp-packet.o: ..//core/net/ip/uip-udp-packet.c \
  ..//core/./net/ipv6/multicast/roll-tm.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-stats.h
 ..//core/net/ip/uip-udp-packet.c :
- ..//platform/cooja/./contiki-conf.h project-conf.h param.h :
+ ..//platform/cooja/./contiki-conf.h project-conf.h :
  ..//core/./net/ip/uip-udp-packet.h ..//core/./net/ip/uip.h :
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h :
  ..//core/./contiki.h ..//core/./contiki-version.h :

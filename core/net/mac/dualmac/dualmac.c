@@ -60,7 +60,6 @@
 
 #include <string.h>
 
-#include "../lanada/param.h"
 #if DUAL_RADIO == 0
 #include "../core/net/rpl/rpl.h"
 #endif

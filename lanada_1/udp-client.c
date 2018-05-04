@@ -71,7 +71,6 @@
 #define PS (600 / ARRIVAL_RATE)
 #endif
 
-#include "param.h"
 
 #define START_INTERVAL		(15 * CLOCK_SECOND)
 #if TRAFFIC_MODEL == 0

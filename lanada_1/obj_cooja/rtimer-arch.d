@@ -1,6 +1,6 @@
 obj_cooja/rtimer-arch.o: ..//platform/cooja/./rtimer-arch.c \
  ..//core/./sys/rtimer.h ..//platform/cooja/./contiki-conf.h \
- project-conf.h param.h ..//platform/cooja/./rtimer-arch.h \
+ project-conf.h ..//platform/cooja/./rtimer-arch.h \
  ..//platform/cooja/./contiki-conf.h ..//core/./sys/clock.h \
  ..//platform/cooja/./sys/cooja_mt.h ..//core/./contiki.h \
  ..//core/./contiki-version.h ..//core/./contiki-default-conf.h \
@@ -15,7 +15,7 @@ obj_cooja/rtimer-arch.o: ..//platform/cooja/./rtimer-arch.c \
  ..//platform/cooja/./lib/simEnvChange.h
 ..//platform/cooja/./rtimer-arch.c :
  ..//core/./sys/rtimer.h ..//platform/cooja/./contiki-conf.h :
- project-conf.h param.h ..//platform/cooja/./rtimer-arch.h :
+ project-conf.h ..//platform/cooja/./rtimer-arch.h :
  ..//platform/cooja/./contiki-conf.h ..//core/./sys/clock.h :
  ..//platform/cooja/./sys/cooja_mt.h ..//core/./contiki.h :
  ..//core/./contiki-version.h ..//core/./contiki-default-conf.h :

@@ -26,7 +26,7 @@ obj_cooja/rpl-of-ltmax.o: ..//core/net/rpl/rpl-of-ltmax.c \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
  ..//core/./net/ipv6/multicast/smrf.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h \
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h \
  ..//core/net/rpl/rpl_debug.h ..//core/./net/ip/uip-debug.h \
  ..//core/./sys/log_message.h ..//core/./cfs/cfs.h \
  ..//core/./sys/residual.h ../platform/cooja/dual_conf.h \
@@ -59,7 +59,7 @@ obj_cooja/rpl-of-ltmax.o: ..//core/net/rpl/rpl-of-ltmax.c \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h :
  ..//core/./net/ipv6/multicast/smrf.h :
  ..//core/./net/ipv6/multicast/roll-tm.h :
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :
  ..//core/net/rpl/rpl_debug.h ..//core/./net/ip/uip-debug.h :
  ..//core/./sys/log_message.h ..//core/./cfs/cfs.h :
  ..//core/./sys/residual.h ../platform/cooja/dual_conf.h :

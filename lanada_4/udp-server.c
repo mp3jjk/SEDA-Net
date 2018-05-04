@@ -51,7 +51,6 @@
 
 #define UDP_EXAMPLE_ID  190
 
-#include "param.h"
 //int id_array[MAX_NUM_NODE]={0,};
 //uint8_t id_count[BUF_SIZE]={0,};
 static struct uip_udp_conn *server_conn;

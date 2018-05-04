@@ -1,6 +1,6 @@
 obj_cooja/frame802154.o: ..//core/net/mac/frame802154.c \
  ..//core/./sys/cc.h ..//platform/cooja/./contiki-conf.h project-conf.h \
- param.h ..//core/./sys/cc-gcc.h ..//core/./net/mac/frame802154.h \
+ ..//core/./sys/cc-gcc.h ..//core/./net/mac/frame802154.h \
  ..//core/./net/linkaddr.h ..//core/./net/llsec/llsec802154.h \
  ..//core/./net/ip/uip.h ..//core/./net/ip/uipopt.h \
  ..//core/./net/ip/tcpip.h ..//core/./contiki.h \
@@ -15,7 +15,7 @@ obj_cooja/frame802154.o: ..//core/net/mac/frame802154.c \
  ..//core/./sys/clock.h ..//core/./sys/energest.h ..//core/./sys/rtimer.h
 ..//core/net/mac/frame802154.c :
  ..//core/./sys/cc.h ..//platform/cooja/./contiki-conf.h project-conf.h :
- param.h ..//core/./sys/cc-gcc.h ..//core/./net/mac/frame802154.h :
+ ..//core/./sys/cc-gcc.h ..//core/./net/mac/frame802154.h :
  ..//core/./net/linkaddr.h ..//core/./net/llsec/llsec802154.h :
  ..//core/./net/ip/uip.h ..//core/./net/ip/uipopt.h :
  ..//core/./net/ip/tcpip.h ..//core/./contiki.h :

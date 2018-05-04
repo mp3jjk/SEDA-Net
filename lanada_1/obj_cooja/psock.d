@@ -1,6 +1,6 @@
 obj_cooja/psock.o: ..//core/net/ip/psock.c ..//core/./net/ip/psock.h \
  ..//core/./contiki.h ..//core/./contiki-version.h \
- ..//platform/cooja/./contiki-conf.h project-conf.h param.h \
+ ..//platform/cooja/./contiki-conf.h project-conf.h \
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h \
  ..//core/./sys/pt.h ..//core/./sys/lc.h ..//core/./sys/lc-switch.h \
  ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h ..//core/./sys/autostart.h \
@@ -51,7 +51,7 @@ obj_cooja/psock.o: ..//core/net/ip/psock.c ..//core/./net/ip/psock.h \
  ..//core/./net/rime/trickle.h ..//core/./net/netstack.h
 ..//core/net/ip/psock.c ..//core/./net/ip/psock.h :
  ..//core/./contiki.h ..//core/./contiki-version.h :
- ..//platform/cooja/./contiki-conf.h project-conf.h param.h :
+ ..//platform/cooja/./contiki-conf.h project-conf.h :
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h :
  ..//core/./sys/pt.h ..//core/./sys/lc.h ..//core/./sys/lc-switch.h :
  ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h ..//core/./sys/autostart.h :

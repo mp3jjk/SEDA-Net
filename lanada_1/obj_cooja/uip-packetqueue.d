@@ -1,6 +1,6 @@
 obj_cooja/uip-packetqueue.o: ..//core/net/ip/uip-packetqueue.c \
  ..//core/./net/ip/uip.h ..//core/./net/ip/uipopt.h \
- ..//platform/cooja/./contiki-conf.h project-conf.h param.h \
+ ..//platform/cooja/./contiki-conf.h project-conf.h \
  ..//core/./net/ip/tcpip.h ..//core/./contiki.h \
  ..//core/./contiki-version.h ..//core/./contiki-default-conf.h \
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h \
@@ -15,7 +15,7 @@ obj_cooja/uip-packetqueue.o: ..//core/net/ip/uip-packetqueue.c \
  ..//core/./net/ip/uip-packetqueue.h ..//core/./sys/ctimer.h
 ..//core/net/ip/uip-packetqueue.c :
  ..//core/./net/ip/uip.h ..//core/./net/ip/uipopt.h :
- ..//platform/cooja/./contiki-conf.h project-conf.h param.h :
+ ..//platform/cooja/./contiki-conf.h project-conf.h :
  ..//core/./net/ip/tcpip.h ..//core/./contiki.h :
  ..//core/./contiki-version.h ..//core/./contiki-default-conf.h :
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h :

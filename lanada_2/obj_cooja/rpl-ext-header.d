@@ -27,7 +27,7 @@ obj_cooja/rpl-ext-header.o: ..//core/net/rpl/rpl-ext-header.c \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
  ..//core/./net/ipv6/multicast/smrf.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h \
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h \
  ..//core/./net/packetbuf.h ..//core/./net/mac/tsch/tsch-conf.h \
  ..//core/./net/ip/uip-debug.h
 ..//core/net/rpl/rpl-ext-header.c :
@@ -59,6 +59,6 @@ obj_cooja/rpl-ext-header.o: ..//core/net/rpl/rpl-ext-header.c \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h :
  ..//core/./net/ipv6/multicast/smrf.h :
  ..//core/./net/ipv6/multicast/roll-tm.h :
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :
  ..//core/./net/packetbuf.h ..//core/./net/mac/tsch/tsch-conf.h :
  ..//core/./net/ip/uip-debug.h :

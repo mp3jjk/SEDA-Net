@@ -26,7 +26,7 @@ obj_cooja/rpl.o: ..//core/net/rpl/rpl.c ..//core/./net/ip/uip.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
  ..//core/./net/ipv6/multicast/smrf.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h \
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h \
  ..//core/net/rpl/rpl_debug.h ..//core/./net/ip/uip-debug.h
 ..//core/net/rpl/rpl.c ..//core/./net/ip/uip.h :
  ..//core/./net/ip/uipopt.h ..//platform/cooja/./contiki-conf.h :
@@ -56,5 +56,5 @@ obj_cooja/rpl.o: ..//core/net/rpl/rpl.c ..//core/./net/ip/uip.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h :
  ..//core/./net/ipv6/multicast/smrf.h :
  ..//core/./net/ipv6/multicast/roll-tm.h :
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :
  ..//core/net/rpl/rpl_debug.h ..//core/./net/ip/uip-debug.h :

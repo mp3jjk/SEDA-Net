@@ -1,7 +1,7 @@
 obj_cooja/uip-nd6.o: ..//core/net/ipv6/uip-nd6.c \
  ..//core/./net/ipv6/uip-icmp6.h ..//core/./net/ip/uip.h \
  ..//core/./net/ip/uipopt.h ..//platform/cooja/./contiki-conf.h \
- project-conf.h param.h ..//core/./net/ip/tcpip.h ..//core/./contiki.h \
+ project-conf.h ..//core/./net/ip/tcpip.h ..//core/./contiki.h \
  ..//core/./contiki-version.h ..//core/./contiki-default-conf.h \
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h \
  ..//core/./sys/lc-switch.h ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h \
@@ -26,7 +26,7 @@ obj_cooja/uip-nd6.o: ..//core/net/ipv6/uip-nd6.c \
 ..//core/net/ipv6/uip-nd6.c :
  ..//core/./net/ipv6/uip-icmp6.h ..//core/./net/ip/uip.h :
  ..//core/./net/ip/uipopt.h ..//platform/cooja/./contiki-conf.h :
- project-conf.h param.h ..//core/./net/ip/tcpip.h ..//core/./contiki.h :
+ project-conf.h ..//core/./net/ip/tcpip.h ..//core/./contiki.h :
  ..//core/./contiki-version.h ..//core/./contiki-default-conf.h :
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h :
  ..//core/./sys/lc-switch.h ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h :

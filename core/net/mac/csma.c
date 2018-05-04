@@ -50,7 +50,6 @@
 
 #include "lib/list.h"
 #include "lib/memb.h"
-#include "lanada/param.h"
 
 #include <string.h>
 

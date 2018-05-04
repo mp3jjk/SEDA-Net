@@ -1,6 +1,6 @@
 obj_cooja/nbr-table.o: ..//core/net/nbr-table.c ..//core/./contiki.h \
  ..//core/./contiki-version.h ..//platform/cooja/./contiki-conf.h \
- project-conf.h param.h ..//core/./contiki-default-conf.h \
+ project-conf.h ..//core/./contiki-default-conf.h \
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h \
  ..//core/./sys/lc-switch.h ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h \
  ..//core/./sys/autostart.h ..//core/./sys/process.h \
@@ -28,10 +28,10 @@ obj_cooja/nbr-table.o: ..//core/net/nbr-table.c ..//core/./contiki.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
  ..//core/./net/ipv6/multicast/smrf.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h
 ..//core/net/nbr-table.c ..//core/./contiki.h :
  ..//core/./contiki-version.h ..//platform/cooja/./contiki-conf.h :
- project-conf.h param.h ..//core/./contiki-default-conf.h :
+ project-conf.h ..//core/./contiki-default-conf.h :
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h :
  ..//core/./sys/lc-switch.h ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h :
  ..//core/./sys/autostart.h ..//core/./sys/process.h :
@@ -59,4 +59,4 @@ obj_cooja/nbr-table.o: ..//core/net/nbr-table.c ..//core/./contiki.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h :
  ..//core/./net/ipv6/multicast/smrf.h :
  ..//core/./net/ipv6/multicast/roll-tm.h :
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :

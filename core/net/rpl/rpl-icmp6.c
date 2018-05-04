@@ -78,7 +78,7 @@
 #endif /* DUAL_RADIO */
 
 /* To transfer remaining energy JJH */
-#include "../lanada/param.h"
+//#include "../lanada/param.h"
 #include "sys/log_message.h"
 #include "sys/residual.h"
 #include <stdlib.h>

@@ -29,7 +29,7 @@ obj_cooja/uip-ds6.o: ..//core/net/ipv6/uip-ds6.c ..//core/./lib/random.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
  ..//core/./net/ipv6/multicast/smrf.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h
 ..//core/net/ipv6/uip-ds6.c ..//core/./lib/random.h :
  ..//core/./net/ipv6/uip-nd6.h ..//core/./net/ip/uip.h :
  ..//core/./net/ip/uipopt.h ..//platform/cooja/./contiki-conf.h :
@@ -61,4 +61,4 @@ obj_cooja/uip-ds6.o: ..//core/net/ipv6/uip-ds6.c ..//core/./lib/random.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h :
  ..//core/./net/ipv6/multicast/smrf.h :
  ..//core/./net/ipv6/multicast/roll-tm.h :
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :

@@ -45,7 +45,6 @@
 #include "sys/ctimer.h"
 #include "net/ipv6/uip-ds6.h"
 #include "net/ipv6/multicast/uip-mcast6.h"
-#include "../lanada/param.h" //JJH
 /*---------------------------------------------------------------------------*/
 /** \brief Is IPv6 address addr the link-local, all-RPL-nodes
     multicast address? */

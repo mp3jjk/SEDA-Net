@@ -1,6 +1,6 @@
 obj_cooja/tcpip.o: ..//core/net/ip/tcpip.c ..//core/./contiki-net.h \
  ..//core/./contiki.h ..//core/./contiki-version.h \
- ..//platform/cooja/./contiki-conf.h project-conf.h param.h \
+ ..//platform/cooja/./contiki-conf.h project-conf.h \
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h \
  ..//core/./sys/pt.h ..//core/./sys/lc.h ..//core/./sys/lc-switch.h \
  ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h ..//core/./sys/autostart.h \
@@ -55,13 +55,13 @@ obj_cooja/tcpip.o: ..//core/net/ip/tcpip.c ..//core/./contiki-net.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
  ..//core/./net/ipv6/multicast/smrf.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h \
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h \
  ..//core/./sys/log_message.h ..//core/./cfs/cfs.h \
  ..//core/./sys/residual.h ..//core/net/ip/ip_debug.h \
  ..//core/./net/ip/uip-debug.h ..//core/net/rpl/rpl.h
 ..//core/net/ip/tcpip.c ..//core/./contiki-net.h :
  ..//core/./contiki.h ..//core/./contiki-version.h :
- ..//platform/cooja/./contiki-conf.h project-conf.h param.h :
+ ..//platform/cooja/./contiki-conf.h project-conf.h :
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h :
  ..//core/./sys/pt.h ..//core/./sys/lc.h ..//core/./sys/lc-switch.h :
  ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h ..//core/./sys/autostart.h :
@@ -116,7 +116,7 @@ obj_cooja/tcpip.o: ..//core/net/ip/tcpip.c ..//core/./contiki-net.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h :
  ..//core/./net/ipv6/multicast/smrf.h :
  ..//core/./net/ipv6/multicast/roll-tm.h :
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :
  ..//core/./sys/log_message.h ..//core/./cfs/cfs.h :
  ..//core/./sys/residual.h ..//core/net/ip/ip_debug.h :
  ..//core/./net/ip/uip-debug.h ..//core/net/rpl/rpl.h :

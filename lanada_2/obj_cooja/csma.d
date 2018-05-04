@@ -18,7 +18,7 @@ obj_cooja/csma.o: ..//core/net/mac/csma.c ..//core/./net/mac/csma.h \
  ..//core/./sys/ctimer.h ..//core/./lib/random.h \
  ..//core/./net/netstack.h ..//core/./net/llsec/llsec.h \
  ..//core/./net/mac/rdc.h ..//core/./net/mac/framer.h \
- ..//core/./lib/list.h ..//core/./lib/memb.h ../lanada/param.h \
+ ..//core/./lib/list.h ..//core/./lib/memb.h \
  ../platform/cooja/dual_conf.h ../platform/cooja/dev/cooja-radio.h \
  ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h \
  ..//core/./net/rpl/rpl-conf.h ..//core/./net/ipv6/uip-ds6.h \
@@ -30,7 +30,7 @@ obj_cooja/csma.o: ..//core/net/mac/csma.c ..//core/./net/mac/csma.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h \
  ..//core/./net/ipv6/multicast/smrf.h \
  ..//core/./net/ipv6/multicast/roll-tm.h \
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h \
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h \
  ..//core/./sys/log_message.h ..//core/./cfs/cfs.h \
  ..//core/./sys/residual.h
 ..//core/net/mac/csma.c ..//core/./net/mac/csma.h :
@@ -53,7 +53,7 @@ obj_cooja/csma.o: ..//core/net/mac/csma.c ..//core/./net/mac/csma.h \
  ..//core/./sys/ctimer.h ..//core/./lib/random.h :
  ..//core/./net/netstack.h ..//core/./net/llsec/llsec.h :
  ..//core/./net/mac/rdc.h ..//core/./net/mac/framer.h :
- ..//core/./lib/list.h ..//core/./lib/memb.h ../lanada/param.h :
+ ..//core/./lib/list.h ..//core/./lib/memb.h :
  ../platform/cooja/dual_conf.h ../platform/cooja/dev/cooja-radio.h :
  ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h :
  ..//core/./net/rpl/rpl-conf.h ..//core/./net/ipv6/uip-ds6.h :
@@ -65,6 +65,6 @@ obj_cooja/csma.o: ..//core/net/mac/csma.c ..//core/./net/mac/csma.h \
  ..//core/./net/ipv6/multicast/uip-mcast6-route.h :
  ..//core/./net/ipv6/multicast/smrf.h :
  ..//core/./net/ipv6/multicast/roll-tm.h :
- ..//core/./net/ipv6/multicast/uip-mcast6-stats.h ../lanada/param.h :
+ ..//core/./net/ipv6/multicast/uip-mcast6-stats.h :
  ..//core/./sys/log_message.h ..//core/./cfs/cfs.h :
  ..//core/./sys/residual.h :

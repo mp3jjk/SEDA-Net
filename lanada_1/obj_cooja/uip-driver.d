@@ -1,7 +1,7 @@
 obj_cooja/uip-driver.o: ..//platform/cooja/net/uip-driver.c \
  ..//core/./net/netstack.h ..//platform/cooja/./contiki-conf.h \
- project-conf.h param.h ..//core/./net/llsec/llsec.h \
- ..//core/./net/mac/mac.h ..//core/./dev/radio.h ..//core/./net/mac/rdc.h \
+ project-conf.h ..//core/./net/llsec/llsec.h ..//core/./net/mac/mac.h \
+ ..//core/./dev/radio.h ..//core/./net/mac/rdc.h \
  ..//core/./net/llsec/llsec802154.h ..//core/./net/mac/frame802154.h \
  ..//core/./net/linkaddr.h ..//core/./net/ip/uip.h \
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h \
@@ -20,8 +20,8 @@ obj_cooja/uip-driver.o: ..//platform/cooja/net/uip-driver.c \
  ..//platform/cooja/./net/uip-driver.h
 ..//platform/cooja/net/uip-driver.c :
  ..//core/./net/netstack.h ..//platform/cooja/./contiki-conf.h :
- project-conf.h param.h ..//core/./net/llsec/llsec.h :
- ..//core/./net/mac/mac.h ..//core/./dev/radio.h ..//core/./net/mac/rdc.h :
+ project-conf.h ..//core/./net/llsec/llsec.h ..//core/./net/mac/mac.h :
+ ..//core/./dev/radio.h ..//core/./net/mac/rdc.h :
  ..//core/./net/llsec/llsec802154.h ..//core/./net/mac/frame802154.h :
  ..//core/./net/linkaddr.h ..//core/./net/ip/uip.h :
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h :

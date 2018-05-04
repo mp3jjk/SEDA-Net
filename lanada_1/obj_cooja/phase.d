@@ -1,6 +1,6 @@
 obj_cooja/phase.o: ..//core/net/mac/phase.c ..//core/./net/mac/phase.h \
  ..//core/./net/linkaddr.h ..//platform/cooja/./contiki-conf.h \
- project-conf.h param.h ..//core/./sys/timer.h ..//core/./sys/clock.h \
+ project-conf.h ..//core/./sys/timer.h ..//core/./sys/clock.h \
  ..//core/./sys/rtimer.h ..//platform/cooja/./rtimer-arch.h \
  ..//platform/cooja/./contiki-conf.h ..//core/./lib/list.h \
  ..//core/./lib/memb.h ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h \
@@ -21,7 +21,7 @@ obj_cooja/phase.o: ..//core/net/mac/phase.c ..//core/./net/mac/phase.h \
  ..//core/./net/queuebuf.h ..//core/./net/nbr-table.h
 ..//core/net/mac/phase.c ..//core/./net/mac/phase.h :
  ..//core/./net/linkaddr.h ..//platform/cooja/./contiki-conf.h :
- project-conf.h param.h ..//core/./sys/timer.h ..//core/./sys/clock.h :
+ project-conf.h ..//core/./sys/timer.h ..//core/./sys/clock.h :
  ..//core/./sys/rtimer.h ..//platform/cooja/./rtimer-arch.h :
  ..//platform/cooja/./contiki-conf.h ..//core/./lib/list.h :
  ..//core/./lib/memb.h ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h :
