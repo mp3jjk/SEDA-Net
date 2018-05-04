@@ -1,6 +1,6 @@
 obj_cooja/uip-ds6-nbr.o: ..//core/net/ipv6/uip-ds6-nbr.c \
  ..//core/./lib/list.h ..//core/./net/linkaddr.h \
- ..//platform/cooja/./contiki-conf.h project-conf.h \
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h \
  ..//core/./net/packetbuf.h ..//core/./net/llsec/llsec802154.h \
  ..//core/./net/mac/frame802154.h ..//core/./net/ip/uip.h \
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h \
@@ -25,7 +25,7 @@ obj_cooja/uip-ds6-nbr.o: ..//core/net/ipv6/uip-ds6-nbr.c \
  ..//core/./net/ip/uip-debug.h
 ..//core/net/ipv6/uip-ds6-nbr.c :
  ..//core/./lib/list.h ..//core/./net/linkaddr.h :
- ..//platform/cooja/./contiki-conf.h project-conf.h :
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h :
  ..//core/./net/packetbuf.h ..//core/./net/llsec/llsec802154.h :
  ..//core/./net/mac/frame802154.h ..//core/./net/ip/uip.h :
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h :

@@ -1,6 +1,6 @@
 obj_cooja/procinit.o: ..//core/sys/procinit.c ..//core/./contiki.h \
  ..//core/./contiki-version.h ..//platform/cooja/./contiki-conf.h \
- project-conf.h ..//core/./contiki-default-conf.h \
+ project-conf.h param.h ..//core/./contiki-default-conf.h \
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h \
  ..//core/./sys/lc-switch.h ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h \
  ..//core/./sys/autostart.h ..//core/./sys/process.h \
@@ -13,7 +13,7 @@ obj_cooja/procinit.o: ..//core/sys/procinit.c ..//core/./contiki.h \
  ..//core/./sys/procinit.h
 ..//core/sys/procinit.c ..//core/./contiki.h :
  ..//core/./contiki-version.h ..//platform/cooja/./contiki-conf.h :
- project-conf.h ..//core/./contiki-default-conf.h :
+ project-conf.h param.h ..//core/./contiki-default-conf.h :
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h :
  ..//core/./sys/lc-switch.h ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h :
  ..//core/./sys/autostart.h ..//core/./sys/process.h :

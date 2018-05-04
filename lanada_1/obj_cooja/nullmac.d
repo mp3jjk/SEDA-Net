@@ -1,6 +1,6 @@
 obj_cooja/nullmac.o: ..//core/net/mac/nullmac.c \
  ..//core/./net/mac/nullmac.h ..//core/./net/mac/mac.h \
- ..//platform/cooja/./contiki-conf.h project-conf.h \
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h \
  ..//core/./dev/radio.h ..//core/./net/netstack.h \
  ..//core/./net/llsec/llsec.h ..//core/./net/mac/rdc.h \
  ..//core/./net/llsec/llsec802154.h ..//core/./net/mac/frame802154.h \
@@ -20,7 +20,7 @@ obj_cooja/nullmac.o: ..//core/net/mac/nullmac.c \
  ..//core/./net/mac/tsch/tsch-conf.h
 ..//core/net/mac/nullmac.c :
  ..//core/./net/mac/nullmac.h ..//core/./net/mac/mac.h :
- ..//platform/cooja/./contiki-conf.h project-conf.h :
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h :
  ..//core/./dev/radio.h ..//core/./net/netstack.h :
  ..//core/./net/llsec/llsec.h ..//core/./net/mac/rdc.h :
  ..//core/./net/llsec/llsec802154.h ..//core/./net/mac/frame802154.h :

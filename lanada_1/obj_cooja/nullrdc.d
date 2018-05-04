@@ -1,7 +1,7 @@
 obj_cooja/nullrdc.o: ..//core/net/mac/nullrdc.c \
  ..//core/./net/mac/mac-sequence.h ..//core/./net/mac/nullrdc.h \
  ..//core/./net/mac/rdc.h ..//platform/cooja/./contiki-conf.h \
- project-conf.h ..//core/./net/mac/mac.h ..//core/./dev/radio.h \
+ project-conf.h param.h ..//core/./net/mac/mac.h ..//core/./dev/radio.h \
  ..//core/./net/llsec/llsec802154.h ..//core/./net/mac/frame802154.h \
  ..//core/./net/linkaddr.h ..//core/./net/ip/uip.h \
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h \
@@ -39,7 +39,7 @@ obj_cooja/nullrdc.o: ..//core/net/mac/nullrdc.c \
 ..//core/net/mac/nullrdc.c :
  ..//core/./net/mac/mac-sequence.h ..//core/./net/mac/nullrdc.h :
  ..//core/./net/mac/rdc.h ..//platform/cooja/./contiki-conf.h :
- project-conf.h ..//core/./net/mac/mac.h ..//core/./dev/radio.h :
+ project-conf.h param.h ..//core/./net/mac/mac.h ..//core/./dev/radio.h :
  ..//core/./net/llsec/llsec802154.h ..//core/./net/mac/frame802154.h :
  ..//core/./net/linkaddr.h ..//core/./net/ip/uip.h :
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h :

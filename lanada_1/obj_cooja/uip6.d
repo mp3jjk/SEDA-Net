@@ -1,5 +1,5 @@
 obj_cooja/uip6.o: ..//core/net/ipv6/uip6.c ..//core/./sys/cc.h \
- ..//platform/cooja/./contiki-conf.h project-conf.h \
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h \
  ..//core/./sys/cc-gcc.h ..//core/./net/ip/uip.h \
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h \
  ..//core/./contiki.h ..//core/./contiki-version.h \
@@ -34,7 +34,7 @@ obj_cooja/uip6.o: ..//core/net/ipv6/uip6.c ..//core/./sys/cc.h \
  ..//core/./sys/residual.h ..//core/net/ipv6/ipv6_debug.h \
  ..//core/./net/ip/uip-debug.h ..//core/net/rpl/rpl.h
 ..//core/net/ipv6/uip6.c ..//core/./sys/cc.h :
- ..//platform/cooja/./contiki-conf.h project-conf.h :
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h :
  ..//core/./sys/cc-gcc.h ..//core/./net/ip/uip.h :
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h :
  ..//core/./contiki.h ..//core/./contiki-version.h :

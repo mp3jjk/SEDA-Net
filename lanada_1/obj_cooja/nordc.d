@@ -1,5 +1,5 @@
 obj_cooja/nordc.o: ..//core/net/mac/nordc.c ..//core/./net/mac/rdc.h \
- ..//platform/cooja/./contiki-conf.h project-conf.h \
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h \
  ..//core/./net/mac/mac.h ..//core/./dev/radio.h \
  ..//core/./net/llsec/llsec802154.h ..//core/./net/mac/frame802154.h \
  ..//core/./net/linkaddr.h ..//core/./net/ip/uip.h \
@@ -17,7 +17,7 @@ obj_cooja/nordc.o: ..//core/net/mac/nordc.c ..//core/./net/mac/rdc.h \
  ..//core/./net/netstack.h ..//core/./net/llsec/llsec.h \
  ..//core/./net/mac/framer.h
 ..//core/net/mac/nordc.c ..//core/./net/mac/rdc.h :
- ..//platform/cooja/./contiki-conf.h project-conf.h :
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h :
  ..//core/./net/mac/mac.h ..//core/./dev/radio.h :
  ..//core/./net/llsec/llsec802154.h ..//core/./net/mac/frame802154.h :
  ..//core/./net/linkaddr.h ..//core/./net/ip/uip.h :

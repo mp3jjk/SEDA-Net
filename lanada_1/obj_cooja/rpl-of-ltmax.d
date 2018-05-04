@@ -1,7 +1,7 @@
 obj_cooja/rpl-of-ltmax.o: ..//core/net/rpl/rpl-of-ltmax.c \
  ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h \
  ..//core/./net/rpl/rpl-conf.h ..//platform/cooja/./contiki-conf.h \
- project-conf.h ..//core/./lib/list.h ..//core/./net/ip/uip.h \
+ project-conf.h param.h ..//core/./lib/list.h ..//core/./net/ip/uip.h \
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h \
  ..//core/./contiki.h ..//core/./contiki-version.h \
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h \
@@ -34,7 +34,7 @@ obj_cooja/rpl-of-ltmax.o: ..//core/net/rpl/rpl-of-ltmax.c \
 ..//core/net/rpl/rpl-of-ltmax.c :
  ..//core/./net/rpl/rpl-private.h ..//core/./net/rpl/rpl.h :
  ..//core/./net/rpl/rpl-conf.h ..//platform/cooja/./contiki-conf.h :
- project-conf.h ..//core/./lib/list.h ..//core/./net/ip/uip.h :
+ project-conf.h param.h ..//core/./lib/list.h ..//core/./net/ip/uip.h :
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h :
  ..//core/./contiki.h ..//core/./contiki-version.h :
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h :

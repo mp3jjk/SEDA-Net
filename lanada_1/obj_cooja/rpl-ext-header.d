@@ -1,6 +1,6 @@
 obj_cooja/rpl-ext-header.o: ..//core/net/rpl/rpl-ext-header.c \
  ..//core/./net/ip/uip.h ..//core/./net/ip/uipopt.h \
- ..//platform/cooja/./contiki-conf.h project-conf.h \
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h \
  ..//core/./net/ip/tcpip.h ..//core/./contiki.h \
  ..//core/./contiki-version.h ..//core/./contiki-default-conf.h \
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h \
@@ -32,7 +32,7 @@ obj_cooja/rpl-ext-header.o: ..//core/net/rpl/rpl-ext-header.c \
  ..//core/./net/ip/uip-debug.h
 ..//core/net/rpl/rpl-ext-header.c :
  ..//core/./net/ip/uip.h ..//core/./net/ip/uipopt.h :
- ..//platform/cooja/./contiki-conf.h project-conf.h :
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h :
  ..//core/./net/ip/tcpip.h ..//core/./contiki.h :
  ..//core/./contiki-version.h ..//core/./contiki-default-conf.h :
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h :

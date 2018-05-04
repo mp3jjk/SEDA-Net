@@ -1,6 +1,6 @@
 obj_cooja/leds-arch.o: ..//platform/cooja/dev/leds-arch.c \
  ..//core/./dev/leds.h ..//platform/cooja/./contiki-conf.h project-conf.h \
- ..//platform/cooja/./lib/simEnvChange.h ..//core/./contiki.h \
+ param.h ..//platform/cooja/./lib/simEnvChange.h ..//core/./contiki.h \
  ..//core/./contiki-version.h ..//core/./contiki-default-conf.h \
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h \
  ..//core/./sys/lc-switch.h ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h \
@@ -13,7 +13,7 @@ obj_cooja/leds-arch.o: ..//platform/cooja/dev/leds-arch.c \
  ..//core/./sys/energest.h ..//core/./sys/rtimer.h
 ..//platform/cooja/dev/leds-arch.c :
  ..//core/./dev/leds.h ..//platform/cooja/./contiki-conf.h project-conf.h :
- ..//platform/cooja/./lib/simEnvChange.h ..//core/./contiki.h :
+ param.h ..//platform/cooja/./lib/simEnvChange.h ..//core/./contiki.h :
  ..//core/./contiki-version.h ..//core/./contiki-default-conf.h :
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h :
  ..//core/./sys/lc-switch.h ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h :

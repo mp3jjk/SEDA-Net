@@ -1,5 +1,5 @@
 obj_cooja/clock.o: ..//platform/cooja/sys/clock.c \
- ..//platform/cooja/./contiki-conf.h project-conf.h \
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h \
  ..//core/./sys/clock.h ..//platform/cooja/./lib/simEnvChange.h \
  ..//core/./contiki.h ..//core/./contiki-version.h \
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h \
@@ -12,7 +12,7 @@ obj_cooja/clock.o: ..//platform/cooja/sys/clock.c \
  ..//core/./sys/procinit.h ..//core/./sys/loader.h ..//core/./sys/clock.h \
  ..//core/./sys/energest.h ..//core/./sys/rtimer.h
 ..//platform/cooja/sys/clock.c :
- ..//platform/cooja/./contiki-conf.h project-conf.h :
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h :
  ..//core/./sys/clock.h ..//platform/cooja/./lib/simEnvChange.h :
  ..//core/./contiki.h ..//core/./contiki-version.h :
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h :
