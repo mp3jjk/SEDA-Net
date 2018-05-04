@@ -1,6 +1,6 @@
 obj_cooja/csma.o: ..//core/net/mac/csma.c ..//core/./net/mac/csma.h \
  ..//core/./net/mac/mac.h ..//platform/cooja/./contiki-conf.h \
- project-conf.h ..//core/./dev/radio.h ..//core/./net/packetbuf.h \
+ project-conf.h param.h ..//core/./dev/radio.h ..//core/./net/packetbuf.h \
  ..//core/./net/linkaddr.h ..//core/./net/llsec/llsec802154.h \
  ..//core/./net/mac/frame802154.h ..//core/./net/ip/uip.h \
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h \
@@ -35,7 +35,7 @@ obj_cooja/csma.o: ..//core/net/mac/csma.c ..//core/./net/mac/csma.h \
  ..//core/./sys/residual.h
 ..//core/net/mac/csma.c ..//core/./net/mac/csma.h :
  ..//core/./net/mac/mac.h ..//platform/cooja/./contiki-conf.h :
- project-conf.h ..//core/./dev/radio.h ..//core/./net/packetbuf.h :
+ project-conf.h param.h ..//core/./dev/radio.h ..//core/./net/packetbuf.h :
  ..//core/./net/linkaddr.h ..//core/./net/llsec/llsec802154.h :
  ..//core/./net/mac/frame802154.h ..//core/./net/ip/uip.h :
  ..//core/./net/ip/uipopt.h ..//core/./net/ip/tcpip.h :

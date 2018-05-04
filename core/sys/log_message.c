@@ -1,6 +1,6 @@
 /* Log levels */
 #include "log_message.h"
-#include "lanada/param.h"
+//#include "lanada/param.h"
 #include "sys/residual.h"
 #include "net/rpl/rpl.h"
 #include "net/mac/dualmac/dualmac.h"

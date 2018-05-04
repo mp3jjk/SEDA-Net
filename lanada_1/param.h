@@ -1,13 +1,6 @@
 /* Energy log */
 #define RPL_ICMP_ENERGY_LOG		0
 
-#define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
-#if TRAFFIC_MODEL == 0
-#define PERIOD 15
-#elif TRAFFIC_MODEL == 1
-#define ARRIVAL_RATE 0 // Mean value, 1/lambda
-#endif
-
 uint8_t dead;
 
 /* RPL Configuration */
@@ -17,7 +10,7 @@ uint8_t dead;
 #define RPL_CONF_BETA	1
 #define RPL_CONF_BETA_DIV	1
 #define RPL_CONF_CROSS_OPT_VERSION1	0
-#define RPL_CONF_DUAL_RPL_RECAL_MODE 0
+#define RPL_CONF_DUAL_RPL_RECAL_MODE 1
 #define RPL_CONF_DUAL_RPL_PROB_PARENT_SWITCH 0
 
 /* MAC Configuration */

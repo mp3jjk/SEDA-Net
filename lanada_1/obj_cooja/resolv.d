@@ -1,6 +1,6 @@
 obj_cooja/resolv.o: ..//core/net/ip/resolv.c ..//core/./net/ip/tcpip.h \
  ..//core/./contiki.h ..//core/./contiki-version.h \
- ..//platform/cooja/./contiki-conf.h project-conf.h \
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h \
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h \
  ..//core/./sys/pt.h ..//core/./sys/lc.h ..//core/./sys/lc-switch.h \
  ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h ..//core/./sys/autostart.h \
@@ -25,7 +25,7 @@ obj_cooja/resolv.o: ..//core/net/ip/resolv.c ..//core/./net/ip/tcpip.h \
  ..//core/./sys/ctimer.h
 ..//core/net/ip/resolv.c ..//core/./net/ip/tcpip.h :
  ..//core/./contiki.h ..//core/./contiki-version.h :
- ..//platform/cooja/./contiki-conf.h project-conf.h :
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h :
  ..//core/./contiki-default-conf.h ..//core/./sys/process.h :
  ..//core/./sys/pt.h ..//core/./sys/lc.h ..//core/./sys/lc-switch.h :
  ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h ..//core/./sys/autostart.h :

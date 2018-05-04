@@ -1,6 +1,6 @@
 obj_cooja/dualmac.o: ..//core/net/mac/dualmac/dualmac.c \
  ..//core/./dev/leds.h ..//platform/cooja/./contiki-conf.h project-conf.h \
- ..//core/./dev/radio.h ..//core/./dev/watchdog.h \
+ param.h ..//core/./dev/radio.h ..//core/./dev/watchdog.h \
  ..//core/./net/netstack.h ..//core/./net/llsec/llsec.h \
  ..//core/./net/mac/mac.h ..//core/./net/mac/rdc.h \
  ..//core/./net/llsec/llsec802154.h ..//core/./net/mac/frame802154.h \
@@ -52,7 +52,7 @@ obj_cooja/dualmac.o: ..//core/net/mac/dualmac/dualmac.c \
  ..//core/./sys/residual.h
 ..//core/net/mac/dualmac/dualmac.c :
  ..//core/./dev/leds.h ..//platform/cooja/./contiki-conf.h project-conf.h :
- ..//core/./dev/radio.h ..//core/./dev/watchdog.h :
+ param.h ..//core/./dev/radio.h ..//core/./dev/watchdog.h :
  ..//core/./net/netstack.h ..//core/./net/llsec/llsec.h :
  ..//core/./net/mac/mac.h ..//core/./net/mac/rdc.h :
  ..//core/./net/llsec/llsec802154.h ..//core/./net/mac/frame802154.h :

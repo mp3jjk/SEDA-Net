@@ -1,6 +1,6 @@
 obj_cooja/ctimer.o: ..//core/sys/ctimer.c ..//core/./sys/ctimer.h \
  ..//core/./sys/etimer.h ..//core/./sys/timer.h ..//core/./sys/clock.h \
- ..//platform/cooja/./contiki-conf.h project-conf.h \
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h \
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h \
  ..//core/./sys/lc-switch.h ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h \
  ..//core/./contiki.h ..//core/./contiki-version.h \
@@ -13,7 +13,7 @@ obj_cooja/ctimer.o: ..//core/sys/ctimer.c ..//core/./sys/ctimer.h \
  ..//core/./lib/list.h
 ..//core/sys/ctimer.c ..//core/./sys/ctimer.h :
  ..//core/./sys/etimer.h ..//core/./sys/timer.h ..//core/./sys/clock.h :
- ..//platform/cooja/./contiki-conf.h project-conf.h :
+ ..//platform/cooja/./contiki-conf.h project-conf.h param.h :
  ..//core/./sys/process.h ..//core/./sys/pt.h ..//core/./sys/lc.h :
  ..//core/./sys/lc-switch.h ..//core/./sys/cc.h ..//core/./sys/cc-gcc.h :
  ..//core/./contiki.h ..//core/./contiki-version.h :
