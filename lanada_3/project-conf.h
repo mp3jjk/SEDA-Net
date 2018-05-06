@@ -60,7 +60,7 @@ uint8_t dead;
 #if TRAFFIC_MODEL == 0
 #define PERIOD 0
 #elif TRAFFIC_MODEL == 1
-#define ARRIVAL_RATE 25 // Mean value, 1/lambda
+#define ARRIVAL_RATE 30 // Mean value, 1/lambda
 #endif
 
 #undef NULLRDC_CONF_802154_AUTOACK

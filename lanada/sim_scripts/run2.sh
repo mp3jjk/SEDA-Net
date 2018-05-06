@@ -1,12 +1,10 @@
 #!/bin/bash
 
-SR=0 # Decide whether SR simulation runs or not
-LR=1 # For LR case
-ONLY_LONG=0 # SR = 1 with only Long
-WAKE_UP=1 # LR = 1 with Wake-up radio
+SIM_TYPE=1 # 0: SR, 1: LR, 2: WAKE-UP, 3: One-Net
+
 TRAFFIC=1 # 0 = periodic, 1 = poisson
 VAR_PERIOD=(25)
-VAR_ARRIVAL=(15 20)
+VAR_ARRIVAL=(10 20 30)
 VAR_TOPOLOGY=("36grid_mrm2_cnt")
 VAR_LR_RANGE=("2X")
 VAR_LTMAX=("1")
@@ -20,11 +18,36 @@ VAR_CROSS_OPT=0
 VAR_STROBE_CNT=0
 VAR_CHECK_RATE=(8)
 
-DATE="G2"
-SEED_NUMBER=("1" "2" "3" "4" "5")
-#SEED_NUMBER=("1")
+DATE="G3"
+#SEED_NUMBER=("1" "2" "3" "4" "5")
+SEED_NUMBER=("1")
 MRM=2
 VAR_PERCENT=("1")
+
+if [ $SIM_TYPE -eq 0 ]
+then
+    SR=1 # Decide whether SR simulation runs or not
+    LR=0 # For LR case
+    ONLY_LONG=0 # SR = 1 with only Long
+    WAKE_UP=0 # LR = 1 with Wake-up radio
+elif [ $SIM_TYPE -eq 1 ]
+then
+    SR=0 # Decide whether SR simulation runs or not
+    LR=1 # For LR case
+    ONLY_LONG=1 # SR = 1 with only Long
+    WAKE_UP=0 # LR = 1 with Wake-up radio    
+elif [ $SIM_TYPE -eq 2 ]
+then
+    SR=0 # Decide whether SR simulation runs or not
+    LR=1 # For LR case
+    ONLY_LONG=0 # SR = 1 with only Long
+    WAKE_UP=1 # LR = 1 with Wake-up radio
+else
+    SR=0 # Decide whether SR simulation runs or not
+    LR=1 # For LR case
+    ONLY_LONG=0 # SR = 1 with only Long
+    WAKE_UP=0 # LR = 1 with Wake-up radio
+fi
 
 # SR_RANGE simulation
 
