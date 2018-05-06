@@ -80,7 +80,7 @@ cd $IN_DIR
 echo "#########################  We are in $PWD  ########################"
 
 HERE=$PWD
-cd $CONTIKI/lanada
+cd $CONTIKI/lanada_$MRM
 make clean TARGET=cooja
 cd $HERE
 
