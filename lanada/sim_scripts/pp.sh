@@ -3,10 +3,10 @@
 # programmed by Joonki Hong
 
 node_count=2
-MAX_NODE_NUMBER=1
-DELAY=0
+MAX_NODE_NUMBER=50
+DELAY=1
 ENERGY=0
-PRR=0
+PRR=1
 COLLISION=0
 
 
@@ -331,5 +331,6 @@ do
 done < energy/final_energy.txt
 
 
-paste temp.txt delay/avg_packet_delay.txt energy/percent_energy.txt PRR/PRR.txt  > report_summary.txt
+paste temp.txt delay/avg_packet_delay.txt PRR/PRR.txt > report_summary.txt
 # collision/collision_ratio.txt
+# energy/percent_energy.txt 
