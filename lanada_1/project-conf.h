@@ -56,11 +56,11 @@ uint8_t dead;
 // #define NETSTACK_CONF_MAC     nullmac_driver
 #define NETSTACK_CONF_MAC		csma_driver
 
-#define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
+#define TRAFFIC_MODEL 1 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
-#define PERIOD 25
+#define PERIOD 0
 #elif TRAFFIC_MODEL == 1
-#define ARRIVAL_RATE 0 // Mean value, 1/lambda
+#define ARRIVAL_RATE 5 // Mean value, 1/lambda
 #endif
 
 #undef NULLRDC_CONF_802154_AUTOACK
