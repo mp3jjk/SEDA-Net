@@ -4,7 +4,7 @@ SR=0 # Decide whether SR simulation runs or not
 LR=1 # For LR case
 ONLY_LONG=0 # SR = 1 with only Long
 WAKE_UP=1 # LR = 1 with Wake-up radio
-TRAFFIC=0 # 0 = periodic, 1 = poisson
+TRAFFIC=1 # 0 = periodic, 1 = poisson
 VAR_PERIOD=(25)
 VAR_ARRIVAL=(15 20)
 VAR_TOPOLOGY=("36grid_mrm2_cnt")

@@ -61,9 +61,9 @@ fi
 
 if [ $TRAFFIC_MODEL -eq 0 ]
 then
-    DIR=$DATE\_$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_LTMAX$LTMAX\_beta$BETA\_$BETA_DIV\_seed$SEED_NUMBER
+    DIR=$DATE\_$topology\_traffic$TRAFFIC_MODEL\_period$PERIOD\_LTMAX$LTMAX\_seed$SEED_NUMBER
 else
-    DIR=$DATE\_$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_LTMAX$LTMAX\_beta$BETA\_$BETA_DIV\_seed$SEED_NUMBER
+    DIR=$DATE\_$topology\_traffic$TRAFFIC_MODEL\_rate$ARRIVAL_RATE\_LTMAX$LTMAX\_seed$SEED_NUMBER
 fi
 
 mkdir $DIR
@@ -92,7 +92,7 @@ fi
 
 ../param.sh $TRAFFIC_MODEL $PERIOD $ARRIVAL_RATE $LONG_WEIGHT $ETX_WEIGHT $BETA $BETA_DIV $CROSS_OPT $STROBE_CNT $CHECK $MRM $LTMAX
 
-IN_DIR=lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_WAKE$WAKE_UP\_check$CHECK\_strobe$STROBE_CNT\_LT$LT_PERCENT
+IN_DIR=lr\_weight$LONG_WEIGHT\_LR_range$LR_range\_L$ONLY_LONG\_WAKE$WAKE_UP\_B$BETA\/$BETA_DIV\_check$CHECK\_strobe$STROBE_CNT\_LT$LT_PERCENT
 if [ ! -e $IN_DIR ]
 then
     mkdir $IN_DIR
