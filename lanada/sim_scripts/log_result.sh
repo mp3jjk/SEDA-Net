@@ -1,26 +1,14 @@
 #!/bin/bash
 
-SERVER=$1
+TARGET=$1
+SERVER=$2
 
-rm lifetime_$1
-rm prr_$1
+rm lifetime_$TARGET_$SERVER
+rm prr_$TARGET_$SERVER
+rm delay_$TARGET_$SERVER
 
-echo "G5" >> lifetime_$1
-echo "G5" >> prr_$1
-./lifetime.sh G5 >> lifetime_$1
-./prr.sh G5 >> prr_$1
-
-echo "G6" >> lifetime_$1
-echo "G6" >> prr_$1
-./lifetime.sh G6 >> lifetime_$1
-./prr.sh G6 >> prr_$1
-
-echo "G7" >> lifetime_$1
-echo "G7" >> prr_$1
-./lifetime.sh G7 >> lifetime_$1
-./prr.sh G7 >> prr_$1
-
-echo "G8" >> lifetime_$1
-echo "G8" >> prr_$1
-./lifetime.sh G8 >> lifetime_$1
-./prr.sh G8 >> prr_$1
+#echo "$TARGET" >> lifetime_$TARGET_$SERVER
+#echo "$TARGET" >> prr_$SERVER
+./lifetime.sh $TARGET >> lifetime_$TARGET_$SERVER
+./prr.sh $TARGET >> prr_$TARGET_$SERVER
+./delay.sh $TARGET >> delay_$TARGET_$SERVER
