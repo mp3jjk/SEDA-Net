@@ -2,10 +2,10 @@
 
 SIM_TYPE=2 # 0: SR, 1: LR, 2: WAKE-UP, 3: One-Net
 
-TRAFFIC=0 # 0 = periodic, 1 = poisson
+TRAFFIC=1 # 0 = periodic, 1 = poisson
 VAR_PERIOD=(10 20 40)
 VAR_ARRIVAL=(10 20 40)
-VAR_TOPOLOGY=("36grid_mrm2_cnt")
+VAR_TOPOLOGY=("50random_mrm2_cnt")
 VAR_LR_RANGE=("2X")
 VAR_LTMAX=("1")
 
@@ -18,8 +18,8 @@ VAR_CROSS_OPT=0
 VAR_STROBE_CNT=0
 VAR_CHECK_RATE=(4)
 
-DATE="G5"
-SEED_NUMBER=("2" "3" "4" "5")
+DATE="G8"
+SEED_NUMBER=("2" "3")
 #SEED_NUMBER=("1")
 MRM=1
 VAR_PERCENT=("1")
