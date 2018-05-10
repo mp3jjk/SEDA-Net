@@ -62,7 +62,7 @@ const energy_t DISSIPATION_RATE[] = {
     0,  // radioTx~
     0,  // radioRx
 #if WAKEUP_RADIO
-    1,  // radioOnLong
+    5,  // radioOnLong
     0,  // radioTxLong
 #else
     10,  // radioOnLong
