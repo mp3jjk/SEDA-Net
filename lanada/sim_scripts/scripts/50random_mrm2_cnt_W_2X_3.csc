@@ -8,15 +8,15 @@
   <project EXPORT="discard">[APPS_DIR]/powertracker</project>
   <simulation>
     <title>My simulation</title>
-    <randomseed>1</randomseed>
+    <randomseed>5</randomseed>
     <motedelay_us>1000000</motedelay_us>
     <radiomedium>
       org.contikios.mrm.MRM
-      <rx_sensitivityLR value="-84.0" />
+      <rx_sensitivityLR value="-76.0" />
       <rx_sensitivity value="-84.0" />
       <obstacles />
       <rx_sensitivity value="-84.0" />
-      <rx_sensitivityLR value="-84.0" />
+      <rx_sensitivityLR value="-76.0" />
       <obstacles />
     </radiomedium>
     <events>
