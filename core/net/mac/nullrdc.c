@@ -125,7 +125,7 @@
 //extern mac_callback_t* global_sent;
 
 /* remaining energy JJH */
-#include "../lanada/param.h"
+//#include "../lanada/param.h"
 #include "sys/log_message.h"
 //extern int collision_count, transmission_count;
 

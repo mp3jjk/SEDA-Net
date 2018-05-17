@@ -716,7 +716,7 @@ cc1200_init(void)
 
     /* Set output power */
     // new_txpower = CC1200_RF_CFG.max_txpower;
-    new_txpower = 14;
+    new_txpower = 6;
     update_txpower(new_txpower);
 
     /* Adjust CAA threshold */
@@ -894,7 +894,13 @@ send(const void *payload, unsigned short payload_len)
   int ret;
 	// ERROR("######################  cc1200_send #########################\n");
   INFO("RF: Send (%d)\n", payload_len);
-
+#if ZOUL_EXPERIMENT
+  if(dead == 1)
+    {
+      ret = RADIO_TX_ERR;
+      return ret;
+    }
+#endif
   /* payload_len checked within prepare() */
   if((ret = prepare(payload, payload_len)) == RADIO_TX_OK) {
     ret = transmit(payload_len);

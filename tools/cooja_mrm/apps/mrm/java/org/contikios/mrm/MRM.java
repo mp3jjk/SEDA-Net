@@ -53,9 +53,9 @@ import org.contikios.mrm.ChannelModel.Parameter;
 import org.contikios.mrm.ChannelModel.RadioPair;
 import org.contikios.mrm.ChannelModel.TxPair;
 import org.contikios.mrm.ChannelModelLR;
-// import org.contikios.mrm.ChannelModelLR.Parameter;
-// import org.contikios.mrm.ChannelModelLR.RadioPair;
-// import org.contikios.mrm.ChannelModelLR.TxPair;
+import org.contikios.mrm.ChannelModelLR.ParameterLR;
+//import org.contikios.mrm.ChannelModelLR.RadioPair;
+//import org.contikios.mrm.ChannelModelLR.TxPair;
 
 /**
  * Multi-path Ray-tracing radio medium (MRM).
@@ -306,7 +306,8 @@ public class MRM extends AbstractRadioMedium {
           /* Success: radio starts receiving */
           newConnection.addDestination(recv, recvSignalStrength);
         }
-      } else if (recvSignalStrength > currentChannelModel.getParameterDoubleValue(Parameter.bg_noise_mean)) {
+      } else if ((isForLongRange && (recvSignalStrength > currentChannelModelLR.getParameterDoubleValue(ParameterLR.bg_noise_mean))) 
+    		  || (!isForLongRange && (recvSignalStrength > currentChannelModel.getParameterDoubleValue(Parameter.bg_noise_mean)))) {
         /* The incoming signal is strong, but strong enough to interfere? */
 
         if (!WITH_CAPTURE_EFFECT) {
@@ -324,13 +325,21 @@ public class MRM extends AbstractRadioMedium {
   }
 
   public void updateSignalStrengths() {
-
-    /* Reset: Background noise */
-        double background = 
-                currentChannelModel.getParameterDoubleValue((Parameter.bg_noise_mean));
-    for (Radio radio : getRegisteredRadios()) {
-      radio.setCurrentSignalStrength(background);
-    }
+	  double backgroundLR = 0;
+	  double background = 0; 
+	  /* Reset: Background noise */
+	  if (isForLongRange) {
+		 backgroundLR = currentChannelModelLR.getParameterDoubleValue((ParameterLR.bg_noise_mean));
+		  for (Radio radio : getRegisteredRadios()) {
+			  radio.setCurrentSignalStrength(backgroundLR);
+		  }
+	  }
+	  else {
+		  background = currentChannelModel.getParameterDoubleValue((Parameter.bg_noise_mean));
+		  for (Radio radio : getRegisteredRadios()) {
+			  radio.setCurrentSignalStrength(background);
+		  }
+	  }
 
     /* Active radio connections */
     RadioConnection[] conns = getActiveConnections();
@@ -389,6 +398,16 @@ public class MRM extends AbstractRadioMedium {
 
         /* Update noise levels */
         final Radio toRadio = affectedRadio;
+        
+		ChannelModelLR.TxPair txPairLR = new ChannelModelLR.RadioPair() {
+			public Radio getFromRadio() {
+				return fromRadio;
+			}
+			public Radio getToRadio() {
+				return toRadio;
+			}
+		};
+        
         TxPair txPair = new RadioPair() {
           public Radio getFromRadio() {
             return fromRadio;
@@ -397,10 +416,22 @@ public class MRM extends AbstractRadioMedium {
             return toRadio;
           }
         };
-        double[] signalMeanVar = currentChannelModel.getReceivedSignalStrength(txPair);
-        double signal = signalMeanVar[0];
-        if (signal < background) {
-          continue;
+        
+    	double[] signalMeanVarLR = currentChannelModelLR.getReceivedSignalStrength(txPairLR);
+    	double signalLR = signalMeanVarLR[0];
+    	
+    	double[] signalMeanVar = currentChannelModel.getReceivedSignalStrength(txPair);
+    	double signal = signalMeanVar[0];
+    	
+        if (isForLongRange) {
+        	if (signalLR < backgroundLR) {
+        		continue;
+        	}
+        }
+        else {
+        	if (signal < background) {
+        		continue;
+        	}
         }
 
         /* TODO Additive signals strengths? */

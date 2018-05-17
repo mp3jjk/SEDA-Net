@@ -118,7 +118,8 @@
 #ifdef CC1200_CONF_RF_CFG
 #define CC1200_RF_CFG                   CC1200_CONF_RF_CFG
 #else
-#define CC1200_RF_CFG                   cc1200_802154g_863_870_fsk_50kbps
+//#define CC1200_RF_CFG                   cc1200_802154g_863_870_fsk_50kbps
+#define CC1200_RF_CFG					cc1200_802154g_915_921_fsk_50kbps
 // #define CC1200_RF_CFG                   cc1200_802154g_868_fsk_sniff_38kbps
 #endif
 /*---------------------------------------------------------------------------*/
@@ -160,7 +161,7 @@
 #define CC1200_DEFAULT_CHANNEL          CC1200_CONF_DEFAULT_CHANNEL
 #else
 /* 868.325 MHz */
-#define CC1200_DEFAULT_CHANNEL          26
+#define CC1200_DEFAULT_CHANNEL          0
 #endif
 /*---------------------------------------------------------------------------*/
 /*

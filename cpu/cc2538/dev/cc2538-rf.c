@@ -633,6 +633,11 @@ transmit(unsigned short transmit_len)
 static int
 send(const void *payload, unsigned short payload_len)
 {
+#if ZOUL_EXPERIMENT
+  if(dead == 1) {
+    return RADIO_TX_ERR;
+  }
+#endif
   prepare(payload, payload_len);
   return transmit(payload_len);
 }

@@ -73,8 +73,8 @@ public class ChannelModelLR {
 
   enum TransmissionData { SIGNAL_STRENGTH, SIGNAL_STRENGTH_VAR, SNR, SNR_VAR, PROB_OF_RECEPTION, DELAY_SPREAD, DELAY_SPREAD_RMS}
 
-  private Hashtable<Parameter,Object> parametersDefaults = new Hashtable<Parameter,Object>();
-  private Hashtable<Parameter,Object> parameters = new Hashtable<Parameter,Object>();
+  private Hashtable<ParameterLR,Object> parametersDefaults = new Hashtable<ParameterLR,Object>();
+  private Hashtable<ParameterLR,Object> parameters = new Hashtable<ParameterLR,Object>();
   private Properties parameterDescriptions = new Properties();
 
   // Parameters used for speeding up calculations
@@ -110,7 +110,7 @@ public class ChannelModelLR {
     }
   }
   private SettingsObservable settingsObservable = new SettingsObservable();
-  public enum Parameter {
+  public enum ParameterLR {
     apply_random,
     snr_threshold,
     bg_noise_mean,
@@ -143,14 +143,15 @@ public class ChannelModelLR {
 
 
 
-    public static Object getDefaultValue(Parameter p) {
+    public static Object getDefaultValue(ParameterLR p) {
       switch (p) {
       case apply_random:
         return new Boolean(false);
       case snr_threshold:
         return new Double(6);
       case bg_noise_mean:
-        return new Double(AbstractRadioMedium.SS_NOTHING);
+/*	  return new Double(AbstractRadioMedium.SS_NOTHING);*/
+	  return new Double(-100);
       case bg_noise_var:
         return new Double(1);
       case system_gain_mean:
@@ -207,7 +208,7 @@ public class ChannelModelLR {
       throw new RuntimeException("Unknown default value: " + p);
     }
     
-    public static Parameter fromString(String name) {
+    public static ParameterLR fromString(String name) {
       /* Backwards compatability */
       if (name.equals("apply_random")) {
         return apply_random;
@@ -263,7 +264,7 @@ public class ChannelModelLR {
       return null;
     }
 
-    public static String getDescription(Parameter p) {
+    public static String getDescription(ParameterLR p) {
       switch (p) {
       case apply_random: return "(DEBUG) Apply random values";
       case snr_threshold: return "SNR reception threshold (dB)";
@@ -301,11 +302,11 @@ public class ChannelModelLR {
     this.simulation = simulation;
     
     /* Default values */
-    for (Parameter p: Parameter.values()) {
-      parameters.put(p, Parameter.getDefaultValue(p));
+    for (ParameterLR p: ParameterLR.values()) {
+      parameters.put(p, ParameterLR.getDefaultValue(p));
     }
 
-    parametersDefaults = (Hashtable<Parameter,Object>) parameters.clone();
+    parametersDefaults = (Hashtable<ParameterLR,Object>) parameters.clone();
 
     // Ray Tracer - Use scattering
     //parameters.put(Parameters.rt_use_scattering, Parameter.getDefaultValue(Parameters.rt_use_scattering)); // TODO Not used yet
@@ -398,7 +399,7 @@ public class ChannelModelLR {
    * @param identifier Parameter identifier
    * @return Current parameter value
    */
-  public Object getParameterValue(Parameter id) {
+  public Object getParameterValue(ParameterLR id) {
     Object value = parameters.get(id);
     if (value == null) {
       logger.fatal("No parameter with id:" + id + ", aborting");
@@ -413,7 +414,7 @@ public class ChannelModelLR {
    * @param identifier Parameter identifier
    * @return Current parameter value
    */
-  public double getParameterDoubleValue(Parameter id) {
+  public double getParameterDoubleValue(ParameterLR id) {
     return ((Double) getParameterValue(id)).doubleValue();
   }
 
@@ -423,7 +424,7 @@ public class ChannelModelLR {
    * @param identifier Parameter identifier
    * @return Current parameter value
    */
-  public int getParameterIntegerValue(Parameter id) {
+  public int getParameterIntegerValue(ParameterLR id) {
     return ((Integer) getParameterValue(id)).intValue();
   }
 
@@ -433,7 +434,7 @@ public class ChannelModelLR {
    * @param identifier Parameter identifier
    * @return Current parameter value
    */
-  public boolean getParameterBooleanValue(Parameter id) {
+  public boolean getParameterBooleanValue(ParameterLR id) {
     return ((Boolean) getParameterValue(id)).booleanValue();
   }
 
@@ -443,7 +444,7 @@ public class ChannelModelLR {
    * @param id Parameter identifier
    * @param newValue New parameter value
    */
-  public void setParameterValue(Parameter id, Object newValue) {
+  public void setParameterValue(ParameterLR id, Object newValue) {
     if (!parameters.containsKey(id)) {
       logger.fatal("No parameter with id:" + id + ", aborting");
       return;
@@ -474,7 +475,7 @@ public class ChannelModelLR {
    */
   protected double getFSPL(double distance) {
     if (needToPrecalculateFSPL) {
-      double f = getParameterDoubleValue(Parameter.frequencyLR);
+      double f = getParameterDoubleValue(ParameterLR.frequencyLR);
       paramFSPL = -32.44 -20*Math.log10(f /*mhz*/);
       needToPrecalculateFSPL = false;
     }
@@ -778,7 +779,7 @@ public class ChannelModelLR {
         // Check if direct path exists
         justBeforeDestination = sourcePoint;
 
-        if (!getParameterBooleanValue(Parameter.rt_disallow_direct_path)) {
+        if (!getParameterBooleanValue(ParameterLR.rt_disallow_direct_path)) {
           directPathExists = isDirectPath(justBeforeDestination, dest);
         } else {
           directPathExists = false;
@@ -901,7 +902,7 @@ public class ChannelModelLR {
           allPaths.add(currentPath);
 
           // Stop here if no other paths should be considered
-          if (type == RayData.RayType.ORIGIN && getParameterBooleanValue(Parameter.rt_ignore_non_direct)) {
+          if (type == RayData.RayType.ORIGIN && getParameterBooleanValue(ParameterLR.rt_ignore_non_direct)) {
             return allPaths;
           }
 
@@ -1446,10 +1447,10 @@ public class ChannelModelLR {
         RayData.RayType.ORIGIN,
         source,
         null,
-        getParameterIntegerValue(Parameter.rt_max_rays),
-        getParameterIntegerValue(Parameter.rt_max_refractions),
-        getParameterIntegerValue(Parameter.rt_max_reflections),
-        getParameterIntegerValue(Parameter.rt_max_diffractions)
+        getParameterIntegerValue(ParameterLR.rt_max_rays),
+        getParameterIntegerValue(ParameterLR.rt_max_refractions),
+        getParameterIntegerValue(ParameterLR.rt_max_reflections),
+        getParameterIntegerValue(ParameterLR.rt_max_diffractions)
     );
 
     // Check if origin tree is already calculated and saved
@@ -1487,20 +1488,20 @@ public class ChannelModelLR {
         // Type specific losses
         // TODO Type specific losses depends on angles as well!
         if (subPathStartType == RayData.RayType.REFRACTION) {
-          pathGain[i] += getParameterDoubleValue(Parameter.rt_refrac_coefficient);
+          pathGain[i] += getParameterDoubleValue(ParameterLR.rt_refrac_coefficient);
         } else if (subPathStartType == RayData.RayType.REFLECTION) {
-          pathGain[i] += getParameterDoubleValue(Parameter.rt_reflec_coefficient);
+          pathGain[i] += getParameterDoubleValue(ParameterLR.rt_reflec_coefficient);
 
           // Add FSPL from last subpaths (if FSPL on individual rays)
-          if (!getParameterBooleanValue(Parameter.rt_fspl_on_total_length) && accumulatedStraightLength > 0) {
+          if (!getParameterBooleanValue(ParameterLR.rt_fspl_on_total_length) && accumulatedStraightLength > 0) {
             pathGain[i] += getFSPL(accumulatedStraightLength);
           }
           accumulatedStraightLength = 0; // Reset straight length
         } else if (subPathStartType == RayData.RayType.DIFFRACTION) {
-          pathGain[i] += getParameterDoubleValue(Parameter.rt_diffr_coefficient);
+          pathGain[i] += getParameterDoubleValue(ParameterLR.rt_diffr_coefficient);
 
           // Add FSPL from last subpaths (if FSPL on individual rays)
-          if (!getParameterBooleanValue(Parameter.rt_fspl_on_total_length) && accumulatedStraightLength > 0) {
+          if (!getParameterBooleanValue(ParameterLR.rt_fspl_on_total_length) && accumulatedStraightLength > 0) {
             pathGain[i] += getFSPL(accumulatedStraightLength);
           }
           accumulatedStraightLength = 0; // Reset straight length
@@ -1512,7 +1513,7 @@ public class ChannelModelLR {
           // Ray passes through a wall, calculate distance through that wall
 
           // Fetch attenuation constant
-          double attenuationConstant = getParameterDoubleValue(Parameter.obstacle_attenuation);
+          double attenuationConstant = getParameterDoubleValue(ParameterLR.obstacle_attenuation);
 
           Vector<Rectangle2D> allPossibleObstacles = myObstacleWorld.getAllObstaclesNear(subPath.getP1());
 
@@ -1540,12 +1541,12 @@ public class ChannelModelLR {
       }
 
       // Add FSPL from last rays (if FSPL on individual rays)
-      if (!getParameterBooleanValue(Parameter.rt_fspl_on_total_length) && accumulatedStraightLength > 0) {
+      if (!getParameterBooleanValue(ParameterLR.rt_fspl_on_total_length) && accumulatedStraightLength > 0) {
         pathGain[i] += getFSPL(accumulatedStraightLength);
       }
 
       // Free space path loss on total path length?
-      if (getParameterBooleanValue(Parameter.rt_fspl_on_total_length)) {
+      if (getParameterBooleanValue(ParameterLR.rt_fspl_on_total_length)) {
         pathGain[i] += getFSPL(pathLengths[i]);
       }
 
@@ -1559,7 +1560,7 @@ public class ChannelModelLR {
     double[] pathModdedLengths = new double[allPaths.size()];
     double delaySpread = 0;
     double delaySpreadRMS = 0;
-    double freq = getParameterDoubleValue(Parameter.frequencyLR);
+    double freq = getParameterDoubleValue(ParameterLR.frequencyLR);
     double wavelength = C/(freq*1000000d);
     double totalPathGain = 0;
     double delaySpreadTotalWeight = 0;
@@ -1616,16 +1617,16 @@ public class ChannelModelLR {
     //  Received power = Output power + System gain + Transmitter gain + Path Loss + Receiver gain
     // TODO Update formulas
     double outputPower = txPair.getTxPower();
-    double systemGain = getParameterDoubleValue(Parameter.system_gain_mean);
-    if (getParameterBooleanValue(Parameter.apply_random)) {
+    double systemGain = getParameterDoubleValue(ParameterLR.system_gain_mean);
+    if (getParameterBooleanValue(ParameterLR.apply_random)) {
       Random random = new Random(); /* TODO Use main random generator? */
-      systemGain += Math.sqrt(getParameterDoubleValue(Parameter.system_gain_var)) * random.nextGaussian();
+      systemGain += Math.sqrt(getParameterDoubleValue(ParameterLR.system_gain_var)) * random.nextGaussian();
     } else {
-      accumulatedVariance += getParameterDoubleValue(Parameter.system_gain_var);
+      accumulatedVariance += getParameterDoubleValue(ParameterLR.system_gain_var);
     }
 
     double transmitterGain = 0;
-    if (getParameterBooleanValue(Parameter.tx_with_gain)) {
+    if (getParameterBooleanValue(ParameterLR.tx_with_gain)) {
       transmitterGain = txPair.getTxGain();
     }
 
@@ -1700,18 +1701,18 @@ public class ChannelModelLR {
     double[] snrData = new double[] { signalStrength[0], signalStrength[1], signalStrength[0] };
 
     // Add antenna gain
-    if (getParameterBooleanValue(Parameter.rx_with_gain)) {
+    if (getParameterBooleanValue(ParameterLR.rx_with_gain)) {
       snrData[0] += txPair.getRxGain();
     }
 
-    double noiseVariance = getParameterDoubleValue(Parameter.bg_noise_var);
-    double noiseMean = getParameterDoubleValue(Parameter.bg_noise_mean);
+    double noiseVariance = getParameterDoubleValue(ParameterLR.bg_noise_var);
+    double noiseMean = getParameterDoubleValue(ParameterLR.bg_noise_mean);
 
     if (interference > noiseMean) {
       noiseMean = interference;
     }
 
-    if (getParameterBooleanValue(Parameter.apply_random)) {
+    if (getParameterBooleanValue(ParameterLR.apply_random)) {
       Random random = new Random(); /* TODO Use main random generator? */
       noiseMean += Math.sqrt(noiseVariance) * random.nextGaussian();
       noiseVariance = 0;
@@ -1749,8 +1750,8 @@ public class ChannelModelLR {
     double snrMean = snrData[0];
     double snrVariance = snrData[1];
     double signalStrength = snrData[2];
-    double threshold = getParameterDoubleValue(Parameter.snr_threshold);
-    double rxSensitivity = getParameterDoubleValue(Parameter.rx_sensitivityLR);
+    double threshold = getParameterDoubleValue(ParameterLR.snr_threshold);
+    double rxSensitivity = getParameterDoubleValue(ParameterLR.rx_sensitivityLR);
 
     // Check signal strength against receiver sensitivity and interference
     if (rxSensitivity > signalStrength - snrMean && 
@@ -1816,9 +1817,9 @@ public class ChannelModelLR {
     ArrayList<Element> config = new ArrayList<Element>();
     Element element;
 
-    Enumeration<Parameter> paramEnum = parameters.keys();
+    Enumeration<ParameterLR> paramEnum = parameters.keys();
     while (paramEnum.hasMoreElements()) {
-      Parameter p = (Parameter) paramEnum.nextElement();
+      ParameterLR p = (ParameterLR) paramEnum.nextElement();
       element = new Element(p.toString());
       if (parametersDefaults.get(p).equals(parameters.get(p))) {
         /* Default value */
@@ -1851,7 +1852,7 @@ public class ChannelModelLR {
       } else /* Parameter values */ {
         String name = element.getName();
         String value;
-        Parameter param = null;
+        ParameterLR param = null;
     
         if (name.equals("wavelength")) {
           /* Backwards compatability: ignored parameters */
@@ -1862,18 +1863,18 @@ public class ChannelModelLR {
 //          private static final double C = 299792458; /* m/s */
           double frequency = C/Double.parseDouble(value);
           frequency /= 1000000.0; /* mhz */
-          parameters.put(Parameter.frequencyLR, frequency); /* mhz */
+          parameters.put(ParameterLR.frequencyLR, frequency); /* mhz */
 
           logger.warn("MRM parameter converted from wavelength to frequency: " + String.format("%1.1f MHz", frequency));
           continue;
         } else if (name.equals("tx_antenna_gain") || name.equals("rx_antenna_gain")) {
           logger.warn("MRM parameter \"" + name + "\" was removed");
           continue;
-        } else if (Parameter.fromString(name) != null) {
+        } else if (ParameterLR.fromString(name) != null) {
           /* Backwards compatability: renamed parameters */
-          param = Parameter.fromString(name);
+          param = ParameterLR.fromString(name);
         } else {
-          param = Parameter.valueOf(name);
+          param = ParameterLR.valueOf(name);
         }
 
         value = element.getAttributeValue("value");

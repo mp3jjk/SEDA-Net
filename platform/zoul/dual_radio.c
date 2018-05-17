@@ -129,12 +129,12 @@ PROCESS_THREAD(dual_dio_broadcast, ev, data)
 //	static struct etimer et;
 	rtimer_clock_t wait;
 	PROCESS_BEGIN();
+#if WAKEUP_RADIO == 0
 	dual_radio_switch(LONG_RADIO);
 	dio_output(temp_instance, NULL);
-
 	wait = RTIMER_NOW();
 	while(RTIMER_CLOCK_LT(RTIMER_NOW(), wait + RTIMER_ARCH_SECOND/400));
-
+#endif
 //	etimer_set(&et, 1);
 //	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 	RADIO("############################################### DIO_BROADCAST: Process stopped for a while ####################\n");
@@ -148,11 +148,12 @@ PROCESS_THREAD(dual_dis_broadcast, ev, data)
 //	static struct etimer et;
 	rtimer_clock_t wait;
 	PROCESS_BEGIN();
+#if WAKEUP_RADIO == 0
 	dual_radio_switch(LONG_RADIO);
 	dis_output(NULL);
-
 	wait = RTIMER_NOW();
 	while(RTIMER_CLOCK_LT(RTIMER_NOW(), wait + RTIMER_ARCH_SECOND/400));
+#endif
 //	etimer_set(&et, 1);
 //	PROCESS_WAIT_EVENT_UNTIL(etimer_expired(&et));
 	RADIO("##############################################  DIS_BROADCAST: Process stopped for a while ####################\n");

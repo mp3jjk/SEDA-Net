@@ -2,7 +2,7 @@
 
 
 #include "dual_conf.h"
-#include "../lanada/param.h"
+//#include "../lanada/param.h"
 #define DEBUG_DUAL	0
 #if DEBUG_DUAL
 #include <stdio.h>

@@ -1973,6 +1973,8 @@ static int
 turn_off(int keep_radio_on)
 {
   dualmac_is_on = 0;
+  LEDS_OFF(LEDS_GREEN);
+  LEDS_OFF(LEDS_RED);
 #if DUAL_RADIO
   if(keep_radio_on) {
     return dual_radio_turn_on(BOTH_RADIO);

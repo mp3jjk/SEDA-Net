@@ -43,7 +43,7 @@
 #include "dev/radio.h"
 #include "dev/cooja-radio.h"
 //#include "sys/residual.h"
-#include "../lanada/param.h"
+//#include "../lanada/param.h"
 
 
 #include "dev/leds.h" // For debug

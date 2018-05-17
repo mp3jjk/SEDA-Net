@@ -389,6 +389,9 @@ PROCESS_THREAD(udp_client_process, ev, data)
 			printf("*************** RESET LOG MESSAGE **************************\n");
 			cfs_remove("log_message");
 			log_reinit();
+			dead = 1;
+			NETSTACK_MAC.off(0);
+			NETSTACK_RADIO.off();
 		}
 #endif
 	}
@@ -421,6 +424,9 @@ PROCESS_THREAD(udp_client_process, ev, data)
 			printf("*************** RESET LOG MESSAGE **************************\n");
 			cfs_remove("log_message");		
 			log_reinit();
+			dead = 1;
+			NETSTACK_MAC.off(0);
+			NETSTACK_RADIO.off();
 		}
 #endif
 

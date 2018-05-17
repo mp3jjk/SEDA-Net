@@ -62,7 +62,7 @@ import org.contikios.cooja.Cooja;
 import org.contikios.cooja.PluginType;
 import org.contikios.cooja.Simulation;
 import org.contikios.cooja.SupportedArguments;
-import org.contikios.mrm.ChannelModelLR.Parameter;
+import org.contikios.mrm.ChannelModelLR.ParameterLR;
 
 /**
  * This plugin allows a user to reconfigure current radio channel parameters.
@@ -124,73 +124,73 @@ public class FormulaViewerLR extends org.contikios.cooja.VisPlugin {
     areaGeneral = collapsableArea;
 
     addBooleanParameter(
-        Parameter.apply_random,
-        Parameter.getDescription(Parameter.apply_random),
+        ParameterLR.apply_random,
+        ParameterLR.getDescription(ParameterLR.apply_random),
         collapsableArea,
-        channelModel.getParameterBooleanValue(Parameter.apply_random)
+        channelModel.getParameterBooleanValue(ParameterLR.apply_random)
     );
 
     addDoubleParameter(
-        Parameter.snr_threshold,
-        Parameter.getDescription(Parameter.snr_threshold),
+        ParameterLR.snr_threshold,
+        ParameterLR.getDescription(ParameterLR.snr_threshold),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.snr_threshold)
+        channelModel.getParameterDoubleValue(ParameterLR.snr_threshold)
     );
 
     addDoubleParameter(
-        Parameter.bg_noise_mean,
-        Parameter.getDescription(Parameter.bg_noise_mean),
+        ParameterLR.bg_noise_mean,
+        ParameterLR.getDescription(ParameterLR.bg_noise_mean),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.bg_noise_mean)
+        channelModel.getParameterDoubleValue(ParameterLR.bg_noise_mean)
     );
 
     addDoubleParameter(
-        Parameter.bg_noise_var,
-        Parameter.getDescription(Parameter.bg_noise_var),
+        ParameterLR.bg_noise_var,
+        ParameterLR.getDescription(ParameterLR.bg_noise_var),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.bg_noise_var)
+        channelModel.getParameterDoubleValue(ParameterLR.bg_noise_var)
     );
 
     addDoubleParameter(
-        Parameter.system_gain_mean,
-        Parameter.getDescription(Parameter.system_gain_mean),
+        ParameterLR.system_gain_mean,
+        ParameterLR.getDescription(ParameterLR.system_gain_mean),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.system_gain_mean)
+        channelModel.getParameterDoubleValue(ParameterLR.system_gain_mean)
     );
 
     addDoubleParameter(
-        Parameter.system_gain_var,
-        Parameter.getDescription(Parameter.system_gain_var),
+        ParameterLR.system_gain_var,
+        ParameterLR.getDescription(ParameterLR.system_gain_var),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.system_gain_var)
+        channelModel.getParameterDoubleValue(ParameterLR.system_gain_var)
     );
 
     addDoubleParameter(
-        Parameter.frequencyLR,
-        Parameter.getDescription(Parameter.frequencyLR),
+        ParameterLR.frequencyLR,
+        ParameterLR.getDescription(ParameterLR.frequencyLR),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.frequencyLR)
+        channelModel.getParameterDoubleValue(ParameterLR.frequencyLR)
     );
 
     addBooleanParameter(
-        Parameter.captureEffect,
-        Parameter.getDescription(Parameter.captureEffect),
+        ParameterLR.captureEffect,
+        ParameterLR.getDescription(ParameterLR.captureEffect),
         collapsableArea,
-        channelModel.getParameterBooleanValue(Parameter.captureEffect)
+        channelModel.getParameterBooleanValue(ParameterLR.captureEffect)
     );
 
     addDoubleParameter(
-        Parameter.captureEffectPreambleDuration,
-        Parameter.getDescription(Parameter.captureEffectPreambleDuration),
+        ParameterLR.captureEffectPreambleDuration,
+        ParameterLR.getDescription(ParameterLR.captureEffectPreambleDuration),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.captureEffectPreambleDuration)
+        channelModel.getParameterDoubleValue(ParameterLR.captureEffectPreambleDuration)
     );
 
     addDoubleParameter(
-        Parameter.captureEffectSignalTreshold,
-        Parameter.getDescription(Parameter.captureEffectSignalTreshold),
+        ParameterLR.captureEffectSignalTreshold,
+        ParameterLR.getDescription(ParameterLR.captureEffectSignalTreshold),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.captureEffectSignalTreshold)
+        channelModel.getParameterDoubleValue(ParameterLR.captureEffectSignalTreshold)
     );
 
     // Transmitter parameters
@@ -198,17 +198,17 @@ public class FormulaViewerLR extends org.contikios.cooja.VisPlugin {
     areaTransmitter = collapsableArea;
 
     addDoubleParameter(
-        Parameter.tx_power,
-        Parameter.getDescription(Parameter.tx_power),
+        ParameterLR.tx_power,
+        ParameterLR.getDescription(ParameterLR.tx_power),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.tx_power)
+        channelModel.getParameterDoubleValue(ParameterLR.tx_power)
     );
 
     addBooleanParameter(
-        Parameter.tx_with_gain,
-        Parameter.getDescription(Parameter.tx_with_gain),
+        ParameterLR.tx_with_gain,
+        ParameterLR.getDescription(ParameterLR.tx_with_gain),
         collapsableArea,
-        channelModel.getParameterBooleanValue(Parameter.tx_with_gain)
+        channelModel.getParameterBooleanValue(ParameterLR.tx_with_gain)
     );
 
     // Receiver parameters
@@ -216,17 +216,17 @@ public class FormulaViewerLR extends org.contikios.cooja.VisPlugin {
     areaReceiver = collapsableArea;
 
     addDoubleParameter(
-        Parameter.rx_sensitivityLR,
-        Parameter.getDescription(Parameter.rx_sensitivityLR),
+        ParameterLR.rx_sensitivityLR,
+        ParameterLR.getDescription(ParameterLR.rx_sensitivityLR),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.rx_sensitivityLR)
+        channelModel.getParameterDoubleValue(ParameterLR.rx_sensitivityLR)
     );
 
     addBooleanParameter(
-        Parameter.rx_with_gain,
-        Parameter.getDescription(Parameter.rx_with_gain),
+        ParameterLR.rx_with_gain,
+        ParameterLR.getDescription(ParameterLR.rx_with_gain),
         collapsableArea,
-        channelModel.getParameterBooleanValue(Parameter.rx_with_gain)
+        channelModel.getParameterBooleanValue(ParameterLR.rx_with_gain)
     );
 
     // Ray Tracer parameters
@@ -234,52 +234,52 @@ public class FormulaViewerLR extends org.contikios.cooja.VisPlugin {
     areaRayTracer = collapsableArea;
 
     addBooleanParameter(
-        Parameter.rt_disallow_direct_path,
-        Parameter.getDescription(Parameter.rt_disallow_direct_path),
+        ParameterLR.rt_disallow_direct_path,
+        ParameterLR.getDescription(ParameterLR.rt_disallow_direct_path),
         collapsableArea,
-        channelModel.getParameterBooleanValue(Parameter.rt_disallow_direct_path)
+        channelModel.getParameterBooleanValue(ParameterLR.rt_disallow_direct_path)
     );
 
     addBooleanParameter(
-        Parameter.rt_ignore_non_direct,
-        Parameter.getDescription(Parameter.rt_ignore_non_direct),
+        ParameterLR.rt_ignore_non_direct,
+        ParameterLR.getDescription(ParameterLR.rt_ignore_non_direct),
         collapsableArea,
-        channelModel.getParameterBooleanValue(Parameter.rt_ignore_non_direct)
+        channelModel.getParameterBooleanValue(ParameterLR.rt_ignore_non_direct)
     );
 
     addBooleanParameter(
-        Parameter.rt_fspl_on_total_length,
-        Parameter.getDescription(Parameter.rt_fspl_on_total_length),
+        ParameterLR.rt_fspl_on_total_length,
+        ParameterLR.getDescription(ParameterLR.rt_fspl_on_total_length),
         collapsableArea,
-        channelModel.getParameterBooleanValue(Parameter.rt_fspl_on_total_length)
+        channelModel.getParameterBooleanValue(ParameterLR.rt_fspl_on_total_length)
     );
 
     addIntegerParameter(
-        Parameter.rt_max_rays,
-        Parameter.getDescription(Parameter.rt_max_rays),
+        ParameterLR.rt_max_rays,
+        ParameterLR.getDescription(ParameterLR.rt_max_rays),
         collapsableArea,
-        channelModel.getParameterIntegerValue(Parameter.rt_max_rays)
+        channelModel.getParameterIntegerValue(ParameterLR.rt_max_rays)
     );
 
     addIntegerParameter(
-        Parameter.rt_max_refractions,
-        Parameter.getDescription(Parameter.rt_max_refractions),
+        ParameterLR.rt_max_refractions,
+        ParameterLR.getDescription(ParameterLR.rt_max_refractions),
         collapsableArea,
-        channelModel.getParameterIntegerValue(Parameter.rt_max_refractions)
+        channelModel.getParameterIntegerValue(ParameterLR.rt_max_refractions)
     );
 
     addIntegerParameter(
-        Parameter.rt_max_reflections,
-        Parameter.getDescription(Parameter.rt_max_reflections),
+        ParameterLR.rt_max_reflections,
+        ParameterLR.getDescription(ParameterLR.rt_max_reflections),
         collapsableArea,
-        channelModel.getParameterIntegerValue(Parameter.rt_max_reflections)
+        channelModel.getParameterIntegerValue(ParameterLR.rt_max_reflections)
     );
 
     addIntegerParameter(
-        Parameter.rt_max_diffractions,
-        Parameter.getDescription(Parameter.rt_max_diffractions),
+        ParameterLR.rt_max_diffractions,
+        ParameterLR.getDescription(ParameterLR.rt_max_diffractions),
         collapsableArea,
-        channelModel.getParameterIntegerValue(Parameter.rt_max_diffractions)
+        channelModel.getParameterIntegerValue(ParameterLR.rt_max_diffractions)
     );
 
 /*    addBooleanParameter(
@@ -290,24 +290,24 @@ public class FormulaViewerLR extends org.contikios.cooja.VisPlugin {
     );
 */
     addDoubleParameter(
-        Parameter.rt_refrac_coefficient,
-        Parameter.getDescription(Parameter.rt_refrac_coefficient),
+        ParameterLR.rt_refrac_coefficient,
+        ParameterLR.getDescription(ParameterLR.rt_refrac_coefficient),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.rt_refrac_coefficient)
+        channelModel.getParameterDoubleValue(ParameterLR.rt_refrac_coefficient)
     );
 
     addDoubleParameter(
-        Parameter.rt_reflec_coefficient,
-        Parameter.getDescription(Parameter.rt_reflec_coefficient),
+        ParameterLR.rt_reflec_coefficient,
+        ParameterLR.getDescription(ParameterLR.rt_reflec_coefficient),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.rt_reflec_coefficient)
+        channelModel.getParameterDoubleValue(ParameterLR.rt_reflec_coefficient)
     );
 
     addDoubleParameter(
-        Parameter.rt_diffr_coefficient,
-        Parameter.getDescription(Parameter.rt_diffr_coefficient),
+        ParameterLR.rt_diffr_coefficient,
+        ParameterLR.getDescription(ParameterLR.rt_diffr_coefficient),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.rt_diffr_coefficient)
+        channelModel.getParameterDoubleValue(ParameterLR.rt_diffr_coefficient)
     );
 
 /*    addDoubleParameter(
@@ -322,10 +322,10 @@ public class FormulaViewerLR extends org.contikios.cooja.VisPlugin {
     areaShadowing = collapsableArea;
 
     addDoubleParameter(
-        Parameter.obstacle_attenuation,
-        Parameter.getDescription(Parameter.obstacle_attenuation),
+        ParameterLR.obstacle_attenuation,
+        ParameterLR.getDescription(ParameterLR.obstacle_attenuation),
         collapsableArea,
-        channelModel.getParameterDoubleValue(Parameter.obstacle_attenuation)
+        channelModel.getParameterDoubleValue(ParameterLR.obstacle_attenuation)
     );
 
     // Add channel model observer responsible to keep all GUI components synched
@@ -413,7 +413,7 @@ public class FormulaViewerLR extends org.contikios.cooja.VisPlugin {
    * @param initialValue Initial value
    * @return Text field in created panel
    */
-  private JFormattedTextField addDoubleParameter(Parameter id, String description, Container contentPane, double initialValue) {
+  private JFormattedTextField addDoubleParameter(ParameterLR id, String description, Container contentPane, double initialValue) {
     JPanel panel = new JPanel();
     JLabel label;
     JFormattedTextField textField;
@@ -431,21 +431,21 @@ public class FormulaViewerLR extends org.contikios.cooja.VisPlugin {
     textField.addPropertyChangeListener("value", new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent e) {
         JFormattedTextField textField = (JFormattedTextField) e.getSource();
-        Parameter id = (Parameter) textField.getClientProperty("id");
+        ParameterLR id = (ParameterLR) textField.getClientProperty("id");
         Double val = ((Number) e.getNewValue()).doubleValue();
         channelModel.setParameterValue(id, val);
-        if (!Parameter.getDefaultValue(id).equals(val)) {
+        if (!ParameterLR.getDefaultValue(id).equals(val)) {
           textField.setBackground(Color.LIGHT_GRAY);
-          textField.setToolTipText("Default value: " + Parameter.getDefaultValue(id));
+          textField.setToolTipText("Default value: " + ParameterLR.getDefaultValue(id));
         } else {
           textField.setBackground(null);
           textField.setToolTipText(null);
         }
       }
     });
-    if (!Parameter.getDefaultValue(id).equals(initialValue)) {
+    if (!ParameterLR.getDefaultValue(id).equals(initialValue)) {
       textField.setBackground(Color.LIGHT_GRAY);
-      textField.setToolTipText("Default value: " + Parameter.getDefaultValue(id));
+      textField.setToolTipText("Default value: " + ParameterLR.getDefaultValue(id));
     } else {
       textField.setBackground(null);
       textField.setToolTipText(null);
@@ -468,7 +468,7 @@ public class FormulaViewerLR extends org.contikios.cooja.VisPlugin {
    * @param initialValue Initial value
    * @return Text field in created panel
    */
-  private JFormattedTextField addIntegerParameter(Parameter id, String description, Container contentPane, int initialValue) {
+  private JFormattedTextField addIntegerParameter(ParameterLR id, String description, Container contentPane, int initialValue) {
     JPanel panel = new JPanel();
     JLabel label;
     JFormattedTextField textField;
@@ -486,21 +486,21 @@ public class FormulaViewerLR extends org.contikios.cooja.VisPlugin {
     textField.addPropertyChangeListener("value", new PropertyChangeListener() {
       public void propertyChange(PropertyChangeEvent e) {
         JFormattedTextField textField = (JFormattedTextField) e.getSource();
-        Parameter id = (Parameter) textField.getClientProperty("id");
+        ParameterLR id = (ParameterLR) textField.getClientProperty("id");
         Integer val = ((Number) e.getNewValue()).intValue();
         channelModel.setParameterValue(id, val);
-        if (!Parameter.getDefaultValue(id).equals(val)) {
+        if (!ParameterLR.getDefaultValue(id).equals(val)) {
           textField.setBackground(Color.LIGHT_GRAY);
-          textField.setToolTipText("Default value: " + Parameter.getDefaultValue(id));
+          textField.setToolTipText("Default value: " + ParameterLR.getDefaultValue(id));
         } else {
           textField.setBackground(null);
           textField.setToolTipText(null);
         }
       }
     });
-    if (!Parameter.getDefaultValue(id).equals(initialValue)) {
+    if (!ParameterLR.getDefaultValue(id).equals(initialValue)) {
       textField.setBackground(Color.LIGHT_GRAY);
-      textField.setToolTipText("Default value: " + Parameter.getDefaultValue(id));
+      textField.setToolTipText("Default value: " + ParameterLR.getDefaultValue(id));
     } else {
       textField.setBackground(null);
       textField.setToolTipText(null);
@@ -523,7 +523,7 @@ public class FormulaViewerLR extends org.contikios.cooja.VisPlugin {
    * @param initialValue Initial value
    * @return Checkbox in created panel
    */
-  private JCheckBox addBooleanParameter(Parameter id, String description, Container contentPane, boolean initialValue) {
+  private JCheckBox addBooleanParameter(ParameterLR id, String description, Container contentPane, boolean initialValue) {
     JPanel panel = new JPanel();
     JLabel label;
     JCheckBox checkBox;
@@ -540,17 +540,17 @@ public class FormulaViewerLR extends org.contikios.cooja.VisPlugin {
     checkBox.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         JCheckBox checkBox = (JCheckBox) e.getSource();
-        Parameter id = (Parameter) checkBox.getClientProperty("id");
+        ParameterLR id = (ParameterLR) checkBox.getClientProperty("id");
         Object val = new Boolean(checkBox.isSelected());
         channelModel.setParameterValue(id, val);
-        if (!Parameter.getDefaultValue(id).equals(val)) {
+        if (!ParameterLR.getDefaultValue(id).equals(val)) {
           checkBox.setText("<");
         } else {
           checkBox.setText("");
         }
       }
     });
-    if (!Parameter.getDefaultValue(id).equals(initialValue)) {
+    if (!ParameterLR.getDefaultValue(id).equals(initialValue)) {
       checkBox.setText("<");
     } else {
       checkBox.setText("");
@@ -572,21 +572,21 @@ public class FormulaViewerLR extends org.contikios.cooja.VisPlugin {
       // Update all integers
       for (int i=0; i < allIntegerParameters.size(); i++) {
         JFormattedTextField textField = allIntegerParameters.get(i);
-        Parameter id = (Parameter) textField.getClientProperty("id");
+        ParameterLR id = (ParameterLR) textField.getClientProperty("id");
         textField.setValue(channelModel.getParameterValue(id));
       }
 
       // Update all doubles
       for (int i=0; i < allDoubleParameters.size(); i++) {
         JFormattedTextField textField = allDoubleParameters.get(i);
-        Parameter id = (Parameter) textField.getClientProperty("id");
+        ParameterLR id = (ParameterLR) textField.getClientProperty("id");
         textField.setValue(channelModel.getParameterValue(id));
       }
 
       // Update all booleans
       for (int i=0; i < allBooleanParameters.size(); i++) {
         JCheckBox checkBox = allBooleanParameters.get(i);
-        Parameter id = (Parameter) checkBox.getClientProperty("id");
+        ParameterLR id = (ParameterLR) checkBox.getClientProperty("id");
         checkBox.setSelected(channelModel.getParameterBooleanValue(id));
       }
 

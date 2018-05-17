@@ -150,7 +150,8 @@ public class ChannelModel {
       case snr_threshold:
         return new Double(6);
       case bg_noise_mean:
-        return new Double(AbstractRadioMedium.SS_NOTHING);
+/*	 return new Double(AbstractRadioMedium.SS_NOTHING);*/
+	 return new Double(-100);
       case bg_noise_var:
         return new Double(1);
       case system_gain_mean:

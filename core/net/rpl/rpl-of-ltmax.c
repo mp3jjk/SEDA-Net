@@ -338,20 +338,34 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 	  printf("Cmp %d %c p2: %d load: %d sum_weight: %d weight: %d rank: %d %c\n", nbr2->ipaddr.u8[15], nbr2->ipaddr.u8[8]==0x82 ? 'L' : 'S',
 			  p2_metric,p2->est_load,p2->parent_sum_weight, p2->parent_weight, p2->rank,p2 == dag->preferred_parent ? 'P':'X');
   }*/
-//  if(nbr1->link_metric >= MAX_LINK_METRIC/2 * RPL_DAG_MC_ETX_DIVISOR && nbr2->link_metric >= MAX_LINK_METRIC/2 * RPL_DAG_MC_ETX_DIVISOR) {
-  if(nbr1->link_metric >= 4 * RPL_DAG_MC_ETX_DIVISOR && nbr2->link_metric >= 4 * RPL_DAG_MC_ETX_DIVISOR) {
 
-	  uint8_t random = rand() % 2;
-	  return random == 0 ? p1 : p2;
-  }
-  else if(nbr1->link_metric >= 4 * RPL_DAG_MC_ETX_DIVISOR) {
-	  return p2;
-  }
-  else if(nbr2->link_metric >= 4 * RPL_DAG_MC_ETX_DIVISOR) {
-	  return p1;
-  }
 
   if(init_phase) {
+#ifdef ZOUL_EXPERIMENT
+	  if(nbr1->link_metric >= 6 * RPL_DAG_MC_ETX_DIVISOR && nbr2->link_metric >= 6 * RPL_DAG_MC_ETX_DIVISOR) {
+
+		  uint8_t random = rand() % 2;
+		  return random == 0 ? p1 : p2;
+	  }
+	  else if(nbr1->link_metric >= 6 * RPL_DAG_MC_ETX_DIVISOR) {
+		  return p2;
+	  }
+	  else if(nbr2->link_metric >= 6 * RPL_DAG_MC_ETX_DIVISOR) {
+		  return p1;
+	  }
+#else
+	  if(nbr1->link_metric >= 4 * RPL_DAG_MC_ETX_DIVISOR && nbr2->link_metric >= 4 * RPL_DAG_MC_ETX_DIVISOR) {
+
+		  uint8_t random = rand() % 2;
+		  return random == 0 ? p1 : p2;
+	  }
+	  else if(nbr1->link_metric >= 4 * RPL_DAG_MC_ETX_DIVISOR) {
+		  return p2;
+	  }
+	  else if(nbr2->link_metric >= 4 * RPL_DAG_MC_ETX_DIVISOR) {
+		  return p1;
+	  }
+#endif /* ZOUL_EXPERIMENT */
 	  if(p1_metric == p2_metric && p1 != NULL && p2 != NULL) {
 		  if(p1 == dag->preferred_parent) {
 			  return p2;
@@ -370,16 +384,27 @@ best_parent(rpl_parent_t *p1, rpl_parent_t *p2)
 
 
 #if RPL_ETX_WEIGHT
-  		if(nbr1->link_metric >= (MAX_LINK_METRIC - 1) * RPL_DAG_MC_ETX_DIVISOR && nbr2->link_metric >= (MAX_LINK_METRIC -1) * RPL_DAG_MC_ETX_DIVISOR) {
-  		  uint8_t random = rand() % 2;
-  		  return random == 0 ? p1 : p2;
-  		}
-  		else if(nbr1->link_metric >= (MAX_LINK_METRIC - 1) * RPL_DAG_MC_ETX_DIVISOR) {
-  			return p2;
-  		}
-  		else if(nbr2->link_metric >= (MAX_LINK_METRIC - 1) * RPL_DAG_MC_ETX_DIVISOR) {
-  			return p1;
-  		}
+#ifdef ZOUL_EXPERIMENT
+  if(nbr1->link_metric >= 6 * RPL_DAG_MC_ETX_DIVISOR && nbr2->link_metric >= 6 * RPL_DAG_MC_ETX_DIVISOR) {
+	  return nbr1->link_metric <= nbr2->link_metric ? p1 : p2;
+  }
+  else if(nbr1->link_metric >= 6 * RPL_DAG_MC_ETX_DIVISOR) {
+	  return p2;
+  }
+  else if(nbr2->link_metric >= 6 * RPL_DAG_MC_ETX_DIVISOR) {
+	  return p1;
+  }
+#else
+	  if(nbr1->link_metric >= 4 * RPL_DAG_MC_ETX_DIVISOR && nbr2->link_metric >= 4 * RPL_DAG_MC_ETX_DIVISOR) {
+		  return nbr1->link_metric <= nbr2->link_metric ? p1 : p2;
+	  }
+	  else if(nbr1->link_metric >= 4 * RPL_DAG_MC_ETX_DIVISOR) {
+		  return p2;
+	  }
+	  else if(nbr2->link_metric >= 4 * RPL_DAG_MC_ETX_DIVISOR) {
+		  return p1;
+	  }
+#endif /* ZOUL_EXPERIMENT */
 
   		if(p1->rank < p2->rank) {
   			return p1;
