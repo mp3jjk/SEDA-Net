@@ -1460,7 +1460,7 @@
  *  Mote mote, int id, String msg&#xD;
  */&#xD;
 &#xD;
-TIMEOUT(200000000000000, log.log("last message: " + msg + "\n"));&#xD;
+TIMEOUT(18000000, log.log("last message: " + msg + "\n"));&#xD;
 &#xD;
 var count = 0;&#xD;
 &#xD;

@@ -41,7 +41,7 @@
 #if DUAL_RADIO == 1
 #define ONLY_LONG 0
 #if ONLY_LONG == 0 && DUAL_RADIO == 1
-#define WAKEUP_RADIO 1  /* Make sure CROSS_OPT_VERSION1 == 0 */
+#define WAKEUP_RADIO 0  /* Make sure CROSS_OPT_VERSION1 == 0 */
 #if WAKEUP_RADIO == 0
 #undef CROSS_OPT_VERSION1
 #define CROSS_OPT_VERSION1 0
