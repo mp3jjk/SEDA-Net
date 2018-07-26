@@ -1042,6 +1042,9 @@ best_parent(rpl_dag_t *dag)
 	  return best;
   }
   else {
+	  if(prev != best) {
+		  printf("RESULT parent change\n");
+	  }
 	  return best;
   }
 #else

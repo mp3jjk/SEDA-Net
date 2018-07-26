@@ -838,7 +838,7 @@ public class Simulation extends Observable implements Runnable {
 
   /**
    * Adds a mote to this simulation
-   *
+xo   *
    * @param mote
    *          Mote to add
    */

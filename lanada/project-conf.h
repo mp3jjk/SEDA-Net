@@ -8,7 +8,7 @@ uint8_t dead;
 
 /* RPL Configuration */
 
-#define RPL_CONF_LONG_WEIGHT_RATIO	1
+#define RPL_CONF_LONG_WEIGHT_RATIO	2
 #define RPL_CONF_ETX_WEIGHT	1
 #define RPL_CONF_BETA	1
 #define RPL_CONF_BETA_DIV	1
