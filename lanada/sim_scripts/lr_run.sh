@@ -38,25 +38,36 @@ MRM=${17}
 LT_PERCENT=${18}
 LTMAX=${19}
 
-if [ $WAKE_UP -eq 0 ]
+if [ $MRM -eq 0 ]
 then
-    sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc 
-else
-    sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\_$MRM\.csc 
-fi
+    if [ $WAKE_UP -eq 0 ]
+    then
+	sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
+    else
+	sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\.csc 
+    fi
 
-if [ $topology == "36grid_mrm2_cnt" ]
-then
-    sed -i "1124s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc 
-    sed -i "1124s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\_$MRM\.csc 
-elif [ $topology == "50random_mrm2_cnt" ]
-then
-    sed -i "1488s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc 
-    sed -i "1488s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\_$MRM\.csc 
-elif [ $topology == "34cluster_mrm2_cnt" ]
-then
-    sed -i "1072s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc
-    sed -i "1072s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\_$MRM\.csc
+else
+    if [ $WAKE_UP -eq 0 ]
+    then
+	sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc 
+    else
+	sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\_$MRM\.csc 
+    fi
+
+    if [ $topology == "36grid_mrm2_cnt" ]
+    then
+	sed -i "1124s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc 
+	sed -i "1124s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\_$MRM\.csc 
+    elif [ $topology == "50random_mrm2_cnt" ]
+    then
+	sed -i "1488s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc 
+	sed -i "1488s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\_$MRM\.csc 
+    elif [ $topology == "34cluster_mrm2_cnt" ]
+    then
+	sed -i "1072s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc
+	sed -i "1072s/.*/var death = $LT_PERCENT;\&\#xD;/g" $CONTIKI/lanada/sim_scripts/scripts/$topology\_W\_$LR_range\_$MRM\.csc
+    fi
 fi
 
 if [ $TRAFFIC_MODEL -eq 0 ]
@@ -102,7 +113,12 @@ cd $IN_DIR
 echo "#########################  We are in $PWD  ########################"
 
 HERE=$PWD
-cd $CONTIKI/lanada_$MRM
+if [ $MRM -eq 0 ]
+then
+    cd $CONTIKI/lanada
+else
+    cd $CONTIKI/lanada_$MRM
+fi
 make clean TARGET=cooja
 cd $HERE
 
@@ -130,10 +146,10 @@ else
 	fi
 fi
 
-if [ ! -e report_summary.txt ]
-then
-    ../../pp.sh
-fi
+# if [ ! -e report_summary.txt ]
+# then
+# #    ../../pp.sh
+# fi
 cd ../..
 
 echo "Simulation finished"

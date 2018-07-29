@@ -1,27 +1,27 @@
 #!/bin/bash
 
-SIM_TYPE=2 # 0: SR, 1: LR, 2: WAKE-UP, 3: One-Net
+SIM_TYPE=3 # 0: SR, 1: LR, 2: WAKE-UP, 3: One-Net
 
-TRAFFIC=1 # 0 = periodic, 1 = poisson
-VAR_PERIOD=(10 20 40)
+TRAFFIC=0 # 0 = periodic, 1 = poisson
+VAR_PERIOD=(30)
 VAR_ARRIVAL=(10 20 40)
-VAR_TOPOLOGY=("50random_mrm2_cnt")
+VAR_TOPOLOGY=("70random")
 VAR_LR_RANGE=("2X")
 VAR_LTMAX=("1")
 
-VAR_LR_WEIGHT=(1)
+VAR_LR_WEIGHT=(2)
 VAR_ETX_WEIGHT=1
-VAR_BETA=(1)
+VAR_BETA=(2)
 VAR_BETA_DIV=(1)
 VAR_CROSS_OPT=0
 
 VAR_STROBE_CNT=0
 VAR_CHECK_RATE=(16)
 
-DATE="G8"
-SEED_NUMBER=("2" "3" "4" "5")
-#SEED_NUMBER=("1")
-MRM=4
+DATE="COM_3"
+#SEED_NUMBER=("1" "2" "3" "4" "5")
+SEED_NUMBER=("1" "2" "3")
+MRM=0
 VAR_PERCENT=("1")
 
 if [ $SIM_TYPE -eq 0 ]

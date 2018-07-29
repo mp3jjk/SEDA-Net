@@ -1,6 +1,12 @@
 #!/bin/bash
 APP=${11}
 
+if [ $APP -eq 0 ]
+then
+    PATTH="../../project-conf.h"
+else
+    PATTH="../../../lanada_$APP/project-conf.h"
+fi
 echo "#ifndef PROJECT_CONF_H_
 #define PROJECT_CONF_H_
 
@@ -17,7 +23,7 @@ uint8_t dead;
 #define RPL_CONF_BETA_DIV	$7
 #define RPL_CONF_CROSS_OPT_VERSION1	$8
 #define RPL_CONF_DUAL_RPL_RECAL_MODE ${12}
-#define RPL_CONF_DUAL_RPL_PROB_PARENT_SWITCH 0
+#define RPL_CONF_DUAL_RPL_PROB_PARENT_SWITCH 1
 
 /* MAC Configuration */
 #define MAC_CONF_STROBE_CNT_MODE	$9
@@ -26,7 +32,7 @@ uint8_t dead;
 
 /* DUAL_RADAIO Configuration */
 
-#define CONF_RESIDUAL_ENERGY_MAX 4000000
+#define CONF_RESIDUAL_ENERGY_MAX 1000000
 
 /*-----------------------------------------------------------------------------------------------*/
 #define DETERMINED_ROUTING_TREE	0
@@ -41,7 +47,7 @@ uint8_t dead;
 
 //#ifdef TEST_MORE_ROUTES
 /* configure number of neighbors and routes */
-#define NBR_TABLE_CONF_MAX_NEIGHBORS     50
+#define NBR_TABLE_CONF_MAX_NEIGHBORS     70
 //#define UIP_CONF_MAX_ROUTES   30
 //#else
 /* configure number of neighbors and routes */
@@ -80,4 +86,4 @@ uint8_t dead;
 #undef NULLRDC_CONF_ACK_WAIT_TIME
 #define NULLRDC_CONF_ACK_WAIT_TIME	RTIMER_SECOND / 30
 
-#endif /* PROJECT_CONF_H_ */" > ../../../lanada_$APP/project-conf.h
+#endif /* PROJECT_CONF_H_ */" > $PATH

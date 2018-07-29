@@ -37,7 +37,13 @@ MRM=${13}
 LT_PERCENT=${14}
 LTMAX=${15}
 
-sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc 
+
+if [ $MRM -eq 0 ]
+then
+    sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc 
+else
+    sed -i "11s/.*/    <randomseed>$SEED_NUMBER<\/randomseed>/" $CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc 
+fi
 
 if [ $topology == "36grid_mrm2_cnt" ]
 then
@@ -80,7 +86,12 @@ cd $IN_DIR
 echo "#########################  We are in $PWD  ########################"
 
 HERE=$PWD
-cd $CONTIKI/lanada_$MRM
+if [ $MRM -eq 0 ]
+then
+    cd $CONTIKI/lanada
+else
+    cd $CONTIKI/lanada_$MRM
+fi
 make clean TARGET=cooja
 cd $HERE
 
@@ -90,7 +101,7 @@ then
     then
 	if [ $ONLY_LONG -eq 0 ]
 	then
-	    java -mx512m -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\_$MRM\.csc -contiki="$CONTIKI"
+	    java -mx512m -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/$topology\_$LR_range\.csc -contiki="$CONTIKI"
 	    #	java -mx512m -classpath $CONTIKI/tools/cooja/apps/mrm/lib/mrm.jar: -jar $CONTIKI/tools/cooja/dist/cooja.jar -nogui=$CONTIKI/lanada/sim_scripts/scripts/0729_$topology\_$LR_range\.csc -contiki="$CONTIKI"
 	    # ant run_nogui -Dargs=/home/user/Desktop/Double-MAC/lanada/sim_scripts/scripts/0729_36grid_2X.csc -Ddir=$PWD
 	else
@@ -114,10 +125,10 @@ else # If MRM mode
 fi
 
 
-if [ ! -e report_summary.txt ]
-then
-    ../../pp.sh
-fi
+# if [ ! -e report_summary.txt ]
+# then
+# #    ../../pp.sh
+# fi
 cd ../..
 
 echo "Simulation finished"
