@@ -14,7 +14,7 @@ uint8_t dead;
 #define RPL_CONF_BETA_DIV	1
 #define RPL_CONF_CROSS_OPT_VERSION1	0
 #define RPL_CONF_DUAL_RPL_RECAL_MODE 1
-#define RPL_CONF_DUAL_RPL_PROB_PARENT_SWITCH 0
+#define RPL_CONF_DUAL_RPL_PROB_PARENT_SWITCH 1
 
 /* MAC Configuration */
 #define MAC_CONF_STROBE_CNT_MODE	0
@@ -24,7 +24,7 @@ uint8_t dead;
 /* DUAL_RADAIO Configuration */
 
 #define CONF_RESIDUAL_ENERGY_MAX 1000000000
-#define ZOUL_EXPERIMENT 1
+#define ZOUL_EXPERIMENT 0
 /*-----------------------------------------------------------------------------------------------*/
 #define DETERMINED_ROUTING_TREE	0
 
@@ -38,8 +38,8 @@ uint8_t dead;
 
 //#ifdef TEST_MORE_ROUTES
 /* configure number of neighbors and routes */
-#define NBR_TABLE_CONF_MAX_NEIGHBORS     50
-//#define UIP_CONF_MAX_ROUTES   30
+#define NBR_TABLE_CONF_MAX_NEIGHBORS     70
+#define UIP_CONF_MAX_ROUTES   70
 //#else
 /* configure number of neighbors and routes */
 //#define NBR_TABLE_CONF_MAX_NEIGHBORS     30
@@ -56,9 +56,9 @@ uint8_t dead;
 // #define NETSTACK_CONF_MAC     nullmac_driver
 #define NETSTACK_CONF_MAC		csma_driver
 
-#define TRAFFIC_MODEL 1 // 0: Periodic, 1: Poisson
+#define TRAFFIC_MODEL 0 // 0: Periodic, 1: Poisson
 #if TRAFFIC_MODEL == 0
-#define PERIOD 0
+#define PERIOD 30
 #elif TRAFFIC_MODEL == 1
 #define ARRIVAL_RATE 15 // Mean value, 1/lambda
 #endif

@@ -147,7 +147,7 @@ int count_index;
 int avg_est_load; // glob_load in the paper
 
 /* To store the number of data packets at the base station */
-#define MAX_NUM_NODE 50
+#define MAX_NUM_NODE 70
 int id_array[MAX_NUM_NODE];
 
 /* Cross-Opt version1 enabled */
