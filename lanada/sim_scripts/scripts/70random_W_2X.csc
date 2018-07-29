@@ -16,8 +16,8 @@
       <interference_range>50.0</interference_range>
       <success_ratio_tx>1.0</success_ratio_tx>
       <success_ratio_rx>1.0</success_ratio_rx>
-      <transmitting_range_lr>100.0</transmitting_range_lr>
-      <interference_range_lr>100.0</interference_range_lr>
+      <transmitting_range_lr>50.0</transmitting_range_lr>
+      <interference_range_lr>50.0</interference_range_lr>
       <success_ratio_tx_lr>1.0</success_ratio_tx_lr>
       <success_ratio_rx_lr>1.0</success_ratio_rx_lr>
     </radiomedium>
@@ -28,7 +28,7 @@
       org.contikios.cooja.contikimote.ContikiMoteType
       <identifier>mtype407</identifier>
       <description>Cooja Mote Type #1</description>
-      <source>[CONTIKI_DIR]/lanada_1/udp-server.c</source>
+      <source>[CONTIKI_DIR]/lanada/udp-server.c</source>
       <commands>make udp-server.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
@@ -55,7 +55,7 @@
       org.contikios.cooja.contikimote.ContikiMoteType
       <identifier>mtype28</identifier>
       <description>Cooja Mote Type #2</description>
-      <source>[CONTIKI_DIR]/lanada_1/udp-client.c</source>
+      <source>[CONTIKI_DIR]/lanada/udp-client.c</source>
       <commands>make udp-client.cooja TARGET=cooja</commands>
       <moteinterface>org.contikios.cooja.interfaces.Position</moteinterface>
       <moteinterface>org.contikios.cooja.interfaces.Battery</moteinterface>
