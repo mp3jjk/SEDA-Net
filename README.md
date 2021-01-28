@@ -1,19 +1,5 @@
-The Contiki Operating System
+SEDA-Net implementation on Contiki OS
 ============================
+SEDA-Net is a cross-layer protocol which exploits dual-radio configuration for IoT. With heterogeneous radios (short-range and long-range), SEDA-Net achieves network lifetime maximization via optimizing MAC and routing operations.
 
-[![Build Status](https://travis-ci.org/contiki-os/contiki.svg?branch=master)](https://travis-ci.org/contiki-os/contiki/branches)
-
-Contiki is an open source operating system that runs on tiny low-power
-microcontrollers and makes it possible to develop applications that
-make efficient use of the hardware while providing standardized
-low-power wireless communication for a range of hardware platforms.
-
-Contiki is used in numerous commercial and non-commercial systems,
-such as city sound monitoring, street lights, networked electrical
-power meters, industrial monitoring, radiation monitoring,
-construction site monitoring, alarm systems, remote house monitoring,
-and so on.
-
-For more information, see the Contiki website:
-
-[http://contiki-os.org](http://contiki-os.org)
+Abstract: Growing interest in emerging IoT applications provides a strong drive to release a plethora of communication radios from different standards, which are largely classified into short-range (IEEE 802.15.4) and long-range radios (IEEE 802.15.4g). In this paper, we propose a joint, self-configuring MAC and routing protocol, SEDA-Net, which aims at adaptively choosing the best configuration for communication coordi- nation and data delivery, depending on different deployed topologies and external conditions. SEDA-Net is a combination of SEDA-MAC, SEDA- Routing, and Cross-Opt. SEDA-MAC and SEDA-Routing adaptively de- termine (i) the best radio configuration for communication coordination under duty-cycling and (ii) each node’s next-hop over which radio and Cross-Opt jointly optimizes inter-coupled MAC and routing iteratively. SEDA-Net differs from prior approaches which are designed with static configurations of radios and/or mainly with the goal of throughput maxi- mization for dual Wi-Fi or Wi-Fi/LTE setups. We implement SEDA-Net on Contiki OS and perform extensive simulations and experiments using a testbed in an office building. This testbed consists of 45 nodes equipped with a commercial platform, Firefly, having 2.4 GHz short-range and 920 MHz long-range radios. We demonstrate that energy efficiency quantified by the network lifetime increases by up to 2.1 times, compared to that of existing approaches.
