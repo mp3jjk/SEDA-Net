@@ -32,11 +32,9 @@
 
 /**
  * \file
- *         A simple power saving MAC protocol based on X-MAC [SenSys 2006]
+ *         SEDA-MAC (component of SEDA-Net), proposed in TMC...
  * \author
- *         Adam Dunkels <adam@sics.se>
- *         Niclas Finne <nfi@sics.se>
- *         Joakim Eriksson <joakime@sics.se>
+ *         Jinhwan Jung <mp3jjk@gmail.com>
  */
 
 #include "dev/leds.h"
@@ -63,12 +61,6 @@
 #if DUAL_RADIO == 0
 #include "../core/net/rpl/rpl.h"
 #endif
-/*
-#if CONTIKI_TARGET_COOJA
-#include "lib/simEnvChange.h"
-#include "sys/cooja_mt.h"
-#endif  CONTIKI_TARGET_COOJA
-*/
 
 #ifndef WITH_ACK_OPTIMIZATION
 #define WITH_ACK_OPTIMIZATION        0
